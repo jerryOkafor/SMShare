@@ -1,0 +1,40 @@
+{
+    "configurations": [
+        {
+            "name": "composeApp",
+            "type": "android-app",
+            "workingDir": "$PROJECT_DIR$",
+            "allowParallelRun": true,
+            "module": "SMShare.composeApp.main",
+            "destination": "Google Pixel 5"
+        },
+        {
+            "name": "iosApp",
+            "type": "xcode-app",
+            "workingDir": "$PROJECT_DIR$",
+            "buildTarget": {
+                "project": "iosApp",
+                "target": "iosApp"
+            },
+            "configuration": "Debug",
+            "destination": "iPhone (2)"
+        },
+        {
+            "name": "composeApp [Desktop]",
+            "type": "gradle",
+            "workingDir": "$PROJECT_DIR$",
+            "tasks": [
+                "desktopRun"
+            ],
+            "args": [
+                "-DmainClass=MainKt",
+                "--quiet",
+                "-p",
+                "$PROJECT_DIR$/composeApp"
+            ],
+            "initScripts": {
+                "flmapper": "ext.mapPath = { path -> null }"
+            }
+        }
+    ]
+}
