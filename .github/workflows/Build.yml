@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - "Readme.md"
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - "Readme.md"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -44,8 +48,8 @@ jobs:
       - name: Build iOS app
         run: xcodebuild -allowProvisioningUpdates -project iosApp/iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphoneos -destination name='iPhone 14' build
 
-#      - name: Run iOS unit tests
-#        run: xcodebuild -allowProvisioningUpdates -project iosApp/iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphoneos -destination name='iPhone 14' test -test-timeouts-enabled YES
+  #      - name: Run iOS unit tests
+  #        run: xcodebuild -allowProvisioningUpdates -project iosApp/iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphoneos -destination name='iPhone 14' test -test-timeouts-enabled YES
 
   build-android:
     runs-on: ubuntu-22.04
@@ -75,7 +79,10 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Build
-        run: ./gradlew :composeApp:assembleDebug
+        run: ./gradlew :composeApp:assemble
+
+      - name: Test Android
+        run: ./gradlew clean testDebugUnitTest -p composeApp/
 
   build-desktop:
     runs-on: ubuntu-22.04
@@ -105,6 +112,9 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Build
-        run: ./gradlew :composeApp:desktopJar -DmainClass=MainKt
+        run: ./gradlew :composeApp:assemble
+
+      - name: Test Desktop
+        run: ./gradlew clean desktopTest -p composeApp
 
     # https://proandroiddev.com/optimising-ci-build-times-of-a-kotlin-multiplatform-project-2a430055f383
