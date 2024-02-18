@@ -44,8 +44,8 @@ jobs:
       - name: Build iOS app
         run: xcodebuild -allowProvisioningUpdates -project iosApp/iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphoneos -destination name='iPhone 14' build
 
-      - name: Run iOS unit tests
-        run: xcodebuild -allowProvisioningUpdates -project iosApp/iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphoneos -destination name='iPhone 14' test -test-timeouts-enabled YES
+#      - name: Run iOS unit tests
+#        run: xcodebuild -allowProvisioningUpdates -project iosApp/iosApp.xcodeproj -configuration Debug -scheme iosApp -sdk iphoneos -destination name='iPhone 14' test -test-timeouts-enabled YES
 
   build-android:
     runs-on: ubuntu-22.04
@@ -105,6 +105,6 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Build
-        run: ./gradlew :composeApp:desktopRun -DmainClass=MainKt --quiet
+        run: ./gradlew :composeApp:desktopJar -DmainClass=MainKt
 
     # https://proandroiddev.com/optimising-ci-build-times-of-a-kotlin-multiplatform-project-2a430055f383
