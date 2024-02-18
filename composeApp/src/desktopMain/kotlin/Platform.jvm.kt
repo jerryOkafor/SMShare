@@ -11,15 +11,11 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
-import model.TokenResponse
 import java.security.MessageDigest
 import java.security.SecureRandom
 import org.apache.commons.codec.binary.Base64
-import util.oauthChallenge2
-import util.oauthChallengeVerify2
 import java.awt.Desktop
 import java.net.URI
-import java.net.URLEncoder
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 
