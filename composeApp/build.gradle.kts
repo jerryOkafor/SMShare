@@ -51,7 +51,6 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
-            @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
             implementation(libs.dev.chrisbanes.windowSizeClass)
 
@@ -74,6 +73,8 @@ kotlin {
 
             implementation("dev.whyoleg.cryptography:cryptography-random:0.2.0")
             implementation("dev.whyoleg.cryptography:cryptography-core:0.2.0")
+
+            implementation("org.jetbrains.compose.annotation-internal:annotation:1.6.0")
 
         }
 
@@ -98,6 +99,9 @@ kotlin {
             implementation(libs.ktor.client.darwin)
             implementation("co.touchlab:stately-common:2.0.6")
             implementation("dev.whyoleg.cryptography:cryptography-provider-apple:0.2.0")
+
+
+            implementation("org.jetbrains.compose.annotation-internal:annotation:1.6.0")
         }
 
         iosTest.dependencies {

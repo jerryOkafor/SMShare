@@ -9,22 +9,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ElectricBolt
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Plumbing
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.Badge
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,6 +38,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import smshare.composeapp.generated.resources.Res
+import smshare.composeapp.generated.resources.avatar6
+import smshare.composeapp.generated.resources.ic_facebook
+import smshare.composeapp.generated.resources.ic_linkedin
+import smshare.composeapp.generated.resources.ic_twitter
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -81,23 +80,23 @@ fun SideNav(onClose: () -> Unit, onAddChanelClick: () -> Unit) {
             Column {
                 ChannelItemMenu(
                     name = "@Noms0",
-                    avatar = painterResource("avatar6.png"),
-                    indicator = painterResource("ic_twitter.xml"),
+                    avatar = painterResource(Res.drawable.avatar6),
+                    indicator = painterResource(Res.drawable.ic_twitter),
                     onClick = { onClose() }
                 )
 
                 Divider(modifier = Modifier.height(0.5.dp).padding(start = 80.dp, end = 8.dp))
                 ChannelItemMenu(
                     name = "Jerry Okafor",
-                    avatar = painterResource("avatar6.png"),
-                    indicator = painterResource("ic_linkedin.xml"),
+                    avatar = painterResource(Res.drawable.avatar6),
+                    indicator = painterResource(Res.drawable.ic_linkedin),
                     onClick = { onClose() }
                 )
                 Divider(modifier = Modifier.height(0.5.dp).padding(start = 80.dp, end = 8.dp))
                 ChannelItemMenu(
                     name = "Jerry Hanks",
-                    avatar = painterResource("avatar6.png"),
-                    indicator = painterResource("ic_facebook.xml"),
+                    avatar = painterResource(Res.drawable.avatar6),
+                    indicator = painterResource(Res.drawable.ic_facebook),
                     onClick = { onClose() }
                 )
             }
@@ -183,7 +182,6 @@ fun SideNavMenu(title: String, subTitle: String, onClick: () -> Unit = {}) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelItemMenu(
     modifier: Modifier = Modifier,

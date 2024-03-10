@@ -1,7 +1,6 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -52,9 +51,19 @@ import cafe.adriel.voyager.navigator.bottomSheet.BottomSheetNavigator
 import component.SideNav
 import kotlinx.coroutines.launch
 import navigation.NavItem
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.KoinContext
-import screens.HomeScreen
+import screens.Posts
 import screens.AddNewConnectionScreen
+import screens.Settings
+import screens.Drafts
+import screens.Analytics
+import smshare.composeapp.generated.resources.Res
+import smshare.composeapp.generated.resources.main_nav_title_analytics
+import smshare.composeapp.generated.resources.main_nav_title_drafts
+import smshare.composeapp.generated.resources.main_nav_title_posts
+import smshare.composeapp.generated.resources.main_nav_title_settings
 
 private val LightColorScheme = lightColorScheme(
     surface = Color(0xFFFFFFFF),
@@ -66,10 +75,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 
-@OptIn(
-    ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalMaterialApi::class
-)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun App(isDarkTheme: Boolean = isSystemInDarkTheme()) {
     val shouldUseDarkTheme by remember(isDarkTheme) { mutableStateOf(isDarkTheme) }
@@ -139,27 +145,34 @@ fun App(isDarkTheme: Boolean = isSystemInDarkTheme()) {
 class HomeDashboard(private val onMoreMenuClick: () -> Unit) : Screen {
     @OptIn(
         ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class,
-        ExperimentalLayoutApi::class
+        ExperimentalResourceApi::class
     )
     @Composable
     override fun Content() {
         val windowSizeClass = calculateWindowSizeClass()
 
-        val shouldShowBottomBar: Boolean =
-            remember(windowSizeClass) { windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact }
+        val shouldShowBottomBar: Boolean = remember(windowSizeClass) {
+            windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+        }
 
         println("Window Size Class: $windowSizeClass")
 
-        Navigator(HomeScreen()) { homeNavigator ->
-            val scrollBehavior =
-                TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+        Navigator(Posts()) { homeNavigator ->
+            val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
+            val title = when (homeNavigator.lastItem) {
+                is Posts -> stringResource(Res.string.main_nav_title_posts)
+                is Drafts -> stringResource(Res.string.main_nav_title_drafts)
+                is Analytics -> stringResource(Res.string.main_nav_title_analytics)
+                is Settings -> stringResource(Res.string.main_nav_title_settings)
+                else -> ""
+            }
             Scaffold(modifier = Modifier.fillMaxSize(),
                 topBar = {
                     CenterAlignedTopAppBar(
                         title = {
                             Text(
-                                "Medium Top App Bar",
+                                text = title,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -199,9 +212,7 @@ class HomeDashboard(private val onMoreMenuClick: () -> Unit) : Screen {
 
                             }
                         }
-                        Box(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
                             CurrentScreen()
                         }
                     }

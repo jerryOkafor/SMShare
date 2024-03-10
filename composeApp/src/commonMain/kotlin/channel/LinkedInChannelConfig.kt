@@ -12,12 +12,16 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 import model.TokenResponse
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import smshare.composeapp.generated.resources.Res
+import smshare.composeapp.generated.resources.ic_linkedin
 import util.urlEncode
 
-class LinkedInChannelConfig(
+class LinkedInChannelConfig @OptIn(ExperimentalResourceApi::class) constructor(
     override val name: String = "LinkedIn",
     override val description: String = "Profile or Page",
-    override val icon: String = "ic_linkedin.xml"
+    override val icon: DrawableResource = Res.drawable.ic_linkedin
 ) : ChannelConfig {
     private val domain: String = "https://www.linkedin.com/oauth/v2/authorization"
     private val scope: List<String> = listOf("profile", "email", "w_member_social")

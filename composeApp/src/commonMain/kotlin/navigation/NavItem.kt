@@ -9,10 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
-import screens.FourthScreen
-import screens.HomeScreen
-import screens.SecondScreen
-import screens.ThirdScreen
 
 sealed interface NavItem {
     val title: @Composable () -> String
@@ -28,9 +24,9 @@ sealed interface NavItem {
             Icon(imageVector = Icons.Default.Message, contentDescription = null)
         },
         override val onClick: (navigator: Navigator) -> Unit = {
-            it.push(HomeScreen())
+            it.push(screens.Posts())
         },
-        override val isSelected: (Screen) -> Boolean = { it is HomeScreen }
+        override val isSelected: (Screen) -> Boolean = { it is screens.Posts }
     ) : NavItem
 
     data class Drafts(
@@ -40,9 +36,9 @@ sealed interface NavItem {
             Icon(imageVector = Icons.Default.Edit, contentDescription = null)
         },
         override val onClick: (navigator: Navigator) -> Unit = {
-            it.push(SecondScreen())
+            it.push(screens.Drafts())
         },
-        override val isSelected: (Screen) -> Boolean = { it is SecondScreen }
+        override val isSelected: (Screen) -> Boolean = { it is screens.Drafts }
     ) : NavItem
 
     data class Analytics(
@@ -52,9 +48,9 @@ sealed interface NavItem {
             Icon(imageVector = Icons.Default.Analytics, contentDescription = null)
         },
         override val onClick: (navigator: Navigator) -> Unit = {
-            it.push(ThirdScreen())
+            it.push(screens.Analytics())
         },
-        override val isSelected: (Screen) -> Boolean = { it is ThirdScreen }
+        override val isSelected: (Screen) -> Boolean = { it is screens.Analytics }
     ) : NavItem
 
     data class Settings(
@@ -64,9 +60,9 @@ sealed interface NavItem {
             Icon(imageVector = Icons.Default.Settings, contentDescription = null)
         },
         override val onClick: (navigator: Navigator) -> Unit = {
-            it.push(FourthScreen())
+            it.push(screens.Settings())
         },
-        override val isSelected: (Screen) -> Boolean = { it is FourthScreen }
+        override val isSelected: (Screen) -> Boolean = { it is screens.Settings }
     ) : NavItem
 
 }

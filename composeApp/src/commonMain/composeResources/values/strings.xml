@@ -1,0 +1,7 @@
+<resources>
+    <string name="main_app_name">SM Share</string>
+    <string name="main_nav_title_posts">Posts</string>
+    <string name="main_nav_title_drafts">Drafts</string>
+    <string name="main_nav_title_analytics">Analytics</string>
+    <string name="main_nav_title_settings">Settings</string>
+</resources>

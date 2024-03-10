@@ -45,6 +45,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import org.koin.dsl.module
@@ -67,7 +68,7 @@ class AddNewConnectionModel(supportedChannels: List<ChannelConfig>) : ScreenMode
 }
 
 class AddNewConnectionScreen : Screen {
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
     @Composable
     override fun Content() {
         val model = getScreenModel<AddNewConnectionModel>()
@@ -110,7 +111,7 @@ class AddNewConnectionScreen : Screen {
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun NewConnectionButton(title: String, description: String, icon: String) {
+fun NewConnectionButton(title: String, description: String, icon: DrawableResource) {
     Surface(
         modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
         shape = MaterialTheme.shapes.extraSmall, shadowElevation = 4.dp

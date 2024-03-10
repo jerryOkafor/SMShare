@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 
-class ThirdScreen : Screen {
+class Analytics : Screen {
     @Composable
     override fun Content() {
         Column(

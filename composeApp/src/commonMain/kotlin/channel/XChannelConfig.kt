@@ -1,11 +1,15 @@
 package channel
 
 import model.TokenResponse
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import smshare.composeapp.generated.resources.Res
+import smshare.composeapp.generated.resources.ic_twitter
 
-class XChannelConfig(
+class XChannelConfig @OptIn(ExperimentalResourceApi::class) constructor(
     override val name: String = "Twitter/X",
     override val description: String = "Profile",
-    override val icon: String = "ic_twitter.xml"
+    override val icon: DrawableResource = Res.drawable.ic_twitter
 ) : ChannelConfig {
     override fun createLoginUrl(redirectUrl: String, challenge: String): String = ""
 

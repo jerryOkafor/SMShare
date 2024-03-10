@@ -32,14 +32,17 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import smshare.composeapp.generated.resources.Res
+import smshare.composeapp.generated.resources.avatar6
+import smshare.composeapp.generated.resources.ic_facebook
 
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ChannelImage(
     modifier: Modifier = Modifier,
-    avatar: Painter = painterResource("avatar6.png"),
-    indicator: Painter = painterResource("ic_facebook.xml"),
+    avatar: Painter = painterResource(Res.drawable.avatar6),
+    indicator: Painter = painterResource(Res.drawable.ic_facebook),
     contentDescription: String? = null
 ) {
     var imageSize by remember { mutableStateOf(IntSize.Zero) }
@@ -118,8 +121,7 @@ fun ChannelImage(
         ) {
             Image(
                 modifier = Modifier.size(dotSizeDp)
-                    .clip(CircleShape).
-                    align(Alignment.BottomEnd),
+                    .clip(CircleShape).align(Alignment.BottomEnd),
                 contentScale = ContentScale.FillHeight,
                 painter = indicator,
                 contentDescription = null
