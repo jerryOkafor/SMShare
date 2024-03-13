@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -59,11 +60,13 @@ import screens.AddNewConnectionScreen
 import screens.Settings
 import screens.Drafts
 import screens.Analytics
+import screens.BottomSheetSample
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.main_nav_title_analytics
 import smshare.composeapp.generated.resources.main_nav_title_drafts
 import smshare.composeapp.generated.resources.main_nav_title_posts
 import smshare.composeapp.generated.resources.main_nav_title_settings
+import kotlin.jvm.Transient
 
 private val LightColorScheme = lightColorScheme(
     surface = Color(0xFFFFFFFF),
@@ -93,14 +96,22 @@ fun App(isDarkTheme: Boolean = isSystemInDarkTheme()) {
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
             val scope = rememberCoroutineScope()
 
+            val onMoreMenuClick: () -> Unit = {
+                scope.launch {
+                    drawerState.apply {
+                        if (isClosed) open() else close()
+                    }
+                }
+            }
+
             BottomSheetNavigator(
                 sheetShape = MaterialTheme.shapes.large,
                 sheetElevation = 2.dp,
                 skipHalfExpanded = true,
                 sheetBackgroundColor = MaterialTheme.colorScheme.background,
                 sheetContentColor = MaterialTheme.colorScheme.onBackground,
-            ) { bottomSheetNavigator ->
-                Navigator(screen = AddNewConnectionScreen()) { mainNavigator ->
+            ) { _ ->
+                Navigator(screen = HomeDashboard(onMoreMenuClick = onMoreMenuClick)) { mainNavigator ->
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                         ModalNavigationDrawer(
                             drawerState = drawerState,
@@ -110,7 +121,6 @@ fun App(isDarkTheme: Boolean = isSystemInDarkTheme()) {
                                         onClose = { scope.launch { drawerState.close() } },
                                         onAddChanelClick = {
                                             scope.launch { drawerState.close() }
-//                                            bottomSheetNavigator.show(BottomSheetSample())
                                             mainNavigator.push(AddNewConnectionScreen())
                                         })
                                 }
@@ -123,18 +133,6 @@ fun App(isDarkTheme: Boolean = isSystemInDarkTheme()) {
 
                         }
                     }
-
-                    LaunchedEffect(Unit) {
-                        if (true) {
-                            mainNavigator.push(HomeDashboard {
-                                scope.launch {
-                                    drawerState.apply {
-                                        if (isClosed) open() else close()
-                                    }
-                                }
-                            })
-                        }
-                    }
                 }
             }
         }
@@ -142,9 +140,10 @@ fun App(isDarkTheme: Boolean = isSystemInDarkTheme()) {
 }
 
 
-class HomeDashboard(private val onMoreMenuClick: () -> Unit) : Screen {
+class HomeDashboard(@Transient private val onMoreMenuClick: () -> Unit) : Screen {
     @OptIn(
-        ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class,
+        ExperimentalMaterial3Api::class,
+        ExperimentalMaterial3WindowSizeClassApi::class,
         ExperimentalResourceApi::class
     )
     @Composable
@@ -154,8 +153,6 @@ class HomeDashboard(private val onMoreMenuClick: () -> Unit) : Screen {
         val shouldShowBottomBar: Boolean = remember(windowSizeClass) {
             windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
         }
-
-        println("Window Size Class: $windowSizeClass")
 
         Navigator(Posts()) { homeNavigator ->
             val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())

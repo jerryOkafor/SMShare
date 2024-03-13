@@ -1,10 +1,12 @@
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 import channel.ChannelConfig
+import com.jerryokafor.smshare.R
 import java.net.URLEncoder
 
 actual class Platform actual constructor() {
@@ -13,15 +15,10 @@ actual class Platform actual constructor() {
 }
 
 
-actual class AuthManager private actual constructor() {
+actual class AuthManager {
     actual var currentChannel: ChannelConfig? = null
 
-    lateinit var context: Context
-        private set
-
-    constructor(context: Context) : this() {
-        this.context = context
-    }
+    private var context: Context? = null
 
     actual fun authenticateUser(channelConfig: ChannelConfig) {
         currentChannel = channelConfig
@@ -35,14 +32,24 @@ actual class AuthManager private actual constructor() {
             challenge = challenge
         )
 
-        val builder = CustomTabsIntent.Builder()
-        val customTabsIntent = builder.build().apply {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-
         Log.d("AuthManager", "Launching: $oath2Url")
 
-        customTabsIntent.launchUrl(context, Uri.parse(oath2Url))
+        context?.let { cntx ->
+            val intent: CustomTabsIntent = CustomTabsIntent.Builder()
+                .apply {
+                    setCloseButtonIcon(
+                        BitmapFactory.decodeResource(cntx.resources, R.drawable.ic_arrow_back)
+                    )
+                }
+                .build()
+
+            intent.launchUrl(cntx, Uri.parse(oath2Url))
+        }
+
+    }
+
+    fun bindContext(context: Context) {
+        this.context = context
     }
 
 }

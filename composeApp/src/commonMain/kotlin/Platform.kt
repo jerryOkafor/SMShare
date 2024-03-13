@@ -5,7 +5,7 @@ expect class Platform() {
 }
 
 
-expect class AuthManager private constructor() {
+expect class AuthManager {
     var currentChannel: ChannelConfig?
     fun authenticateUser(channelConfig: ChannelConfig)
 }

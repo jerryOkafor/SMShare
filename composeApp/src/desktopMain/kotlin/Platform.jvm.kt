@@ -20,14 +20,10 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 
 
-actual class AuthManager private actual constructor() {
+actual class AuthManager(coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
 
-    lateinit var coroutineScope: CoroutineScope
+    var coroutineScope: CoroutineScope = coroutineScope
         private set
-
-    constructor(coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) : this() {
-        this.coroutineScope = coroutineScope
-    }
 
     private val callbackJob = MutableStateFlow<Job?>(null)
 

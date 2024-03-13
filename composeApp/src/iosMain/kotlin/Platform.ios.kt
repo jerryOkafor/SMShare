@@ -14,13 +14,7 @@ actual class Platform actual constructor() {
 }
 
 
-actual class AuthManager private actual constructor() {
-    lateinit var name: String
-        private set
-
-    constructor(name: String = "") : this() {
-        this.name = name
-    }
+actual class AuthManager {
 
     actual fun authenticateUser(channelConfig: ChannelConfig) {
         println("Authenticating user with $channelConfig")

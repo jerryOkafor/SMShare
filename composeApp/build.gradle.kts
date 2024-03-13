@@ -90,7 +90,6 @@ kotlin {
             api(libs.kotlinx.coroutines.android)
             
             implementation(libs.koin.android)
-            implementation("androidx.browser:browser:1.7.0")
             implementation("dev.whyoleg.cryptography:cryptography-provider-jdk:0.2.0")
         }
 
@@ -156,6 +155,8 @@ android {
         debugImplementation(libs.compose.ui.tooling)
         implementation(libs.androidx.ui.tooling.preview.android)
         testImplementation("junit:junit:4.13.2")
+
+        implementation("androidx.browser:browser:1.7.0")
 
         androidTestImplementation("androidx.test.ext:junit:1.1.3")
         androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
