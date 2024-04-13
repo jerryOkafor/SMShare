@@ -6,7 +6,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_twitter
 
-class XChannelConfig @OptIn(ExperimentalResourceApi::class) constructor(
+@OptIn(ExperimentalResourceApi::class)
+class XChannelConfig(
     override val name: String = "Twitter/X",
     override val description: String = "Profile",
     override val icon: DrawableResource = Res.drawable.ic_twitter

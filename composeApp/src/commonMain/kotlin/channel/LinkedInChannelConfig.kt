@@ -18,7 +18,8 @@ import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_linkedin
 import util.urlEncode
 
-class LinkedInChannelConfig @OptIn(ExperimentalResourceApi::class) constructor(
+@OptIn(ExperimentalResourceApi::class, ExperimentalSerializationApi::class)
+class LinkedInChannelConfig(
     override val name: String = "LinkedIn",
     override val description: String = "Profile or Page",
     override val icon: DrawableResource = Res.drawable.ic_linkedin
@@ -36,7 +37,6 @@ class LinkedInChannelConfig @OptIn(ExperimentalResourceApi::class) constructor(
             "state=$challenge&" +
             "scope=${urlEncode(scope.joinToString(" "))}"
 
-    @OptIn(ExperimentalSerializationApi::class)
     override suspend fun getToken(code: String, redirectUrl: String): TokenResponse {
         val client = HttpClient {
             install(ContentNegotiation) {

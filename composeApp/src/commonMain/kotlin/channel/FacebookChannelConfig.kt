@@ -6,7 +6,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_facebook
 
-class FacebookChannelConfig @OptIn(ExperimentalResourceApi::class) constructor(
+@OptIn(ExperimentalResourceApi::class)
+class FacebookChannelConfig(
     override val name: String = "Facebook",
     override val description: String = "Page or Group",
     override val icon: DrawableResource = Res.drawable.ic_facebook

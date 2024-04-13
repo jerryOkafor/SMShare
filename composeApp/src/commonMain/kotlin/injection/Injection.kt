@@ -20,6 +20,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication {
 }
 
 
+@Suppress("OPT_IN_USAGE_FUTURE_ERROR")
 fun commonModule() = module {
     single { Platform() }
     single { Greeting(get()) }

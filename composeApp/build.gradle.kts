@@ -1,5 +1,8 @@
-import org.jetbrains.compose.ExperimentalComposeLibrary
+@file:Suppress("OPT_IN_USAGE")
+
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +11,9 @@ plugins {
     alias(libs.plugins.kotlinxSerialization)
 }
 
+compose {
+    kotlinCompilerPlugin.set(libs.versions.kotlinCompilerPlugin.get())
+}
 kotlin {
 //    @OptIn(ExperimentalWasmDsl::class)
 //    wasmJs {
@@ -19,12 +25,19 @@ kotlin {
 //        }
 //        binaries.executable()
 //    }
-//    
+
+    //K2 compiler is enabled by default for Kotlin 2.0.0-RC1.
+    //No support yet for KMP so we force kotlin 1.9
+    compilerOptions {
+        languageVersion.set(KotlinVersion.KOTLIN_1_9)
+        apiVersion.set(KotlinVersion.KOTLIN_1_9)
+
+//        freeCompilerArgs.add("")
+    }
+
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
         }
     }
 
@@ -71,10 +84,10 @@ kotlin {
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.tabNavigator)
 
-            implementation("dev.whyoleg.cryptography:cryptography-random:0.2.0")
-            implementation("dev.whyoleg.cryptography:cryptography-core:0.2.0")
+            implementation(libs.dev.whyoleg.cryptography.random)
+            implementation(libs.dev.whyoleg.cryptography.core)
 
-            implementation("org.jetbrains.compose.annotation-internal:annotation:1.6.0")
+            implementation(libs.annotation.internal.annotation)
 
         }
 
@@ -88,19 +101,19 @@ kotlin {
             implementation(libs.ktor.client.android)
 
             api(libs.kotlinx.coroutines.android)
-            
+
             implementation(libs.koin.android)
-            implementation("dev.whyoleg.cryptography:cryptography-provider-jdk:0.2.0")
+            implementation(libs.dev.whyoleg.cryptography.provider.jdk)
         }
 
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
-            implementation("co.touchlab:stately-common:2.0.6")
-            implementation("dev.whyoleg.cryptography:cryptography-provider-apple:0.2.0")
+            implementation(libs.stately.common)
+            implementation(libs.dev.whyoleg.cryptography.provider.apple)
 
 
-            implementation("org.jetbrains.compose.annotation-internal:annotation:1.6.0")
+            implementation(libs.annotation.internal.annotation)
         }
 
         iosTest.dependencies {
@@ -112,10 +125,10 @@ kotlin {
             implementation(libs.commons.codec)
 
             api(libs.kotlinx.coroutines.swingx)
-            
+
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
-            implementation("dev.whyoleg.cryptography:cryptography-provider-jdk:0.2.0")
+            implementation(libs.dev.whyoleg.cryptography.provider.jdk)
         }
     }
 }
@@ -148,19 +161,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
         implementation(libs.androidx.ui.tooling.preview.android)
-        testImplementation("junit:junit:4.13.2")
+        testImplementation(libs.junit)
 
-        implementation("androidx.browser:browser:1.7.0")
+        implementation(libs.androidx.browser)
 
-        androidTestImplementation("androidx.test.ext:junit:1.1.3")
-        androidTestImplementation("androidx.test.ext:junit-ktx:1.1.3")
-        androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+        androidTestImplementation(libs.androidx.test.junit)
+        androidTestImplementation(libs.androidx.junit.ktx)
+        androidTestImplementation(libs.androidx.espresso.core)
     }
 }
 
