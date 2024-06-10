@@ -4,12 +4,12 @@ import ComposeApp
 @main
 struct iOSApp: App {
 	init(){
-        IOSInjectionKt.doInitKoin()
+        Injection_iosKt.doInitKoin()
 	}
+
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
 		}
 	}
-	
 }

@@ -1,3 +1,5 @@
+# SM Share
+
 This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
@@ -24,11 +26,9 @@ channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
 If you face any issues, please report them
 on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
 
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle
-task.
+## Reference
 
-## Todo
-
-- [ ] Add KtLint and Detekt
-- [ ] Add Detekt
-- [ ] Add SQL Delight to track access and refresh tokens for channels.
+[Jetpack Room KMP](https://johnoreilly.dev/posts/jetpack_room_kmp/)
+[Advanced work with the Snackbar in the Jetpack Compose](https://proandroiddev.com/advanced-work-with-the-snackbar-in-the-jetpack-compose-9bb7b7a30d60)
+[FantasyPremierLeague](https://github.com/joreilly/FantasyPremierLeague/tree/main)
+[Tivi](https://github.com/chrisbanes/tivi)

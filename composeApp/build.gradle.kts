@@ -1,19 +1,18 @@
-@file:Suppress("OPT_IN_USAGE")
-
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidApplication)
+    id("com.jerryokafor.smshare.android.application")
     alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.compose.compiler)
+//    alias(libs.plugins.kotlinx.rpc.platform)
 }
 
-compose {
-    kotlinCompilerPlugin.set(libs.versions.kotlinCompilerPlugin.get())
+kotlin {
+    jvmToolchain(17)
 }
+
 kotlin {
 //    @OptIn(ExperimentalWasmDsl::class)
 //    wasmJs {
@@ -21,32 +20,25 @@ kotlin {
 //        browser {
 //            commonWebpackConfig {
 //                outputFileName = "composeApp.js"
+//                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+//                    static = (static ?: mutableListOf()).apply {
+//                        // Serve sources to debug inside browser
+//                        add(project.projectDir.path)
+//                    }
+//                }
 //            }
 //        }
 //        binaries.executable()
 //    }
 
-    //K2 compiler is enabled by default for Kotlin 2.0.0-RC1.
-    //No support yet for KMP so we force kotlin 1.9
-    compilerOptions {
-        languageVersion.set(KotlinVersion.KOTLIN_1_9)
-        apiVersion.set(KotlinVersion.KOTLIN_1_9)
-
-//        freeCompilerArgs.add("")
-    }
-
-    androidTarget {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
-        }
-    }
+    androidTarget {}
 
     jvm("desktop")
 
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
@@ -55,87 +47,67 @@ kotlin {
     }
 
     sourceSets {
+
+        all {
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
+        }
+
         val desktopMain by getting
 
+        androidMain.dependencies {
+            implementation(compose.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
+        }
+
         commonMain.dependencies {
+            implementation(projects.core.domain)
+            implementation(projects.core.datastore)
+            implementation(projects.core.database)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
+            implementation(compose.ui)
             implementation(compose.material)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(libs.dev.chrisbanes.windowSizeClass)
+
+            // ViewModel
+            implementation(libs.androidx.lifecycle.viewmodel)
+
+//            implementation(libs.kotlinx.rpc.runtime.client)
+//            implementation(libs.kotlinx.rpc.runtime.serialization.json)
+//            implementation(libs.kotlinx.rpc.transport.ktor.client)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.websockets)
+
+            implementation(libs.navigation.compose)
+
+            implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc05")
+            implementation("com.github.skydoves:flexible-bottomsheet-material3:0.1.3")
 
             api(libs.koin.core)
             api(libs.koin.test)
             api(libs.koin.compose)
-
-            api(libs.kotlinx.coroutines.core)
-            api(libs.kotlinx.datetime)
-            api(libs.ktor.client.core)
-            api(libs.ktor.client.content.negotiation)
-            api(libs.ktor.serialization.kotlinx.json)
-
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.screenModel)
-            implementation(libs.voyager.bottomSheetNavigator)
-            implementation(libs.voyager.koin)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.tabNavigator)
-
-            implementation(libs.dev.whyoleg.cryptography.random)
-            implementation(libs.dev.whyoleg.cryptography.core)
-
-            implementation(libs.annotation.internal.annotation)
-
-        }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.client.android)
-
-            api(libs.kotlinx.coroutines.android)
-
-            implementation(libs.koin.android)
-            implementation(libs.dev.whyoleg.cryptography.provider.jdk)
-        }
-
-
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
-            implementation(libs.stately.common)
-            implementation(libs.dev.whyoleg.cryptography.provider.apple)
-
-
-            implementation(libs.annotation.internal.annotation)
-        }
-
-        iosTest.dependencies {
-            implementation(libs.kotlin.test)
+            api(libs.koin.compose.viewmodel.kmp)
         }
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.commons.codec)
-
             api(libs.kotlinx.coroutines.swingx)
-
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
-            implementation(libs.dev.whyoleg.cryptography.provider.jdk)
         }
     }
 }
 
 android {
     namespace = "com.jerryokafor.smshare"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
@@ -143,12 +115,8 @@ android {
 
     defaultConfig {
         applicationId = "com.jerryokafor.smshare"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -161,22 +129,30 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerPlugin.get()
     }
     dependencies {
+        implementation(libs.androidx.core.splashscreen)
+        implementation(libs.androidx.activity.ktx)
         debugImplementation(libs.compose.ui.tooling)
-        implementation(libs.androidx.ui.tooling.preview.android)
-        testImplementation(libs.junit)
-
         implementation(libs.androidx.browser)
 
+        testImplementation(libs.junit)
+
         androidTestImplementation(libs.androidx.test.junit)
-        androidTestImplementation(libs.androidx.junit.ktx)
         androidTestImplementation(libs.androidx.espresso.core)
     }
 }
-
+dependencies {
+    implementation(libs.androidx.material3.android)
+}
 
 compose.desktop {
     application {
@@ -188,8 +164,4 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
-}
-
-compose.experimental {
-    web.application {}
 }

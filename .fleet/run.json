@@ -35,6 +35,15 @@
             "initScripts": {
                 "flmapper": "ext.mapPath = { path -> null }"
             }
-        }
+        },
+        {
+            "type": "gradle",
+            "name": "Run Server",
+            "workingDir": "$PROJECT_DIR$",
+            "allowParallelRun": true,
+            "tasks": [
+                ":server:run"
+            ],
+        },
     ]
 }
