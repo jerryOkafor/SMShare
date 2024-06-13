@@ -6,12 +6,14 @@ import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 
 class IOSChannelAuthManager : ChannelAuthManager {
+    override var currentChannelConfig: ChannelConfig? = null
+
     override suspend fun authenticateUser(channelConfig: ChannelConfig) {
-        val oauth2Url =
-            channelConfig.createLoginUrl(
-                redirectUrl = getRedirectUrl(),
-                challenge = getChallenge(),
-            )
+        currentChannelConfig = channelConfig
+        val oauth2Url = channelConfig.createLoginUrl(
+            redirectUrl = getRedirectUrl(),
+            challenge = getChallenge(),
+        )
 
         NSURL.URLWithString(oauth2Url)?.let {
             val result = UIApplication.sharedApplication.openURL(it)

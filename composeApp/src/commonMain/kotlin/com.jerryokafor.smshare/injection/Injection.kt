@@ -1,12 +1,13 @@
 package com.jerryokafor.smshare.injection
 
+import com.jerryokafor.core.database.injection.commonDatabaseModules
 import com.jerryokafor.smshare.AppViewModel
 import com.jerryokafor.smshare.channel.ChannelConfig
 import com.jerryokafor.smshare.channel.FacebookChannelConfig
 import com.jerryokafor.smshare.channel.LinkedInChannelConfig
 import com.jerryokafor.smshare.channel.XChannelConfig
 import com.jerryokafor.smshare.core.domain.Injection.domainModule
-import com.jerryokafor.smshare.core.network.injection.networkModule
+import com.jerryokafor.smshare.core.network.injection.commonNetworkModule
 import com.jerryokafor.smshare.screens.compose.ComposeMessageViewModel
 import org.koin.compose.viewmodel.dsl.viewModelOf
 import org.koin.core.KoinApplication
@@ -19,25 +20,25 @@ import screens.login.LoginViewModel
 fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication {
     return startKoin {
         appDeclaration()
-        modules(commonModule(), domainModule(), networkModule())
+        modules(commonModule(), domainModule(), commonNetworkModule(), commonDatabaseModules())
     }
 }
 
-fun commonModule() =
-    module {
-        single<List<ChannelConfig>> {
-            listOf(
-                LinkedInChannelConfig(httpClient = get()),
-                FacebookChannelConfig(),
-                XChannelConfig(),
-            )
-        }
-
-        viewModelOf(::AppViewModel)
-        viewModelOf(::LoginViewModel)
-        viewModelOf(::CreateAccountViewModel)
-        viewModelOf(::ComposeMessageViewModel)
+fun commonModule() = module {
+    single<List<ChannelConfig>> {
+        listOf(
+            LinkedInChannelConfig(httpClient = get()),
+            FacebookChannelConfig(),
+            XChannelConfig(),
+        )
     }
+
+
+    viewModelOf(::AppViewModel)
+    viewModelOf(::LoginViewModel)
+    viewModelOf(::CreateAccountViewModel)
+    viewModelOf(::ComposeMessageViewModel)
+}
 
 // suspend inline fun <reified T : RPC> HttpClient.bindRPC(): T {
 //    return rpc {

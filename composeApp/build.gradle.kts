@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     id("com.jerryokafor.smshare.android.application")
@@ -64,6 +63,7 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
             implementation(projects.core.database)
+            implementation(projects.core.config)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -152,6 +152,7 @@ android {
 }
 dependencies {
     implementation(libs.androidx.material3.android)
+    implementation(project(":core:config"))
 }
 
 compose.desktop {

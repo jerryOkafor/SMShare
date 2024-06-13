@@ -32,3 +32,5 @@ on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
 [Advanced work with the Snackbar in the Jetpack Compose](https://proandroiddev.com/advanced-work-with-the-snackbar-in-the-jetpack-compose-9bb7b7a30d60)
 [FantasyPremierLeague](https://github.com/joreilly/FantasyPremierLeague/tree/main)
 [Tivi](https://github.com/chrisbanes/tivi)
+[Compose Custom Window frame](https://github.com/amir1376/compose-custom-window-frame)
+[Targeting Android in KMP](https://medium.com/kodein-koders/targeting-android-in-a-kotlin-multiplatform-mobile-library-b6ab75469287)

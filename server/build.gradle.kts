@@ -31,9 +31,9 @@ dependencies {
     implementation(libs.koin.logger.slf4j)
 
     // Kotlinx RPC
-    implementation(libs.kotlinx.rpc.runtime.server)
-    implementation(libs.kotlinx.rpc.runtime.serialization.json)
-    implementation(libs.kotlinx.rpc.transport.ktor.server)
+//    implementation(libs.kotlinx.rpc.runtime.server)
+//    implementation(libs.kotlinx.rpc.runtime.serialization.json)
+//    implementation(libs.kotlinx.rpc.transport.ktor.server)
 
     testImplementation(libs.ktor.server.tests)
 //    testImplementation(libs.kotlinx.rpc.runtime.client)

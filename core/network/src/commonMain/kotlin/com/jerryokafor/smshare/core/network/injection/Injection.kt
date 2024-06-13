@@ -9,8 +9,7 @@ import kotlinx.serialization.json.JsonNamingStrategy
 import org.koin.dsl.module
 
 @OptIn(ExperimentalSerializationApi::class)
-fun networkModule() =
-    module {
+fun commonNetworkModule() = module {
         single<HttpClient> {
             HttpClient {
                 install(ContentNegotiation) {

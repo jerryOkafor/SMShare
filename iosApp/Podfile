@@ -1,0 +1,12 @@
+use_frameworks!
+platform :ios, '17.5'
+
+install! 'cocoapods', :deterministic_uuids => false
+
+target 'iosApp' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for iosApp
+  pod 'Reachability', '3.7.5'
+end

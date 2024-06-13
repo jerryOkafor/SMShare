@@ -30,7 +30,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.jerryokafor.smshare.core.model.ChannelType
+import com.jerryokafor.smshare.core.model.AccountType
 import org.jetbrains.compose.resources.painterResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.avatar6
@@ -39,11 +39,11 @@ import smshare.composeapp.generated.resources.ic_linkedin
 import smshare.composeapp.generated.resources.ic_twitter
 
 @Composable
-fun iconForChannel(type: ChannelType) =
+fun iconIndicatorForAccountType(type: AccountType) =
     when (type) {
-        ChannelType.LINKEDIN -> painterResource(Res.drawable.ic_linkedin)
-        ChannelType.TWITTER_X -> painterResource(Res.drawable.ic_twitter)
-        ChannelType.FACEBOOK -> painterResource(Res.drawable.ic_facebook)
+        AccountType.LINKEDIN -> painterResource(Res.drawable.ic_linkedin)
+        AccountType.TWITTER_X -> painterResource(Res.drawable.ic_twitter)
+        AccountType.FACEBOOK -> painterResource(Res.drawable.ic_facebook)
     }
 
 @Composable

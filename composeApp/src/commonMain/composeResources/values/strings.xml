@@ -4,4 +4,11 @@
     <string name="main_nav_title_drafts">Drafts</string>
     <string name="main_nav_title_analytics">Analytics</string>
     <string name="main_nav_title_settings">Settings</string>
+
+    <!--Navigation-->
+    <string name="title_accounts">Accounts</string>
+    <string name="title_add_account">Add account</string>
+    <string name="title_manage_tags">Manage Tags</string>
+    <string name="title_more">More</string>
+    <string name="title_logout">Logout</string>
 </resources>

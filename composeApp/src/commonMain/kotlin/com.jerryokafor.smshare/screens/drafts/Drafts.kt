@@ -35,43 +35,21 @@ private fun DraftsPreview() {
 
 @Composable
 fun Drafts(
-    onSetupTopAppBar: (SMShareTopAppBarState) -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit = {},
-    onMoreMenuClick: () -> Unit = {},
+    onSetupTopAppBar: () -> Unit = {},
+    onSetUpBottomAppBar: () -> Unit = {}
 ) {
-    val title = stringResource(Res.string.main_nav_title_drafts)
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
 
     LaunchedEffect(true) {
-        currentOnSetupTopAppBar(
-            SMShareTopAppBarState(
-                title = {
-                    Text(
-                        text = title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                actions = {
-                    IconButton(onClick = onMoreMenuClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "More",
-                        )
-                    }
-                },
-            ),
-        )
-
+        currentOnSetupTopAppBar()
         currentOnSetUpBottomAppBar()
     }
     Box(Modifier.fillMaxSize()) {
         Text(
-            modifier =
-                Modifier.align(
-                    Alignment.Center,
-                ),
+            modifier = Modifier.align(
+                Alignment.Center,
+            ),
             text = "Welcome to drafts",
         )
     }
@@ -80,15 +58,13 @@ fun Drafts(
 val draftsRoute = "drafts"
 
 fun NavGraphBuilder.draftsScreen(
-    onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit,
-    onMoreMenuClick: () -> Unit,
+    onSetupTopAppBar: () -> Unit = {},
+    onSetUpBottomAppBar: () -> Unit
 ) {
     composable(route = draftsRoute) {
         Drafts(
             onSetupTopAppBar = onSetupTopAppBar,
-            onSetUpBottomAppBar = onSetUpBottomAppBar,
-            onMoreMenuClick = onMoreMenuClick,
+            onSetUpBottomAppBar = onSetUpBottomAppBar
         )
     }
 }

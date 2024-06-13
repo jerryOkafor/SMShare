@@ -1,11 +1,22 @@
 plugins {
+    kotlin("native.cocoapods")
     id("com.jerryokafor.smshare.android.library")
     id("com.jerryokafor.smshare.multiplatform")
     alias(libs.plugins.kotlinx.serialization)
 }
 
+group = "com.jerryokafor.smshare"
+version = "1.0.0"
+
 kotlin {
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.ktor.client.android)
+            implementation(libs.dev.whyoleg.cryptography.provider.jdk)
+
+            implementation(libs.androidx.core.ktx)
+        }
+
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
 
@@ -19,11 +30,6 @@ kotlin {
             implementation(libs.dev.whyoleg.cryptography.core)
         }
 
-        androidMain.dependencies {
-            implementation(libs.ktor.client.android)
-            implementation(libs.dev.whyoleg.cryptography.provider.jdk)
-        }
-
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.dev.whyoleg.cryptography.provider.apple)
@@ -35,8 +41,27 @@ kotlin {
             implementation(libs.dev.whyoleg.cryptography.provider.jdk)
         }
     }
+
+    cocoapods {
+        summary = "SM Share Core Network  - part of SM Share Project"
+        homepage = "https://github.com/jerryOkafor/SMShare"
+        ios.deploymentTarget = libs.versions.iosDeploymentVersion.get()
+        license = "MIT"
+
+//        extraSpecAttributes["libraries"] = "'c++', 'sqlite3'"
+//        extraSpecAttributes.put("swift_version", "\"5.0\"")
+
+        // https://github.com/tonymillion/Reachability
+        pod("Reachability") {
+            version = libs.versions.reachability.get()
+        }
+    }
+
 }
 
 android {
     namespace = "com.jerryokafor.smshare.core.network"
+
+    //Include our manifest with required permission for merger
+    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 }

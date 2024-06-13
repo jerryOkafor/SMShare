@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -57,9 +58,9 @@ import androidx.navigation.compose.composable
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.ChannelImage
-import com.jerryokafor.smshare.component.ChannelItemMenu
+import com.jerryokafor.smshare.screens.navigation.ChannelItemMenu
 import com.jerryokafor.smshare.component.SMSShareTextButton
-import com.jerryokafor.smshare.component.iconForChannel
+import com.jerryokafor.smshare.component.iconIndicatorForAccountType
 import com.jerryokafor.smshare.theme.FillingSpacer
 import com.jerryokafor.smshare.theme.OneVerticalSpacer
 import com.jerryokafor.smshare.theme.ThreeVerticalSpacer
@@ -111,34 +112,36 @@ fun ComposeMessage(
     val currentNnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
     LaunchedEffect(true) {
         currentOnSetupTopAppBar(
-            SMShareTopAppBarState(
-                title = {
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        items(uiState.targetChannels.filter { it.isSelected }) { channel ->
-                            ChannelImage(
-                                modifier = Modifier.size(40.dp),
-                                avatar = painterResource(Res.drawable.avatar6),
-                                indicator = iconForChannel(channel.type),
-                                contentDescription = "",
-                            )
-                        }
-
-                        item {
-                            IconButton(onClick = { showBottomSheet = true }) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Add,
-                                    contentDescription = "Add new target channel",
+            SMShareTopAppBarState {
+                CenterAlignedTopAppBar(
+                    title = {
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            items(uiState.targetAccounts.filter { it.isSelected }) { channel ->
+                                ChannelImage(
+                                    modifier = Modifier.size(40.dp),
+                                    avatar = painterResource(Res.drawable.avatar6),
+                                    indicator = iconIndicatorForAccountType(channel.type),
+                                    contentDescription = "",
                                 )
                             }
+
+                            item {
+                                IconButton(onClick = { showBottomSheet = true }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Add,
+                                        contentDescription = "Add new target channel",
+                                    )
+                                }
+                            }
                         }
-                    }
-                },
-                actions = {},
-            ),
+                    },
+                    actions = {},
+                )
+            }
         )
 
         currentNnSetUpBottomAppBar(
@@ -177,11 +180,11 @@ fun ComposeMessage(
             maxLines = 10,
             textStyle = MaterialTheme.typography.bodyLarge,
             colors =
-                RichTextEditorDefaults.richTextEditorColors(
-                    containerColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                ),
+            RichTextEditorDefaults.richTextEditorColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
             placeholder = { Text("What are we doing today?") },
             shape = RichTextEditorDefaults.outlinedShape,
         )
@@ -242,13 +245,13 @@ fun ComposeMessage(
                     HorizontalDivider()
                     OneVerticalSpacer()
                 }
-                items(uiState.targetChannels) { channel ->
+                items(uiState.targetAccounts) { channel ->
                     ChannelItemMenu(
                         modifier = Modifier.padding(end = 16.dp),
                         name = channel.name,
                         color = Color.Transparent,
                         avatar = painterResource(Res.drawable.avatar6),
-                        indicator = iconForChannel(channel.type),
+                        indicator = iconIndicatorForAccountType(channel.type),
                         onClick = {
                             if (channel.isSelected) {
                                 viewModel.removeTargetChannel(channel.type)
@@ -267,16 +270,16 @@ fun ComposeMessage(
                     }
                     HorizontalDivider(
                         modifier =
-                            Modifier.height(0.5.dp)
-                                .padding(start = 80.dp, end = 8.dp),
+                        Modifier.height(0.5.dp)
+                            .padding(start = 80.dp, end = 8.dp),
                     )
                 }
 
                 item {
                     HorizontalDivider(
                         modifier =
-                            Modifier.height(0.5.dp)
-                                .padding(start = 80.dp, end = 8.dp),
+                        Modifier.height(0.5.dp)
+                            .padding(start = 80.dp, end = 8.dp),
                     )
                     Surface(onClick = {
                         scope.launch {
@@ -290,8 +293,8 @@ fun ComposeMessage(
                     }, color = Color.Transparent) {
                         Row(
                             modifier =
-                                Modifier.fillMaxWidth()
-                                    .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
+                            Modifier.fillMaxWidth()
+                                .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
@@ -317,8 +320,8 @@ fun ComposeMessage(
                     }
                     HorizontalDivider(
                         modifier =
-                            Modifier.height(0.5.dp)
-                                .padding(start = 80.dp, end = 8.dp),
+                        Modifier.height(0.5.dp)
+                            .padding(start = 80.dp, end = 8.dp),
                     )
                 }
                 item { ThreeVerticalSpacer() }

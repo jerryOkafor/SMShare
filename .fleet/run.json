@@ -10,14 +10,24 @@
         },
         {
             "name": "iosApp",
-            "type": "xcode-app",
-            "workingDir": "$PROJECT_DIR$",
-            "buildTarget": {
-                "project": "iosApp",
-                "target": "iosApp"
-            },
-            "configuration": "Debug",
-            "destination": "iPhone (2)"
+            "type": "command",
+            "workingDir": "$PROJECT_DIR$/iosApp/",
+            "program": "xcodebuild",
+            "args": [
+                "-workspace",
+                "$PROJECT_DIR$/iosApp/iosApp.xcworkspace",
+                "-scheme",
+                "iosApp",
+                "-configuration",
+                "Debug",
+                "OBJROOT=$PROJECT_DIR$/build/ios",
+                "SYMROOT=$PROJECT_DIR$/build/ios",
+                "-destination",
+                "platform=iOS,name=iPhone (2)",
+                "-allowProvisioningDeviceRegistration",
+                "-allowProvisioningUpdates",
+                "install"
+            ]
         },
         {
             "name": "composeApp [Desktop]",
@@ -27,7 +37,7 @@
                 "desktopRun"
             ],
             "args": [
-                "-DmainClass=MainKt",
+                "-DmainClass=com.jerryokafor.smshare.MainKt",
                 "--quiet",
                 "-p",
                 "$PROJECT_DIR$/composeApp"
@@ -47,3 +57,4 @@
         },
     ]
 }
+

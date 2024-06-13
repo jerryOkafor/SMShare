@@ -35,42 +35,22 @@ private fun AnalyticsPreview() {
 
 @Composable
 fun Analytics(
-    onSetupTopAppBar: (SMShareTopAppBarState) -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit = {},
-    onMoreMenuClick: () -> Unit = {},
+    onSetupTopAppBar: () -> Unit = {},
+    onSetUpBottomAppBar: () -> Unit = {}
 ) {
-    val title = stringResource(Res.string.main_nav_title_analytics)
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
 
     LaunchedEffect(true) {
-        currentOnSetupTopAppBar(
-            SMShareTopAppBarState(
-                title = {
-                    Text(
-                        text = title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                },
-                actions = {
-                    IconButton(onClick = onMoreMenuClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "More",
-                        )
-                    }
-                },
-            ),
-        )
+        currentOnSetupTopAppBar()
         currentOnSetUpBottomAppBar()
     }
     Box(Modifier.fillMaxSize()) {
         Text(
             modifier =
-                Modifier.align(
-                    Alignment.Center,
-                ),
+            Modifier.align(
+                Alignment.Center,
+            ),
             text = "Welcome to analytics",
         )
     }
@@ -79,15 +59,13 @@ fun Analytics(
 val analyticsRoute = "analytics"
 
 fun NavGraphBuilder.analyticsScreen(
-    onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit,
-    onMoreMenuClick: () -> Unit,
+    onSetupTopAppBar: () -> Unit = {},
+    onSetUpBottomAppBar: () -> Unit
 ) {
     composable(route = analyticsRoute) {
         Analytics(
             onSetupTopAppBar = onSetupTopAppBar,
-            onSetUpBottomAppBar = onSetUpBottomAppBar,
-            onMoreMenuClick = onMoreMenuClick,
+            onSetUpBottomAppBar = onSetUpBottomAppBar
         )
     }
 }
