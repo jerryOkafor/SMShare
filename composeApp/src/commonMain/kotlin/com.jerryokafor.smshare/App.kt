@@ -119,9 +119,14 @@ import com.jerryokafor.smshare.screens.settings.settingsScreen
 import com.jerryokafor.smshare.tags.navigateToTags
 import com.jerryokafor.smshare.tags.tagsScreen
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.avatar6
 import smshare.composeapp.generated.resources.ic_twitter
+import smshare.composeapp.generated.resources.main_nav_title_analytics
+import smshare.composeapp.generated.resources.main_nav_title_drafts
+import smshare.composeapp.generated.resources.main_nav_title_posts
+import smshare.composeapp.generated.resources.main_nav_title_settings
 
 expect val DEV_SERVER_HOST: String
 
@@ -240,6 +245,7 @@ fun Home(
     val appUiState by viewModel.userData.collectAsState()
     val isOnline by viewModel.isOnLine.collectAsState()
     val accounts by viewModel.accounts.collectAsState()
+    val currentAccount by viewModel.currentAccounts.collectAsState()
 
     val currentOnNetChange by rememberUpdatedState(onNetChange)
     LaunchedEffect(viewModel, isOnline) {
@@ -275,6 +281,16 @@ fun Home(
         }
     }
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val title = when (navBackStackEntry?.destination?.route) {
+        NavItem.Posts().route() -> stringResource(Res.string.main_nav_title_posts)
+        NavItem.Drafts().route() -> stringResource(Res.string.main_nav_title_drafts)
+        NavItem.Analytics().route() -> stringResource(Res.string.main_nav_title_analytics)
+        NavItem.Settings().route() -> stringResource(Res.string.main_nav_title_settings)
+        else -> "currentRoute"
+    }
+
+
     val mainTopAppBar: @Composable (() -> Unit) = {
         CenterAlignedTopAppBar(
             title = {
@@ -283,46 +299,50 @@ fun Home(
                 Box(
                     modifier = Modifier.wrapContentSize(Alignment.TopStart)
                 ) {
-                    TextButton(onClick = { expanded = true }) {
-                        ChannelWithName(
-                            modifier = Modifier.wrapContentSize(),
-                            name = "Jerry Okafor",
-                            avatarSize = 38.dp,
-                            avatar = painterResource(Res.drawable.avatar6),
-                            indicator = painterResource(Res.drawable.ic_twitter),
-                        )
-                    }
+                    if (currentAccount != null) {
+                        TextButton(onClick = { expanded = true }) {
+                            ChannelWithName(
+                                modifier = Modifier.wrapContentSize(),
+                                name = currentAccount!!.name,
+                                avatarSize = 38.dp,
+                                avatar = painterResource(Res.drawable.avatar6),
+                                indicator = painterResource(Res.drawable.ic_twitter),
+                            )
+                        }
 
-                    DropdownMenu(
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        scrollState = scrollState
-                    ) {
-                        accounts.fastForEach { account ->
-                            DropdownMenuItem(
-                                modifier = Modifier.background(MaterialTheme.colorScheme.surface),
-                                colors = MenuDefaults.itemColors(),
-                                text = {
-                                    ChannelWithName(
-                                        modifier = Modifier.padding(
-                                            horizontal = 8.dp,
-                                            vertical = 4.dp
-                                        ),
-                                        name = account.name,
-                                        avatarSize = 38.dp,
-                                        avatar = painterResource(Res.drawable.avatar6),
-                                        indicator = iconIndicatorForAccountType(account.type),
-                                    )
-                                },
-                                onClick = { expanded = false })
+                        DropdownMenu(
+                            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            scrollState = scrollState
+                        ) {
+                            accounts.fastForEach { account ->
+                                DropdownMenuItem(
+                                    modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+                                    colors = MenuDefaults.itemColors(),
+                                    text = {
+                                        ChannelWithName(
+                                            modifier = Modifier.padding(
+                                                horizontal = 8.dp,
+                                                vertical = 4.dp
+                                            ),
+                                            name = account.name,
+                                            avatarSize = 38.dp,
+                                            avatar = painterResource(Res.drawable.avatar6),
+                                            indicator = iconIndicatorForAccountType(account.type),
+                                        )
+                                    },
+                                    onClick = { expanded = false })
+                            }
                         }
-                    }
-                    LaunchedEffect(expanded) {
-                        if (expanded) {
-                            // Scroll to show the bottom menu items.
-                            scrollState.scrollTo(scrollState.maxValue)
+                        LaunchedEffect(expanded) {
+                            if (expanded) {
+                                // Scroll to show the bottom menu items.
+                                scrollState.scrollTo(scrollState.maxValue)
+                            }
                         }
+                    } else {
+                        Text(text = title)
                     }
                 }
 
@@ -619,7 +639,18 @@ fun Home(
                                 },
                                 floatingActionButton = {
                                     AnimatedVisibility(appState.currentTopLevelDestination != null) {
-                                        ExtendedFloatingActionButton(onClick = { navController.navigateToCompose() }) {
+                                        ExtendedFloatingActionButton(onClick = {
+                                            if (accounts.isEmpty() && currentAccount == null) {
+                                                scope.launch {
+                                                    onShowSnackbar(
+                                                        "No account added, please add account to continue",
+                                                        ""
+                                                    )
+                                                }
+                                            } else {
+                                                navController.navigateToCompose()
+                                            }
+                                        }) {
                                             Row(
                                                 modifier = Modifier,
                                                 verticalAlignment = Alignment.CenterVertically,

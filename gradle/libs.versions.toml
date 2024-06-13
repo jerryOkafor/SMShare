@@ -11,13 +11,13 @@ composeMultiplatform = "1.6.11"
 #https://androidx.dev/storage/compose-compiler/repository
 kotlinCompilerPlugin = "1.5.14"
 navigationCompose = "2.7.0-alpha07"
-uiToolingPreviewAndroid = "1.7.0-beta02"
+uiToolingPreviewAndroid = "1.7.0-beta03"
 dev-chrisbanes-windowSizeClass = "0.5.0"
 
 # Room
-room = "2.7.0-alpha03"
+room = "2.7.0-alpha04"
 datastore = "1.1.1"
-sqlite = "2.5.0-alpha03"
+sqlite = "2.5.0-alpha04"
 atomicfu = "0.24.0"
 okio = "3.9.0"
 
@@ -47,7 +47,8 @@ androidx-test-junit = "1.1.5"
 browser = "1.8.0"
 junit = "4.13.2"
 ktor = "2.3.11"
-commonsCodec = "1.15"
+skie = "0.6.2"
+commonsCodec = "1.16.1"
 logback = "1.5.6"
 kotlinx-serialization-json = "1.6.3"
 dateTime = "0.6.0"
@@ -55,11 +56,11 @@ coroutines = "1.8.1"
 kotlinx-rpc = "0.1.0"
 activityKtx = "1.9.0"
 splashscreen = "1.0.1"
-lifecycleViewModel = "2.8.1"
+lifecycleViewModel = "2.8.2"
 esugaJdkLibs = "2.0.4"
 cacheFix = "3.0.1"
 material3Android = "1.2.1"
-googleTruth = "1.0.1"
+googleTruth = "1.1.5"
 archCoreTesting = "2.2.0"
 
 [libraries]
@@ -103,6 +104,7 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 #Room
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 # Datastore
@@ -123,6 +125,7 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
 
 commons-codec = { module = "commons-codec:commons-codec", version.ref = "commonsCodec" }
+skie-annotations = { module = "co.touchlab.skie:configuration-annotations", version.ref = "skie" }
 
 # ktor
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
@@ -188,13 +191,10 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-
 kotlinx-rpc = { id = "org.jetbrains.kotlinx.rpc.plugin", version.ref = "kotlinx-rpc" }
 kotlinx-rpc-platform = { id = "org.jetbrains.kotlinx.rpc.platform", version.ref = "kotlinx-rpc" }
-
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
 androidx-room = { id = "androidx.room", version.ref = "room" }
-
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }

@@ -22,26 +22,23 @@
  * SOFTWARE.
  */
 
-package com.jerryokafor.smshare
+package com.jerryokafor.smshare.injection
 
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberWindowState
-import com.jerryokafor.smshare.injection.desktopModule
-import com.jerryokafor.smshare.injection.initKoin
+import com.jerryokafor.core.database.jvmDBModule
+import com.jerryokafor.core.datastore.jvmDataStoreModule
+import com.jerryokafor.smshare.DesktopChannelAuthManager
+import com.jerryokafor.smshare.channel.ChannelAuthManager
+import com.jerryokafor.smshare.core.network.injection.jvmNetworkModule
+import com.jerryokafor.smshare.platform.Platform
+import org.koin.dsl.module
 
+fun desktopModule() = module {
+    includes(
+        jvmDataStoreModule(),
+        jvmDBModule(),
+        jvmNetworkModule()
+    )
+    single<ChannelAuthManager> { DesktopChannelAuthManager() }
 
-private val koin = initKoin {
-    modules(desktopModule())
-}.koin
-
-fun main() = application {
-    val windowState = rememberWindowState()
-    Window(
-        onCloseRequest = ::exitApplication,
-        state = windowState,
-        title = "SM Share",
-        content = {
-            App()
-        })
+    single { Platform() }
 }

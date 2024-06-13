@@ -12,7 +12,11 @@ import org.koin.core.component.inject
 import org.koin.dsl.module
 
 fun iOSModules() = module {
-    includes(nativeDBModule(), nativeUserDatastoreModule(), iosNetworkModules())
+    includes(
+        nativeDBModule(),
+        nativeUserDatastoreModule(),
+        iosNetworkModules()
+    )
 
     single { Platform() }
     single<ChannelAuthManager> { IOSChannelAuthManager() }

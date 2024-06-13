@@ -180,12 +180,19 @@ fun SideNav(
                             HorizontalDivider(
                                 modifier = Modifier
                                     .height(0.5.dp)
-                                    .padding(
-                                        start = 80.dp,
-                                        end = 8.dp
-                                    ),
+                                    .padding(start = 80.dp, end = 8.dp)
                             )
                         }
+                    }
+
+                    if (accounts.isEmpty()) {
+                        Row(
+                            modifier = Modifier.padding(
+                                vertical = 8.dp,
+                                horizontal = 16.dp
+                            ).fillParentMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) { Text("No Account", color = MaterialTheme.colorScheme.error) }
                     }
                 }
             }

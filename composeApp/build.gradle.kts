@@ -60,9 +60,9 @@ kotlin {
         }
 
         commonMain.dependencies {
+            implementation(projects.core.database)
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
-            implementation(projects.core.database)
             implementation(projects.core.config)
 
             implementation(compose.runtime)

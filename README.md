@@ -1,5 +1,7 @@
 # SM Share
 
+![kotlin-version](https://img.shields.io/badge/kotlin-2.0.0-blue?logo=kotlin)
+
 This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
@@ -34,3 +36,4 @@ on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
 [Tivi](https://github.com/chrisbanes/tivi)
 [Compose Custom Window frame](https://github.com/amir1376/compose-custom-window-frame)
 [Targeting Android in KMP](https://medium.com/kodein-koders/targeting-android-in-a-kotlin-multiplatform-mobile-library-b6ab75469287)
+[Understanding and Configuring your Kotlin Multiplatform Mobile Test Suite](https://touchlab.co/understanding-and-configuring-your-kmm-test-suite)

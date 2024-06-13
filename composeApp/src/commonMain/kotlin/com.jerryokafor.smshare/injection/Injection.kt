@@ -20,7 +20,12 @@ import screens.login.LoginViewModel
 fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication {
     return startKoin {
         appDeclaration()
-        modules(commonModule(), domainModule(), commonNetworkModule(), commonDatabaseModules())
+        modules(
+            commonModule(),
+            domainModule(),
+            commonNetworkModule(),
+            commonDatabaseModules()
+        )
     }
 }
 

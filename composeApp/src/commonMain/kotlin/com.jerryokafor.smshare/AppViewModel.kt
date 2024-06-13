@@ -3,6 +3,7 @@ package com.jerryokafor.smshare
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import com.jerryokafor.core.database.AppDatabase
 import com.jerryokafor.core.datastore.UserData
 import com.jerryokafor.core.datastore.UserDataStore
 import com.jerryokafor.smshare.channel.ChannelAuthManager
@@ -26,6 +27,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 open class AppViewModel : ViewModel(), KoinComponent {
+    private val database: AppDatabase by inject()
     private val userDataStore: UserDataStore by inject()
     private val supportedChannels: List<ChannelConfig> by inject()
     private val networkMonitor: NetworkMonitor by inject()
@@ -54,18 +56,27 @@ open class AppViewModel : ViewModel(), KoinComponent {
             initialValue = false,
         )
 
-    private val _accounts = MutableStateFlow<List<Account>>(emptyList())
-    val accounts = _accounts.asStateFlow()
-
-    init {
-        _accounts.update {
-            listOf(
-                Account(name = "Jerry Okafor", type = AccountType.FACEBOOK),
-                Account(name = "Jerry Okafor", type = AccountType.LINKEDIN),
-                Account(name = "Jerry Okafor", type = AccountType.TWITTER_X),
-            )
+    val accounts = database.getAccountDao().getAllAsFlow()
+        .map {
+            it.mapIndexed { index, entity ->
+                Account(
+                    type = AccountType.TWITTER_X,
+                    name = entity.name,
+                    description = entity.description,
+                    isSelected = index == 0,
+                    avatarUrl = entity.avatarUrl,
+                    postsCount = 0
+                )
+            }
         }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList(),
+        )
+
+    private val _currentAccounts = MutableStateFlow<Account?>(null)
+    val currentAccounts = _currentAccounts.asStateFlow()
 
     fun logout() {
         viewModelScope.launch {
@@ -77,13 +88,26 @@ open class AppViewModel : ViewModel(), KoinComponent {
         Logger.d("Fetching Token: $code | $state")
         viewModelScope.launch {
             try {
-                val tokenResponse =
-                    channelConfigAuthManager.currentChannelConfig?.requestAccessToken(
+                val currentChannelConfig = channelConfigAuthManager.currentChannelConfig
+                val tokenResponse = currentChannelConfig?.requestAccessToken(
                         code = code,
                         redirectUrl = SMShareConfig.redirectUrl
                     )
 
-                Logger.d("access Token: $tokenResponse")
+//                val accountDao = database.getAccountDao()
+//                val accountEntity = AccountEntity(
+//                    name = currentChannelConfig?.name ?: "",
+//                    description = currentChannelConfig?.description ?: "",
+//                    avatarUrl = tokenResponse?.accessToken ?: "",
+//                    accessToken = tokenResponse?.accessToken ?: "",
+//                    expiresInt = tokenResponse?.expiresIn ?: 0,
+//                    scope = tokenResponse?.scope ?: "",
+//                    created = ""
+//                )
+//
+//                accountDao.insert(accountEntity)
+
+//                Logger.d("access Token: $tokenResponse -> $accountEntity")
             } catch (e: Exception) {
                 Logger.w(e.message ?: "Error creating access token")
             }

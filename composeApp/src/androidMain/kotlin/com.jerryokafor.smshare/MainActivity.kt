@@ -39,9 +39,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Consumer
-import androidx.lifecycle.lifecycleScope
-import com.jerryokafor.smshare.channel.ChannelAuthManager
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -85,7 +82,7 @@ class MainActivity : ComponentActivity() {
                             // create session id here
                             val code = data.getQueryParameter("code")!!
                             val state = data.getQueryParameter("state")
-                            appViewModel.authenticateChannel(code,state)
+                            appViewModel.authenticateChannel(code, state)
                         }
                     }
                 }
