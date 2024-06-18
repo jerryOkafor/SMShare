@@ -2,8 +2,11 @@ package com.jerryokafor.smshare
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import co.touchlab.kermit.Logger
+import com.jerryokafor.core.database.AccountEntity
 import com.jerryokafor.core.database.AppDatabase
+import com.jerryokafor.core.database.toDomainModel
 import com.jerryokafor.core.datastore.UserData
 import com.jerryokafor.core.datastore.UserDataStore
 import com.jerryokafor.smshare.channel.ChannelAuthManager
@@ -18,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -56,17 +60,19 @@ open class AppViewModel : ViewModel(), KoinComponent {
             initialValue = false,
         )
 
+
+    private val _currentAccount = MutableStateFlow<Account?>(null)
+    val currentAccount: StateFlow<Account?> = _currentAccount.asStateFlow()
+
     val accounts = database.getAccountDao().getAllAsFlow()
         .map {
             it.mapIndexed { index, entity ->
-                Account(
-                    type = AccountType.TWITTER_X,
-                    name = entity.name,
-                    description = entity.description,
-                    isSelected = index == 0,
-                    avatarUrl = entity.avatarUrl,
-                    postsCount = 0
-                )
+                entity.toDomainModel().copy(isSelected = index == 0)
+            }
+        }
+        .onEach { acts ->
+            if (currentAccount.isNull()) {
+                _currentAccount.update { acts.firstOrNull() }
             }
         }
         .stateIn(
@@ -75,9 +81,6 @@ open class AppViewModel : ViewModel(), KoinComponent {
             initialValue = emptyList(),
         )
 
-    private val _currentAccounts = MutableStateFlow<Account?>(null)
-    val currentAccounts = _currentAccounts.asStateFlow()
-
     fun logout() {
         viewModelScope.launch {
             userDataStore.logoOutUser()
@@ -85,31 +88,37 @@ open class AppViewModel : ViewModel(), KoinComponent {
     }
 
     fun authenticateChannel(code: String, state: String?) {
-        Logger.d("Fetching Token: $code | $state")
+        Logger.withTag("Testing").d("Fetching Token: $code | $state")
         viewModelScope.launch {
             try {
                 val currentChannelConfig = channelConfigAuthManager.currentChannelConfig
                 val tokenResponse = currentChannelConfig?.requestAccessToken(
-                        code = code,
-                        redirectUrl = SMShareConfig.redirectUrl
-                    )
+                    code = code,
+                    redirectUrl = SMShareConfig.redirectUrl
+                )
 
-//                val accountDao = database.getAccountDao()
-//                val accountEntity = AccountEntity(
-//                    name = currentChannelConfig?.name ?: "",
-//                    description = currentChannelConfig?.description ?: "",
-//                    avatarUrl = tokenResponse?.accessToken ?: "",
-//                    accessToken = tokenResponse?.accessToken ?: "",
-//                    expiresInt = tokenResponse?.expiresIn ?: 0,
-//                    scope = tokenResponse?.scope ?: "",
-//                    created = ""
-//                )
-//
-//                accountDao.insert(accountEntity)
 
-//                Logger.d("access Token: $tokenResponse -> $accountEntity")
+                val accountDao = database.getAccountDao()
+
+                val accountEntity = AccountEntity(
+                    name = currentChannelConfig?.name ?: "",
+                    description = currentChannelConfig?.description ?: "",
+                    avatarUrl = tokenResponse?.accessToken ?: "",
+                    accessToken = tokenResponse?.accessToken ?: "",
+                    expiresInt = tokenResponse?.expiresIn ?: 0,
+                    scope = tokenResponse?.scope ?: "",
+                    created = ""
+                )
+
+                accountDao.insert(accountEntity)
+
+                if (_currentAccount.isNull()) {
+                    _currentAccount.update { accountEntity.toDomainModel() }
+                }
+
+                Logger.withTag("Testing").d("access Token: $tokenResponse -> $accountEntity")
             } catch (e: Exception) {
-                Logger.w(e.message ?: "Error creating access token")
+                Logger.withTag("Testing").w(e.message ?: "Error creating access token")
             }
         }
     }
@@ -120,3 +129,5 @@ sealed interface AppUiState {
 
     data class Success(val user: UserData, val platform: Platform) : AppUiState
 }
+
+fun <T> StateFlow<T?>.isNull(): Boolean = this.value == null

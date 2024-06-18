@@ -1,0 +1,16 @@
+[*.{kt,kts}]
+ktlint_code_style = ktlint_official
+insert_final_newline = true
+max_line_length = 100
+ktlint_function_naming_ignore_when_annotated_with = Composable
+ktlint_ignore_back_ticked_identifier = false
+ktlint_standard_multiline-expression-wrapping = disabled
+ktlint_standard_string-template-indent = disabled
+ktlint_function_signature_wrapping_rule_always_with_minimum_parameters = 3
+ktlint_function_signature_body_expression_wrapping = default
+
+[**/generated/**/*]
+ktlint = disabled
+
+[**/generated-sources/**/*]
+ktlint = disabled

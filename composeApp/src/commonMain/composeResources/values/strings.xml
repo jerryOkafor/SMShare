@@ -11,4 +11,9 @@
     <string name="title_manage_tags">Manage Tags</string>
     <string name="title_more">More</string>
     <string name="title_logout">Logout</string>
+
+    <!--Card actions-->
+    <string name="title_delete">Delete</string>
+    <string name="title_edit">Edit</string>
+    <string name="title_schedule">Schedule</string>
 </resources>

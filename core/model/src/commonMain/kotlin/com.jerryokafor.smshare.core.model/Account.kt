@@ -7,6 +7,7 @@ enum class AccountType {
 }
 
 data class Account(
+    val id:Long,
     val type: AccountType,
     val name: String = "",
     val description: String = "",

@@ -4,5 +4,5 @@ import androidx.room.RoomDatabase
 import org.koin.dsl.module
 
 fun nativeDBModule() = module {
-        single<RoomDatabase.Builder<AppDatabase>> { createAppDatabase() }
-    }
+    single<RoomDatabase.Builder<AppDatabase>> { createAppDatabase() }
+}

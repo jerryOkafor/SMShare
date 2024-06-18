@@ -1,20 +1,12 @@
 plugins {
     id("com.jerryokafor.smshare.android.library")
     id("com.jerryokafor.smshare.multiplatform")
-    alias(libs.plugins.androidx.room)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
-    sourceSets.commonMain {
-        kotlin.srcDir("build/generated/ksp/metadata")
-    }
-    sourceSets.all {
-        languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
-        languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
-    }
-
     sourceSets {
         androidUnitTest.dependencies {
             implementation(libs.junit)
@@ -33,11 +25,18 @@ kotlin {
                 implementation(libs.androidx.room.runtime.android)
             }
         }
-        commonMain.dependencies {
-            api(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
-            implementation(libs.koin.core)
-            implementation(libs.kotlinx.datetime)
+        commonMain {
+            kotlin {
+                srcDir("build/generated/ksp/metadata")
+            }
+            dependencies {
+                implementation(projects.core.model)
+
+                api(libs.androidx.room.runtime)
+                implementation(libs.androidx.sqlite.bundled)
+                implementation(libs.koin.core)
+                implementation(libs.kotlinx.datetime)
+            }
         }
 
         commonTest.dependencies {
@@ -67,17 +66,24 @@ android {
     }
 }
 
+//https://issuetracker.google.com/issues/342905180
 //More info: https://github.com/google/ksp/blob/00862a18967eed6832b28e081212e5f3250eb191/examples/multiplatform/workload/build.gradle.kts#L43
 dependencies {
     add("kspCommonMainMetadata", libs.androidx.room.compiler)
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-    add("kspJvm", libs.androidx.room.compiler)
+//    add("kspAndroid", libs.androidx.room.compiler)
+//    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+//    add("kspIosX64", libs.androidx.room.compiler)
+//    add("kspIosArm64", libs.androidx.room.compiler)
+//    add("kspJvm", libs.androidx.room.compiler)
 }
 
 room {
     schemaDirectory("$projectDir/schemas")
+    generateKotlin = true
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+}

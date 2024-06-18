@@ -145,7 +145,7 @@ fun SideNav(
                     ) {
                         onClose(null)
                     }
-                    HorizontalDivider(modifier = Modifier.height(0.5.dp).padding(horizontal = 8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp),thickness = 0.5.dp)
                     SideNavMenu(
                         title = "Calendar",
                         subTitle = "See your schedule wide",
@@ -205,7 +205,7 @@ fun SideNav(
                         icon = Icons.Default.Add,
                         onClick = { onClose(SideNavMenuAction.AddNewConnection) },
                     )
-                    HorizontalDivider(modifier = Modifier.height(0.5.dp))
+                    HorizontalDivider(thickness = 0.5.dp)
                     MoreMenuItem(
                         title = stringResource(Res.string.title_manage_tags),
                         icon = Icons.Default.Tag,

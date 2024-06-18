@@ -32,6 +32,7 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
@@ -54,7 +55,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.ChannelImage
@@ -90,6 +93,7 @@ fun ComposeMessage(
     onSetupTopAppBar: (SMShareTopAppBarState) -> Unit = {},
     onSetUpBottomAppBar: (SMShareBottomAppBarState) -> Unit = { _ -> },
     onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
+    defaultAccountId: Long? = null,
     onCancel: () -> Unit = {},
 ) {
     val viewModel: ComposeMessageViewModel = koinViewModel()
@@ -116,7 +120,7 @@ fun ComposeMessage(
                 CenterAlignedTopAppBar(
                     title = {
                         LazyRow(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
@@ -133,7 +137,7 @@ fun ComposeMessage(
                                 IconButton(onClick = { showBottomSheet = true }) {
                                     Icon(
                                         imageVector = Icons.Outlined.Add,
-                                        contentDescription = "Add new target channel",
+                                        contentDescription = "Add new account",
                                     )
                                 }
                             }
@@ -167,6 +171,10 @@ fun ComposeMessage(
         )
     }
 
+    LaunchedEffect(defaultAccountId) {
+        viewModel.bindDefaultAccountId(defaultAccountId)
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -189,7 +197,7 @@ fun ComposeMessage(
             shape = RichTextEditorDefaults.outlinedShape,
         )
         // Todo: Add character limit counter
-        HorizontalDivider()
+        HorizontalDivider(thickness = 0.5.dp)
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -230,7 +238,7 @@ fun ComposeMessage(
                         modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text("Select target channels")
+                        Text("Select account")
                         FillingSpacer()
                         SMSShareTextButton(onClick = {
                             scope.launch {
@@ -242,7 +250,7 @@ fun ComposeMessage(
                             Text("Done")
                         }
                     }
-                    HorizontalDivider()
+                    HorizontalDivider(thickness = 0.5.dp)
                     OneVerticalSpacer()
                 }
                 items(uiState.targetAccounts) { channel ->
@@ -269,17 +277,17 @@ fun ComposeMessage(
                         }
                     }
                     HorizontalDivider(
-                        modifier =
-                        Modifier.height(0.5.dp)
+                        modifier = Modifier
                             .padding(start = 80.dp, end = 8.dp),
+                        thickness = 0.5.dp
                     )
                 }
 
                 item {
                     HorizontalDivider(
-                        modifier =
-                        Modifier.height(0.5.dp)
+                        modifier = Modifier
                             .padding(start = 80.dp, end = 8.dp),
+                        thickness = 0.5.dp
                     )
                     Surface(onClick = {
                         scope.launch {
@@ -292,8 +300,7 @@ fun ComposeMessage(
                         }
                     }, color = Color.Transparent) {
                         Row(
-                            modifier =
-                            Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth()
                                 .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
@@ -305,11 +312,11 @@ fun ComposeMessage(
                                 Icon(
                                     modifier = Modifier.padding(12.dp).size(24.dp),
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = "Connect a new channel",
+                                    contentDescription = "Connect a new account",
                                 )
                             }
                             TwoHorizontalSpacer()
-                            Text("Connect a new channel")
+                            Text("Connect a new account")
                             FillingSpacer()
                             Icon(
                                 tint = MaterialTheme.colorScheme.secondary,
@@ -319,9 +326,9 @@ fun ComposeMessage(
                         }
                     }
                     HorizontalDivider(
-                        modifier =
-                        Modifier.height(0.5.dp)
+                        modifier = Modifier
                             .padding(start = 80.dp, end = 8.dp),
+                        thickness = 0.5.dp
                     )
                 }
                 item { ThreeVerticalSpacer() }
@@ -335,6 +342,8 @@ fun ComposeControlButton(
     imageVector: ImageVector,
     text: String,
     contentDescription: String? = null,
+    color: Color = Color.Unspecified,
+    iconTintcolor: Color? = null,
     onClick: () -> Unit = {},
 ) {
     SMSShareTextButton(onClick = onClick) {
@@ -345,14 +354,21 @@ fun ComposeControlButton(
             Icon(
                 modifier = Modifier.size(18.dp),
                 imageVector = imageVector,
+                tint = iconTintcolor ?: LocalContentColor.current,
                 contentDescription = contentDescription ?: text,
             )
-            Text(text = text, style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = text,
+                color = color,
+                style = MaterialTheme.typography.labelMedium
+            )
         }
     }
 }
 
-val composeMessageRoute = "compose"
+const val composeMessageAccountArg = "accountId"
+const val composeMessageRoute = "compose"
+val composeMessageRoutePattern = "compose?$composeMessageAccountArg={$composeMessageAccountArg}"
 
 fun NavGraphBuilder.composeMessageScreen(
     onSetupTopAppBar: (SMShareTopAppBarState) -> Unit = {},
@@ -360,8 +376,13 @@ fun NavGraphBuilder.composeMessageScreen(
     onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
     onCancel: () -> Unit,
 ) {
-    composable(composeMessageRoute) {
+    composable(
+        route = composeMessageRoutePattern,
+        arguments = listOf(navArgument(name = composeMessageAccountArg) { type = NavType.LongType })
+    ) { bavBackstackEntry ->
+        val accountId = bavBackstackEntry.arguments?.getLong(composeMessageAccountArg)
         ComposeMessage(
+            defaultAccountId = accountId,
             onSetupTopAppBar = onSetupTopAppBar,
             onSetUpBottomAppBar = onSetUpBottomAppBar,
             onShowSnackbar = onShowSnackbar,
@@ -370,6 +391,6 @@ fun NavGraphBuilder.composeMessageScreen(
     }
 }
 
-fun NavController.navigateToCompose(navOptions: NavOptions? = null) {
-    navigate(composeMessageRoute, navOptions)
+fun NavController.navigateToCompose(accountId: Long?, navOptions: NavOptions? = null) {
+    navigate("$composeMessageRoute?accountId=$accountId", navOptions)
 }

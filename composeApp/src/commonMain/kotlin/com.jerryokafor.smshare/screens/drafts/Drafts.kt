@@ -1,7 +1,10 @@
 package com.jerryokafor.smshare.screens.drafts
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
@@ -15,11 +18,13 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.jerryokafor.smshare.SMShareTopAppBarState
+import com.jerryokafor.smshare.component.PostItem
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import smshare.composeapp.generated.resources.Res
@@ -45,13 +50,16 @@ fun Drafts(
         currentOnSetupTopAppBar()
         currentOnSetUpBottomAppBar()
     }
+
     Box(Modifier.fillMaxSize()) {
-        Text(
-            modifier = Modifier.align(
-                Alignment.Center,
-            ),
-            text = "Welcome to drafts",
-        )
+        LazyColumn(
+            Modifier.fillMaxSize().padding(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(15) {
+                PostItem()
+            }
+        }
     }
 }
 

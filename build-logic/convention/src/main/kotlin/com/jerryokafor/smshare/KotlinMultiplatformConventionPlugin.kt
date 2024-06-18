@@ -42,8 +42,6 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
 
                 configureArgs()
 
-//            configureMetaData()
-
                 configureKotlin()
             }
         }

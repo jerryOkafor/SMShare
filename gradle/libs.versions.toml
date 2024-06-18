@@ -3,7 +3,7 @@ kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
 annotationVersion = "1.6.11"
 
-agp = "8.2.2"
+agp = "8.4.2"
 iOSDeploymentVersion = "17.5"
 reachability = "3.7.5"
 
@@ -12,10 +12,12 @@ composeMultiplatform = "1.6.11"
 kotlinCompilerPlugin = "1.5.14"
 navigationCompose = "2.7.0-alpha07"
 uiToolingPreviewAndroid = "1.7.0-beta03"
-dev-chrisbanes-windowSizeClass = "0.5.0"
+windowSizeClass = "0.5.0"
 
 # Room
 room = "2.7.0-alpha04"
+paging = "3.3.0"
+roomKtx = "2.6.1"
 datastore = "1.1.1"
 sqlite = "2.5.0-alpha04"
 atomicfu = "0.24.0"
@@ -35,7 +37,7 @@ koinComposeMultiplatform = "1.2.0-Beta4"
 cryptographyProviderJdkVersion = "0.2.0"
 
 android-compileSdk = "34"
-android-minSdk = "24"
+android-minSdk = "27"
 android-targetSdk = "34"
 androidx-activityCompose = "1.9.0"
 androidx-appcompat = "1.7.0"
@@ -95,7 +97,7 @@ google-truth = { module = "com.google.truth:truth", version.ref = "googleTruth" 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiToolingPreviewAndroid" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiToolingPreviewAndroid" }
-dev-chrisbanes-windowSizeClass = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "dev-chrisbanes-windowSizeClass" }
+dev-chrisbanes-windowSizeClass = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref = "windowSizeClass" }
 annotation-internal-annotation = { module = "org.jetbrains.compose.annotation-internal:annotation", version.ref = "annotationVersion" }
 
 # Navigation
@@ -105,7 +107,12 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 # Datastore
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
