@@ -1,4 +1,4 @@
-# SM Share (👷🔧️WIP👷⛏)
+# SMShare (👷🔧️WIP👷⛏)
 
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.0.0-blue?logo=kotlin)
 
@@ -14,12 +14,41 @@ written completely in Jetpack Compose and shareed accross iOS, Android and Deskt
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
 * `/iosApp` contains iOS applications.
-* `core`  - Core modules
-  * `network` - Core network module
-  * `database` - Core database module which implements Room (KMP)
-  * `datastore` - Core datastore module that implements Datastore (KMP)
-  * `rpc` - Core RPC Module based on `kotlinx.rpc` 
+* `/core`  - Core modules
+    * `/network` - Core network module
+    * `/database` - Core database module which implements Room (KMP)
+    * `/datastore` - Core datastore module that implements Datastore (KMP)
+    * `/rpc` - Core RPC Module based on `kotlinx.rpc`
 
+## Tech Stack (Todo)
+
+This project leveraged the latest technologies, tools and libraries in Kotlin and Android including
+Kotlin Multiplatform
+and more:
+
+* `Kotlin` first
+    * Coroutines
+    * Kotlin Symbolic processing
+    * Kotlin Serialization
+    * Kotlin RPC
+* Ktor - networking
+* koin - dependency injection
+* Jetpack libraries
+    * Compose - modern, native and declarative UI framework for KMP
+    * Lifecycle - used to create lifecycle aware components
+    * ViewModel - a lifecycle aware component to store and manage UI states in the MVVM pattern
+    * Room Database - sore offline data in SQLite database
+    * DataStore - store key/value pair and/or serializable json object on disk
+* Modern Architecture
+    * Clean Architecture
+    * Single Activity
+    * Model, View, ViewModel - MVVM
+* UI
+    * Reactive / Declarative UI framework
+    * Jetpack compose - modern, native and declarative UI framework
+    * Material Design 3 - Google material Design 3 implementation for Android and KMP
+
+## Architecture (TODO)
 
 ## Building
 
