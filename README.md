@@ -13,8 +13,16 @@ SMShare is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop. 
 written completely in Jetpack Compose and shareed accross iOS, Android and Desktop.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-
 * `/iosApp` contains iOS applications.
+* `/core` - Contains the core components of the codebase as shown below:
+    * `/common` - App Common code [WIP]
+    * `/config` - App Config [WIP]
+    * `/datbase` - Database integration using `Room` + `SQLite`
+    * `/datastore`  - Datastore int`gration using `Jetpack Datastore` and `kotinx.serialization`
+    * `/doomain` Contains the usecases [WIP]
+    * `/model` - UI models / domain models used in the app
+    * `/network` - Network integreation using `ktor` and `kotlin.serialization`
+    * `/rpc` - RPC integration using `kotlinx.rpc` [WIP]
 
 ## Sample
 
@@ -204,6 +212,7 @@ guide : [How to open a localhost website on iPhone / iOS](https://maxschmitt.me/
 - [Targeting Android in KMP](https://medium.com/kodein-koders/targeting-android-in-a-kotlin-multiplatform-mobile-library-b6ab75469287)
 - [Understanding and Configuring your Kotlin Multiplatform Mobile Test Suite](https://touchlab.co/understanding-and-configuring-your-kmm-test-suite)
 - [KMM-PicSplash](https://github.com/cvivek07/KMM-PicSplash)
+- [Native distributions & local execution](https://github.com/JetBrains/compose-multiplatform/tree/master/tutorials/Native_distributions_and_local_execution)
 
 ## Contributions
 
