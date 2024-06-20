@@ -1,4 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -6,10 +8,6 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
 //    alias(libs.plugins.kotlinx.rpc.platform)
-}
-
-kotlin {
-    jvmToolchain(17)
 }
 
 kotlin {
@@ -30,7 +28,18 @@ kotlin {
 //        binaries.executable()
 //    }
 
-    androidTarget {}
+    //Run instrumented (emulator) tests for Android
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant {
+            sourceSetTree.set(KotlinSourceSetTree.test)
+
+            dependencies {
+                implementation("androidx.compose.ui:ui-test-junit4-android:1.6.8")
+                debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+            }
+        }
+    }
 
     jvm("desktop")
 
@@ -52,6 +61,7 @@ kotlin {
         }
 
         val desktopMain by getting
+        val desktopTest by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -95,6 +105,14 @@ kotlin {
             api(libs.koin.compose.viewmodel.kmp)
         }
 
+        commonTest.dependencies {
+//            implementation(libs.kotlin.test)
+
+            @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+            implementation(compose.uiTest)
+        }
+
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.commons.codec)
@@ -102,8 +120,14 @@ kotlin {
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
         }
+
+        desktopTest.dependencies {
+            implementation(compose.desktop.currentOs)
+        }
     }
+
 }
+
 
 android {
     namespace = "com.jerryokafor.smshare"
@@ -116,6 +140,8 @@ android {
         applicationId = "com.jerryokafor.smshare"
         versionCode = 1
         versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -140,18 +166,13 @@ android {
     dependencies {
         implementation(libs.androidx.core.splashscreen)
         implementation(libs.androidx.activity.ktx)
-        debugImplementation(libs.compose.ui.tooling)
         implementation(libs.androidx.browser)
 
-        testImplementation(libs.junit)
-
-        androidTestImplementation(libs.androidx.test.junit)
-        androidTestImplementation(libs.androidx.espresso.core)
+//        testImplementation(libs.junit)
+//
+//        androidTestImplementation(libs.androidx.test.junit)
+//        androidTestImplementation(libs.androidx.espresso.core)
     }
-}
-dependencies {
-    implementation(libs.androidx.material3.android)
-    implementation(project(":core:config"))
 }
 
 compose.desktop {

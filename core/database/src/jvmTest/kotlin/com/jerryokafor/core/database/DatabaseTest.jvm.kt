@@ -24,8 +24,9 @@
 
 package com.jerryokafor.core.database
 
+import androidx.room.Room
 import androidx.room.RoomDatabase
 
 internal actual fun createTestDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
-    TODO("Not yet implemented")
+    return Room.inMemoryDatabaseBuilder<AppDatabase>()
 }

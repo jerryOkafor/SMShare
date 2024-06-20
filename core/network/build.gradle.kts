@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
+
 plugins {
     kotlin("native.cocoapods")
     id("com.jerryokafor.smshare.android.library")
@@ -47,6 +49,15 @@ kotlin {
         homepage = "https://github.com/jerryOkafor/SMShare"
         ios.deploymentTarget = libs.versions.iosDeploymentVersion.get()
         license = "MIT"
+
+        name = "CoreNetwork"
+
+        framework {
+            baseName = "CoreNetwork"
+            isStatic = false
+            transitiveExport = false
+            embedBitcode(BitcodeEmbeddingMode.BITCODE)
+        }
 
 //        extraSpecAttributes["libraries"] = "'c++', 'sqlite3'"
 //        extraSpecAttributes.put("swift_version", "\"5.0\"")

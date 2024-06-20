@@ -1,4 +1,4 @@
-# SMShare (👷🔧️WIP👷⛏)
+# SM Share (👷🔧️WIP👷⛏)
 
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.0.0-blue?logo=kotlin)
 
@@ -13,42 +13,28 @@ SMShare is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop. 
 written completely in Jetpack Compose and shareed accross iOS, Android and Desktop.
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
+
 * `/iosApp` contains iOS applications.
-* `/core`  - Core modules
-    * `/network` - Core network module
-    * `/database` - Core database module which implements Room (KMP)
-    * `/datastore` - Core datastore module that implements Datastore (KMP)
-    * `/rpc` - Core RPC Module based on `kotlinx.rpc`
 
-## Tech Stack (Todo)
+## Sample
 
-This project leveraged the latest technologies, tools and libraries in Kotlin and Android including
-Kotlin Multiplatform
-and more:
+Android, iOS and Desktop screenshot sample
+<p align="center">
+  <img src="doc/screenshots/ios_android_desktop.webp"/>
+</p>
 
-* `Kotlin` first
-    * Coroutines
-    * Kotlin Symbolic processing
-    * Kotlin Serialization
-    * Kotlin RPC
-* Ktor - networking
-* koin - dependency injection
-* Jetpack libraries
-    * Compose - modern, native and declarative UI framework for KMP
-    * Lifecycle - used to create lifecycle aware components
-    * ViewModel - a lifecycle aware component to store and manage UI states in the MVVM pattern
-    * Room Database - sore offline data in SQLite database
-    * DataStore - store key/value pair and/or serializable json object on disk
-* Modern Architecture
-    * Clean Architecture
-    * Single Activity
-    * Model, View, ViewModel - MVVM
-* UI
-    * Reactive / Declarative UI framework
-    * Jetpack compose - modern, native and declarative UI framework
-    * Material Design 3 - Google material Design 3 implementation for Android and KMP
+### More samples
 
-## Architecture (TODO)
+<details>
+  <summary>Android</summary>
+<p align="center">
+  <img src="doc/screenshots/android_1.webp" width="200" />
+  <img src="doc/screenshots/android_2.webp" width="200" />
+  <img src="doc/screenshots/android_3.webp" width="200" />
+  <img src="doc/screenshots/android_4.webp" width="200" />
+  <img src="doc/screenshots/android_5.webp" width="200" />
+</p>
+</details>
 
 ## Building
 
@@ -56,7 +42,7 @@ You will require the following rools to build and run SMSahre
 
 - Android SAndroid Studio Jellyfish | 2023.3.1 or higher
 - Java 17 installed
-- Xcode Version >> 15.4
+- Xcode Version > 15.4
 
 <details><summary><h4>Android</h4></summary>
 
@@ -137,9 +123,35 @@ For iOS, you can follow this
 guide : [How to open a localhost website on iPhone / iOS](https://maxschmitt.me/posts/localhost-iphone-ios)
  </details>
 
+## UI Testing
+
+### Android Emulator test
+
+```bash
+./gradlew :composeApp:connectedAndroidTest
+```
+
+### iOS Simulator
+
+```bash
+./gradlew :composeApp:iosSimulatorArm64Test
+```
+
+### Desktop
+
+```bash
+./gradlew :composeApp:desktopTest
+```
+
+### Wasm (headless browser)
+
+```bash
+./gradlew :composeApp:wasmJsTest
+```
+
 ## Code Style (Todo)
 
-## Todos
+## Todo
 
 - [ ] Add KtLint and Detekt
 - [ ] Add Detekt
@@ -153,6 +165,7 @@ guide : [How to open a localhost website on iPhone / iOS](https://maxschmitt.me/
 
 ## Reference
 
+- [Testing Compose Multiplatform UI](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-test.html#d1be12e6)
 - [Jetpack Room KMP](https://johnoreilly.dev/posts/jetpack_room_kmp/)
 - [Advanced work with the Snackbar in the Jetpack Compose](https://proandroiddev.com/advanced-work-with-the-snackbar-in-the-jetpack-compose-9bb7b7a30d60)
 - [FantasyPremierLeague](https://github.com/joreilly/FantasyPremierLeague/tree/main)
@@ -172,4 +185,14 @@ if your change is substantial, please raise an issue first to discuss it.
 
 ## License
 
-[MIT License](/LICENSE.tx)
+```
+The MIT License (MIT)
+
+Copyright (c) 2024 SMShare Projects
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```

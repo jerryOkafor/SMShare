@@ -43,7 +43,8 @@ plugins {
 val isCi = providers.environmentVariable("CI").isPresent
 
 buildCache {
-    val remoteBuildCacheUrl = providers.gradleProperty("REMOTE_BUILD_CACHE_URL").orNull ?: return@buildCache
+    val remoteBuildCacheUrl =
+        providers.gradleProperty("REMOTE_BUILD_CACHE_URL").orNull ?: return@buildCache
 
     local {
         isEnabled = !isCi
@@ -64,7 +65,7 @@ buildCache {
 
 include(":composeApp")
 include(":server")
-include(":shared")
+include(":core:common")
 // include(":core:rpc")
 include(":core:model")
 include(":core:database")

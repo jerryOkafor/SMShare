@@ -71,6 +71,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -355,6 +357,7 @@ fun Home(
         )
     }
 
+    val hapticFeedback = LocalHapticFeedback.current
     val mainBottomNavigation: @Composable () -> Unit = {
         NavigationBar(modifier = Modifier.background(Color.Red)) {
             listOf(
@@ -365,7 +368,10 @@ fun Home(
             ).fastForEach { navItem ->
                 NavigationBarItem(
                     selected = currentDestination?.hierarchy?.any { it.route == navItem.route() } == true,
-                    onClick = { onMenuItemClick(navItem.route()) },
+                    onClick = {
+                        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onMenuItemClick(navItem.route())
+                    },
                     icon = navItem.icon,
                     label = { Text(text = navItem.title()) },
                 )

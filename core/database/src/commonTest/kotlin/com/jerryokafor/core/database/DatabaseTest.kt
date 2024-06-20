@@ -25,13 +25,16 @@
 package com.jerryokafor.core.database
 
 import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 
+@Suppress("NO_ACTUAL_FOR_EXPECT")
 internal expect fun createTestDatabaseBuilder(): RoomDatabase.Builder<AppDatabase>
 
 abstract class DatabaseTest {
     private val testDatabaseBuilder: RoomDatabase.Builder<AppDatabase> by lazy {
         createTestDatabaseBuilder()
+            .setDriver(BundledSQLiteDriver())
     }
 
-    protected  val database : AppDatabase  by lazy { testDatabaseBuilder.build() }
+    protected val database: AppDatabase by lazy { testDatabaseBuilder.build() }
 }

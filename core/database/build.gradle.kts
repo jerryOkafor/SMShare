@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
+
 plugins {
     id("com.jerryokafor.smshare.android.library")
     id("com.jerryokafor.smshare.multiplatform")
@@ -7,19 +10,30 @@ plugins {
 }
 
 kotlin {
-    sourceSets {
-        androidUnitTest.dependencies {
-            implementation(libs.junit)
-            implementation(libs.androidx.test.junit)
-            implementation("org.robolectric:robolectric:4.12.2")
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        instrumentedTestVariant {
+            sourceSetTree.set(KotlinSourceSetTree.test)
         }
-        androidInstrumentedTest.dependencies {
-            implementation(libs.androidx.test.junit)
-            implementation(libs.androidx.test.junit.ktx)
-            implementation(libs.androidx.espresso.core)
-            implementation(libs.google.truth)
-        }
+    }
 
+    sourceSets {
+        androidUnitTest {
+            dependencies {
+                implementation(libs.junit)
+                implementation(libs.androidx.test.junit)
+                implementation("org.robolectric:robolectric:4.12.2")
+            }
+        }
+        androidInstrumentedTest {
+            dependencies {
+                implementation(libs.androidx.test.junit)
+                implementation(libs.androidx.test.junit.ktx)
+                implementation(libs.androidx.espresso.core)
+                implementation(libs.google.truth)
+            }
+
+        }
         androidMain {
             dependencies {
                 implementation(libs.androidx.room.runtime.android)
@@ -39,11 +53,13 @@ kotlin {
             }
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlin.test.common)
-            implementation(libs.kotlin.test.annotations.common)
+        commonTest {
+            dependencies {
+                implementation(libs.kotlinx.coroutines.test)
+                implementation(libs.kotlin.test)
+                implementation(libs.kotlin.test.common)
+                implementation(libs.kotlin.test.annotations.common)
+            }
         }
 
         jvmTest.dependencies {
@@ -63,6 +79,10 @@ android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments += mutableMapOf("clearPackageData" to "true")
+    }
+
+    dependencies {
+        androidTestImplementation(libs.androidx.test.runner)
     }
 }
 

@@ -9,4 +9,5 @@ target 'iosApp' do
 
   # Pods for iosApp
   pod 'Reachability', '3.7.5'
+#   pod 'CoreNetwork', :path => '../core/network/CoreNetwork.podspec'
 end

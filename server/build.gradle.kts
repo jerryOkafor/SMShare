@@ -38,5 +38,5 @@ dependencies {
     testImplementation(libs.ktor.server.tests)
 //    testImplementation(libs.kotlinx.rpc.runtime.client)
 //    testImplementation(libs.kotlinx.rpc.transport.ktor.client)
-    testImplementation(libs.kotlin.test.junit)
+//    testImplementation(libs.kotlin.test.junit)
 }
