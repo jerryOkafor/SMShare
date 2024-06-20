@@ -44,7 +44,8 @@ You will require the following rools to build and run SMSahre
 - Java 17 installed
 - Xcode Version > 15.4
 
-<details><summary><h4>Android</h4></summary>
+<details>
+<summary>Android</summary>
 
 #### Using Android Studio
 
@@ -61,37 +62,49 @@ in the [Run Json file](.fleet/run.json)
 To run the Android app, use the command below or select the `composeApp` configuration on Android
 Studio and click on run.
 
-``bash
-
-``
- </details>
+</details>
 
 
 
 
 <details>
   <summary>Desktop</summary>
+
 #### Using Fleet
-Fleet uses Smart Mode to detect and configure the Android run configuration for you.You can modify in the [Run Json file](.fleet/run.json)
+
+Fleet uses Smart Mode to detect and configure the Android run configuration for you.You can modify
+in the [Run Json file](.fleet/run.json)
+
 #### Using Command line
+
 ```bash
 ./gradlew desktopRun -DmainClass=com.jerryokafor.smshare.MainKt --quiet
 ```
+
  </details>
 
 <details>
   <summary>iOS</summary>
+
 #### Using XCode
+
 Open `iosApp/iosApp.xcworkspace` from Xcode and run.
 Note: You need to have run `pod install` from the `iOSApp` directory app
+
 #### Using Fleet
-Fleet uses Smart mode to configure iOS run configuration for you. You can modify in the [Run Json file](.fleet/run.json)
+
+Fleet uses Smart mode to configure iOS run configuration for you. You can modify in
+the [Run Json file](.fleet/run.json)
  </details>
 
 <details>
   <summary>Server</summary>
+
 #### Using Fleet
-Fleet uses Smart mode to detect and configure the various run configurations for you for iOS, Android, Desktop and Server. Ensure the You have Xcode, Android Studio, iOS Simulator, Android Emulator all installed or Physical iphone and Android Devices plugged in.
+
+Fleet uses Smart mode to detect and configure the various run configurations for you for iOS,
+Android, Desktop and Server. Ensure the You have Xcode, Android Studio, iOS Simulator, Android
+Emulator all installed or Physical iphone and Android Devices plugged in.
 
 #### From Command Line
 
