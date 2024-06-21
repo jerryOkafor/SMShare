@@ -10,11 +10,25 @@ import org.gradle.kotlin.dsl.dependencies
 
 fun Project.configureAndroid() {
     android {
-        compileSdkVersion(libs.findVersion("android-compileSdk").get().toString().toInt())
+        compileSdkVersion(
+            libs
+                .findVersion("android-compileSdk")
+                .get()
+                .toString()
+                .toInt(),
+        )
 
         defaultConfig {
-            minSdk = libs.findVersion("android-minSdk").get().toString().toInt()
-            targetSdk = libs.findVersion("android-targetSdk").get().toString().toInt()
+            minSdk = libs
+                .findVersion("android-minSdk")
+                .get()
+                .toString()
+                .toInt()
+            targetSdk = libs
+                .findVersion("android-targetSdk")
+                .get()
+                .toString()
+                .toInt()
 
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -29,7 +43,11 @@ fun Project.configureAndroid() {
         testOptions {
             if (this@android is LibraryExtension) {
                 // We only want to configure this for library modules
-                targetSdk = libs.findVersion("android-targetSdk").get().toString().toInt()
+                targetSdk = libs
+                    .findVersion("android-targetSdk")
+                    .get()
+                    .toString()
+                    .toInt()
             }
 
             unitTests {
@@ -53,7 +71,8 @@ fun Project.configureAndroid() {
     }
 }
 
-private fun Project.android(action: BaseExtension.() -> Unit) = extensions.configure<BaseExtension>(action)
+private fun Project.android(action: BaseExtension.() -> Unit) =
+    extensions.configure<BaseExtension>(action)
 
 private fun Project.androidComponents(action: AndroidComponentsExtension<*, *, *>.() -> Unit) {
     extensions.configure(AndroidComponentsExtension::class.java, action)

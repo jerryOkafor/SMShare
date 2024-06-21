@@ -71,7 +71,8 @@ class MainActivity : ComponentActivity() {
                 isDarkTheme = isDarkTheme,
                 onAppReady = {
                     splashScreen.setKeepOnScreenCondition { false }
-                })
+                },
+            )
 
             DisposableEffect(Unit) {
                 val listener = Consumer<Intent> {

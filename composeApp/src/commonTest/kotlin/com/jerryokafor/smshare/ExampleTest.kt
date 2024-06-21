@@ -40,7 +40,6 @@ import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
 
 class ExampleTest {
-
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun myTest() = runComposeUiTest {
@@ -51,11 +50,11 @@ class ExampleTest {
             var text by remember { mutableStateOf("Hello") }
             Text(
                 text = text,
-                modifier = Modifier.testTag("text")
+                modifier = Modifier.testTag("text"),
             )
             Button(
                 onClick = { text = "Compose" },
-                modifier = Modifier.testTag("button")
+                modifier = Modifier.testTag("button"),
             ) {
                 Text("Click me")
             }

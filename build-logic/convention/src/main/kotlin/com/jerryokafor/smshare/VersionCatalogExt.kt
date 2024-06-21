@@ -13,13 +13,12 @@ import org.gradle.kotlin.dsl.accessors.runtime.addDependencyTo
 fun DependencyHandler.implementations(
     dependencyNotation: ExternalModuleDependencyFactory,
     dependencyConfiguration: Action<ExternalModuleDependency>,
-): ExternalModuleDependency =
-    addDependencyTo(
-        this,
-        "implementation",
-        dependencyNotation,
-        dependencyConfiguration,
-    )
+): ExternalModuleDependency = addDependencyTo(
+    this,
+    "implementation",
+    dependencyNotation,
+    dependencyConfiguration,
+)
 
 fun ModuleDependency.exclude(
     group: Provider<MinimalExternalModuleDependency>? = null,
@@ -32,16 +31,16 @@ fun ModuleDependency.exclude(
     module?.let { this.exclude(it.asModule()) }
 }
 
-private fun Provider<MinimalExternalModuleDependency>.asGroup(): Map<String, String> = this.get().module.asGroup()
+private fun Provider<MinimalExternalModuleDependency>.asGroup(): Map<String, String> =
+    this.get().module.asGroup()
 
-private fun ModuleIdentifier.asGroup(): Map<String, String> =
-    mapOf(
-        "group" to this.group,
-    )
+private fun ModuleIdentifier.asGroup(): Map<String, String> = mapOf(
+    "group" to this.group,
+)
 
-private fun Provider<MinimalExternalModuleDependency>.asModule(): Map<String, String> = this.get().module.asModule()
+private fun Provider<MinimalExternalModuleDependency>.asModule(): Map<String, String> =
+    this.get().module.asModule()
 
-private fun ModuleIdentifier.asModule(): Map<String, String> =
-    mapOf(
-        "module" to this.name,
-    )
+private fun ModuleIdentifier.asModule(): Map<String, String> = mapOf(
+    "module" to this.name,
+)

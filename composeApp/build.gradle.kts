@@ -5,6 +5,8 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     id("com.jerryokafor.smshare.android.application")
+    id("com.jerryokafor.smshare.android.detekt")
+    id("com.jerryokafor.smshare.android.ktlint")
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
 //    alias(libs.plugins.kotlinx.rpc.platform)
@@ -28,7 +30,7 @@ kotlin {
 //        binaries.executable()
 //    }
 
-    //Run instrumented (emulator) tests for Android
+    // Run instrumented (emulator) tests for Android
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         instrumentedTestVariant {
@@ -112,7 +114,6 @@ kotlin {
             implementation(compose.uiTest)
         }
 
-
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.commons.codec)
@@ -125,9 +126,7 @@ kotlin {
             implementation(compose.desktop.currentOs)
         }
     }
-
 }
-
 
 android {
     namespace = "com.jerryokafor.smshare"

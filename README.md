@@ -189,6 +189,32 @@ guide : [How to open a localhost website on iPhone / iOS](https://maxschmitt.me/
 
 ## Code Style (Todo)
 
+### Code Quality
+
+#### Ensure Code Quality before submitting PR
+
+```bash
+./gradlew detekt ktlintCheck 
+```
+
+#### Generate Detekt baseline
+
+```bash
+./gradlew detektProjectBaseline  
+```
+
+#### Generate Ktlint Baseline
+
+```bash
+ktlint -F --baseline=config/ktlint/baseline.xml
+```
+
+or Using Gradle command
+
+```bash
+./gradlew ktlintFormatBaseline
+```
+
 ## Todo
 
 - [ ] Add KtLint and Detekt

@@ -5,6 +5,8 @@ import java.util.Properties
 plugins {
     id("com.jerryokafor.smshare.android.library")
     id("com.jerryokafor.smshare.multiplatform")
+    id("com.jerryokafor.smshare.android.detekt")
+    id("com.jerryokafor.smshare.android.ktlint")
     alias(libs.plugins.buildKonfig)
 }
 
@@ -15,7 +17,6 @@ secretProps.load(FileInputStream(secretPropsFile))
 android {
     namespace = "com.jerryokafor.smshare.core.config"
 }
-
 
 buildkonfig {
     packageName = "com.jerryokafor.smshare.core.config"
@@ -29,7 +30,7 @@ buildkonfig {
         buildConfigField(
             STRING,
             "linkedInClientSecret",
-            secretProps["LINKEDIN_CLIENT_SECRET"] as String
+            secretProps["LINKEDIN_CLIENT_SECRET"] as String,
         )
     }
 

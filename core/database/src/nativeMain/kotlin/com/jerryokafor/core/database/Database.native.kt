@@ -2,13 +2,11 @@ package com.jerryokafor.core.database
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.jerryokafor.core.database.instantiateImpl
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
-
 
 @OptIn(ExperimentalForeignApi::class)
 fun createAppDatabase(): RoomDatabase.Builder<AppDatabase> {
@@ -24,6 +22,6 @@ fun createAppDatabase(): RoomDatabase.Builder<AppDatabase> {
 
     return Room.databaseBuilder<AppDatabase>(
         name = dbFilePath,
-        factory = { AppDatabase::class.instantiateImpl() }
+        factory = { AppDatabase::class.instantiateImpl() },
     )
 }

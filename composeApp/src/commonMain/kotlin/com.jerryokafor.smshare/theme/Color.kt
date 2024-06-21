@@ -75,17 +75,17 @@ val md_theme_dark_scrim = Color(0xFF000000)
 val seed = Color(0xFF7703ED)
 
 @Stable
-class SMShareColorScheme(extraColor: Color) {
+class SMShareColorScheme(
+    extraColor: Color,
+) {
     var extraColor by mutableStateOf(extraColor, structuralEqualityPolicy())
         internal set
 }
 
-fun iheNKiriLightColorScheme(): SMShareColorScheme {
-    return SMShareColorScheme(extraColor = md_theme_dark_outline)
-}
+fun iheNKiriLightColorScheme(): SMShareColorScheme =
+    SMShareColorScheme(extraColor = md_theme_dark_outline)
 
-fun iheNKiriDarkColorScheme(): SMShareColorScheme {
-    return SMShareColorScheme(extraColor = md_theme_dark_outline)
-}
+fun iheNKiriDarkColorScheme(): SMShareColorScheme =
+    SMShareColorScheme(extraColor = md_theme_dark_outline)
 
 val LocalIheNkiriColorScheme = staticCompositionLocalOf { iheNKiriLightColorScheme() }

@@ -6,7 +6,7 @@ import com.jerryokafor.smshare.channel.ChannelConfig
 import com.jerryokafor.smshare.channel.FacebookChannelConfig
 import com.jerryokafor.smshare.channel.LinkedInChannelConfig
 import com.jerryokafor.smshare.channel.XChannelConfig
-import com.jerryokafor.smshare.core.domain.Injection.domainModule
+import com.jerryokafor.smshare.core.domain.injection.domainModule
 import com.jerryokafor.smshare.core.network.injection.commonNetworkModule
 import com.jerryokafor.smshare.screens.compose.ComposeMessageViewModel
 import org.koin.compose.viewmodel.dsl.viewModelOf
@@ -17,16 +17,14 @@ import org.koin.dsl.module
 import screens.createAccount.CreateAccountViewModel
 import screens.login.LoginViewModel
 
-fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication {
-    return startKoin {
-        appDeclaration()
-        modules(
-            commonModule(),
-            domainModule(),
-            commonNetworkModule(),
-            commonDatabaseModules()
-        )
-    }
+fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication = startKoin {
+    appDeclaration()
+    modules(
+        commonModule(),
+        domainModule(),
+        commonNetworkModule(),
+        commonDatabaseModules(),
+    )
 }
 
 fun commonModule() = module {
@@ -37,7 +35,6 @@ fun commonModule() = module {
             XChannelConfig(),
         )
     }
-
 
     viewModelOf(::AppViewModel)
     viewModelOf(::LoginViewModel)

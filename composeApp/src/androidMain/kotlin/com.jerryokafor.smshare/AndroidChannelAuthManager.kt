@@ -33,7 +33,9 @@ import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfig
 import java.net.URLEncoder
 
-class AndroidChannelAuthManager(private val context: Context) : ChannelAuthManager {
+class AndroidChannelAuthManager(
+    private val context: Context,
+) : ChannelAuthManager {
     override var currentChannelConfig: ChannelConfig? = null
 
     override suspend fun authenticateUser(channelConfig: ChannelConfig) {
@@ -52,13 +54,13 @@ class AndroidChannelAuthManager(private val context: Context) : ChannelAuthManag
             )
 
         val intent: CustomTabsIntent =
-            CustomTabsIntent.Builder()
+            CustomTabsIntent
+                .Builder()
                 .apply {
                     setCloseButtonIcon(
                         BitmapFactory.decodeResource(context.resources, R.drawable.ic_arrow_back),
                     )
-                }
-                .build()
+                }.build()
                 .apply {
                     intent.flags = FLAG_ACTIVITY_NEW_TASK
                 }

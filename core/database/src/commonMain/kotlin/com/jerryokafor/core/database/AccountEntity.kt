@@ -15,7 +15,7 @@ data class AccountEntity(
     val accessToken: String = "",
     val expiresInt: Int = 0,
     val scope: String = "",
-    val created: String
+    val created: String,
 )
 
 fun AccountEntity.toDomainModel() = Account(
@@ -24,6 +24,5 @@ fun AccountEntity.toDomainModel() = Account(
     name = this.name,
     description = this.description,
     avatarUrl = this.avatarUrl,
-    postsCount = 0
+    postsCount = 0,
 )
-

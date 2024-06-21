@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 plugins {
     id("com.jerryokafor.smshare.android.library")
     id("com.jerryokafor.smshare.multiplatform")
+    id("com.jerryokafor.smshare.android.detekt")
+    id("com.jerryokafor.smshare.android.ktlint")
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
@@ -32,7 +34,6 @@ kotlin {
                 implementation(libs.androidx.espresso.core)
                 implementation(libs.google.truth)
             }
-
         }
         androidMain {
             dependencies {
@@ -86,8 +87,8 @@ android {
     }
 }
 
-//https://issuetracker.google.com/issues/342905180
-//More info: https://github.com/google/ksp/blob/00862a18967eed6832b28e081212e5f3250eb191/examples/multiplatform/workload/build.gradle.kts#L43
+// https://issuetracker.google.com/issues/342905180
+// More info: https://github.com/google/ksp/blob/00862a18967eed6832b28e081212e5f3250eb191/examples/multiplatform/workload/build.gradle.kts#L43
 dependencies {
     add("kspCommonMainMetadata", libs.androidx.room.compiler)
 //    add("kspAndroid", libs.androidx.room.compiler)

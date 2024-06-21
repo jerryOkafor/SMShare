@@ -70,27 +70,27 @@ fun PostItem(
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RectangleShape,
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
     ) {
         Row(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
                 modifier = Modifier.clip(RoundedCornerShape(5.dp)).size(32.dp).aspectRatio(1f),
                 painter = painterResource(Res.drawable.ic_linkedin),
-                contentDescription = ""
+                contentDescription = "",
             )
             TwoHorizontalSpacer()
             Text(
                 text = "Hendrux Paints created this on 12/23/2024",
-                style = MaterialTheme.typography.labelLarge
+                style = MaterialTheme.typography.labelLarge,
             )
         }
         HalfVerticalSpacer()
@@ -98,23 +98,23 @@ fun PostItem(
 
         Text(
             text = "Just closed a \$10K deal \uD83E\uDD73\n" +
-                    "\n" +
-                    "No sales, no email, no \"jump on a quick call\"\n" +
-                    "\n" +
-                    "The customer found my product, signed up, and paid via credit card. " +
-                    "All self-served. It's just the best type of revenue.\n" +
-                    "\n" +
-                    "Here is a quick story about how I turned my weekend side project into a " +
-                    "business:\n",
+                "\n" +
+                "No sales, no email, no \"jump on a quick call\"\n" +
+                "\n" +
+                "The customer found my product, signed up, and paid via credit card. " +
+                "All self-served. It's just the best type of revenue.\n" +
+                "\n" +
+                "Here is a quick story about how I turned my weekend side project into a " +
+                "business:\n",
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(16.dp),
         )
         OneVerticalSpacer()
         HorizontalDivider(thickness = 0.5.dp)
         Row(
-            modifier = Modifier.fillMaxWidth(),//.padding(horizontal = 8.dp, vertical = 8.dp),
+            modifier = Modifier.fillMaxWidth(), // .padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             if (isDeleteAllowed) {
                 ComposeControlButton(

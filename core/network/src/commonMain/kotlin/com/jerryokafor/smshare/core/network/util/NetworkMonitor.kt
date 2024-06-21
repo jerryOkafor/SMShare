@@ -9,5 +9,4 @@ interface NetworkMonitor {
 
 class AlwaysOnlineNetworkMonitor : NetworkMonitor {
     override val isOnline: Flow<Boolean> = flowOf(true)
-
 }

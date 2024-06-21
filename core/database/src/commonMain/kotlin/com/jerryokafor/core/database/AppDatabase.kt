@@ -8,7 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
 @Database(entities = [AccountEntity::class], version = 1)
-abstract class AppDatabase : RoomDatabase(), DB {
+abstract class AppDatabase :
+    RoomDatabase(),
+    DB {
     abstract fun getAccountDao(): AccountDao
 
     override fun clearAllTables() {
@@ -23,13 +25,10 @@ interface DB {
 }
 
 val MIGRATIONS = arrayOf<Migration>()
-fun getRoomDatabase(
-    builder: RoomDatabase.Builder<AppDatabase>
-): AppDatabase {
-    return builder
-        .addMigrations(*MIGRATIONS)
-        .fallbackToDestructiveMigrationOnDowngrade(true)
-        .setDriver(BundledSQLiteDriver())
-        .setQueryCoroutineContext(Dispatchers.IO)
-        .build()
-}
+
+fun getRoomDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase = builder
+    .addMigrations(*MIGRATIONS)
+    .fallbackToDestructiveMigrationOnDowngrade(true)
+    .setDriver(BundledSQLiteDriver())
+    .setQueryCoroutineContext(Dispatchers.IO)
+    .build()

@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ComposeMessageViewModel : ViewModel(), KoinComponent {
+class ComposeMessageViewModel :
+    ViewModel(),
+    KoinComponent {
     private val database: AppDatabase by inject()
 
     private val _uiState = MutableStateFlow(ComposeMessageUiState())

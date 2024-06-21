@@ -31,14 +31,16 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
+import androidx.core.content.getSystemService
 import com.jerryokafor.smshare.core.network.util.NetworkMonitor
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import androidx.core.content.getSystemService
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.conflate
 
-class ConnectivityManagerNetworkMonitor(context: Context) : NetworkMonitor {
+class ConnectivityManagerNetworkMonitor(
+    context: Context,
+) : NetworkMonitor {
     @SuppressLint("MissingPermission")
     override val isOnline: Flow<Boolean> = callbackFlow {
         val connectivityManager = context.getSystemService<ConnectivityManager>()
@@ -48,13 +50,11 @@ class ConnectivityManagerNetworkMonitor(context: Context) : NetworkMonitor {
             return@callbackFlow
         }
 
-
         /**
          * The callback's methods are invoked on changes to *any* network matching the [NetworkRequest],
          * not just the active network. So we can simply track the presence (or absence) of such [Network].
          */
         val callback = object : ConnectivityManager.NetworkCallback() {
-
             private val networks = mutableSetOf<Network>()
 
             override fun onAvailable(network: Network) {
@@ -68,7 +68,8 @@ class ConnectivityManagerNetworkMonitor(context: Context) : NetworkMonitor {
             }
         }
 
-        val request = NetworkRequest.Builder()
+        val request = NetworkRequest
+            .Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             .build()
         connectivityManager.registerNetworkCallback(request, callback)

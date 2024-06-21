@@ -14,7 +14,7 @@ fun androidModules(app: Application) = module {
     includes(
         androidDataStoreModule(app),
         androidDBModule(app),
-        commonAndroidNetworkModules(app)
+        commonAndroidNetworkModules(app),
     )
 
     single { Platform() }

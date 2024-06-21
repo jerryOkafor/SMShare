@@ -158,7 +158,9 @@ class AppState(
     val currentDestination: NavDestination?
         @Composable get() =
             navController
-                .currentBackStackEntryAsState().value?.destination
+                .currentBackStackEntryAsState()
+                .value
+                ?.destination
 
     val currentTopLevelDestination: String?
         @Composable
@@ -205,17 +207,24 @@ fun App(
     }
 }
 
-data class SMShareBottomAppBarState(val configure: @Composable () -> Unit)
+data class SMShareBottomAppBarState(
+    val configure: @Composable () -> Unit,
+)
 
-data class BottomSheetState(val content: (@Composable () -> Unit)? = null)
+data class BottomSheetState(
+    val content: (@Composable () -> Unit)? = null,
+)
 
-data class SMShareTopAppBarState(val configure: (@Composable () -> Unit)? = null)
+data class SMShareTopAppBarState(
+    val configure: (@Composable () -> Unit)? = null,
+)
 
 @OptIn(
     ExperimentalMaterial3WindowSizeClassApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class,
 )
 @Composable
+@Suppress("CyclomaticComplexMethod")
 fun Home(
     appState: AppState,
     onNetChange: (Boolean) -> Unit = {},
@@ -290,7 +299,6 @@ fun Home(
         else -> "currentRoute"
     }
 
-
     val mainTopAppBar: @Composable (() -> Unit) = {
         CenterAlignedTopAppBar(
             title = {
@@ -301,7 +309,8 @@ fun Home(
                     if (currentAccount != null) {
                         Surface(onClick = { expanded = true }, shape = CircleShape) {
                             ChannelWithName(
-                                modifier = Modifier.wrapContentSize()
+                                modifier = Modifier
+                                    .wrapContentSize()
                                     .padding(vertical = 8.dp, horizontal = 16.dp),
                                 name = currentAccount!!.name,
                                 avatarSize = 38.dp,
@@ -313,7 +322,7 @@ fun Home(
                         if (accounts.size > 1) {
                             DropdownMenu(
                                 expanded = expanded,
-                                onDismissRequest = { expanded = false }
+                                onDismissRequest = { expanded = false },
                             ) {
                                 accounts.forEach { account ->
                                     DropdownMenuItem(
@@ -321,15 +330,18 @@ fun Home(
                                             ChannelWithName(
                                                 modifier = Modifier.padding(
                                                     horizontal = 8.dp,
-                                                    vertical = 4.dp
+                                                    vertical = 4.dp,
                                                 ),
                                                 name = account.name,
                                                 avatarSize = 38.dp,
                                                 avatar = painterResource(Res.drawable.avatar6),
-                                                indicator = iconIndicatorForAccountType(account.type),
+                                                indicator = iconIndicatorForAccountType(
+                                                    account.type,
+                                                ),
                                             )
                                         },
-                                        onClick = { expanded = false })
+                                        onClick = { expanded = false },
+                                    )
                                 }
                             }
                             LaunchedEffect(expanded) {
@@ -343,7 +355,6 @@ fun Home(
                         Text(text = title)
                     }
                 }
-
             },
             actions = {
                 IconButton(onClick = onMoreMenuClick) {
@@ -367,7 +378,8 @@ fun Home(
                 NavItem.Settings(),
             ).fastForEach { navItem ->
                 NavigationBarItem(
-                    selected = currentDestination?.hierarchy?.any { it.route == navItem.route() } == true,
+                    selected =
+                        currentDestination?.hierarchy?.any { it.route == navItem.route() } == true,
                     onClick = {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                         onMenuItemClick(navItem.route())
@@ -394,14 +406,17 @@ fun Home(
                         SideNav(
                             accounts = accounts,
                             onClose = { sideNavMenAction ->
-                                scope.launch { drawerState.close() }
+                                scope
+                                    .launch { drawerState.close() }
                                     .invokeOnCompletion {
                                         when (sideNavMenAction) {
                                             SideNavMenuAction.Logout -> {
                                                 viewModel.logout()
                                                 navController.navigateToSignIn(
                                                     navOptions {
-                                                        popUpTo(navController.graph.startDestinationRoute!!) {
+                                                        popUpTo(
+                                                            navController.graph.startDestinationRoute!!,
+                                                        ) {
                                                             inclusive = true
                                                         }
                                                         launchSingleTop = true
@@ -410,7 +425,8 @@ fun Home(
                                             }
 
                                             SideNavMenuAction.AddNewConnection -> {
-                                                scope.launch { sheetState.show() }
+                                                scope
+                                                    .launch { sheetState.show() }
                                                     .invokeOnCompletion {
                                                         bottomSheetVisible = true
                                                     }
@@ -419,7 +435,9 @@ fun Home(
                                             null -> { // Do Nothing
                                             }
 
-                                            SideNavMenuAction.ManageTags -> navController.navigateToTags()
+                                            SideNavMenuAction.ManageTags ->
+                                                navController
+                                                    .navigateToTags()
                                         }
                                     }
                             },
@@ -439,7 +457,8 @@ fun Home(
                         },
                         content = { innerPadding ->
                             Row(
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxSize()
                                     .padding(
                                         top = innerPadding.calculateTopPadding(),
                                         end = innerPadding.calculateEndPadding(
@@ -449,10 +468,12 @@ fun Home(
                                             LayoutDirection.Ltr,
                                         ),
                                         bottom = innerPadding.calculateBottomPadding(),
-                                    )
-                                    .consumeWindowInsets(innerPadding),
+                                    ).consumeWindowInsets(innerPadding),
                             ) {
-                                if (!shouldShowBottomNav && appState.currentTopLevelDestination != null && bottomAppBarState != null) {
+                                if (!shouldShowBottomNav &&
+                                    appState.currentTopLevelDestination != null &&
+                                    bottomAppBarState != null
+                                ) {
                                     NavigationRail(modifier = Modifier.fillMaxHeight()) {
                                         listOf(
                                             NavItem.Posts(),
@@ -461,7 +482,12 @@ fun Home(
                                             NavItem.Settings(),
                                         ).fastForEach { navItem ->
                                             NavigationRailItem(
-                                                selected = currentDestination?.hierarchy?.any { it.route == navItem.route() } == true,
+                                                selected =
+                                                    currentDestination?.hierarchy?.any {
+                                                        it.route ==
+                                                            navItem.route()
+                                                    } ==
+                                                        true,
                                                 onClick = { onMenuItemClick(navItem.route()) },
                                                 icon = navItem.icon,
                                                 label = { Text(text = navItem.title()) },
@@ -480,7 +506,8 @@ fun Home(
                                     composable("splash") {
                                         Box(modifier = Modifier.fillMaxSize()) {
                                             CircularProgressIndicator(
-                                                modifier = Modifier.size(24.dp)
+                                                modifier = Modifier
+                                                    .size(24.dp)
                                                     .align(Alignment.Center),
                                                 strokeWidth = 1.dp,
                                                 strokeCap = StrokeCap.Round,
@@ -493,12 +520,12 @@ fun Home(
                                         onCreateAccountClick = {
                                             navController.navigateToSignUp(
                                                 navOptions =
-                                                navOptions {
-                                                    popUpTo(signInRoute) {
-                                                        inclusive = true
-                                                    }
-                                                    launchSingleTop = true
-                                                },
+                                                    navOptions {
+                                                        popUpTo(signInRoute) {
+                                                            inclusive = true
+                                                        }
+                                                        launchSingleTop = true
+                                                    },
                                             )
                                         },
                                         onLoginComplete = {
@@ -515,7 +542,7 @@ fun Home(
                                         onSetUpBottomAppBar = { bottomAppBarState = it },
                                     )
 
-                                    //SignUp
+                                    // SignUp
                                     signUpScreen(
                                         onSetupTopAppBar = onSetupTopAppBar,
                                         onLoginClick = {
@@ -532,7 +559,7 @@ fun Home(
                                         onSetUpBottomAppBar = { bottomAppBarState = it },
                                     )
 
-                                    //Posts
+                                    // Posts
                                     postsScreen(
                                         onSetupTopAppBar = {
                                             topAppBarState =
@@ -543,10 +570,10 @@ fun Home(
                                                 SMShareBottomAppBarState(
                                                     configure = mainBottomNavigation,
                                                 )
-                                        }
+                                        },
                                     )
 
-                                    //Drafts
+                                    // Drafts
                                     draftsScreen(
                                         onSetupTopAppBar = {
                                             topAppBarState =
@@ -557,10 +584,10 @@ fun Home(
                                                 SMShareBottomAppBarState(
                                                     configure = mainBottomNavigation,
                                                 )
-                                        }
+                                        },
                                     )
 
-                                    //Analytics
+                                    // Analytics
                                     analyticsScreen(
                                         onSetupTopAppBar = {
                                             topAppBarState =
@@ -571,10 +598,10 @@ fun Home(
                                                 SMShareBottomAppBarState(
                                                     configure = mainBottomNavigation,
                                                 )
-                                        }
+                                        },
                                     )
 
-                                    //Settings
+                                    // Settings
                                     settingsScreen(
                                         onSetupTopAppBar = {
                                             topAppBarState =
@@ -585,7 +612,7 @@ fun Home(
                                                 SMShareBottomAppBarState(
                                                     configure = mainBottomNavigation,
                                                 )
-                                        }
+                                        },
                                     )
 
                                     // Compose message
@@ -603,10 +630,11 @@ fun Home(
                                         },
                                     )
 
-                                    //tags
+                                    // tags
                                     tagsScreen(
                                         onSetupTopAppBar = { topAppBarState = it },
-                                        onSetUpBottomAppBar = { bottomAppBarState = it })
+                                        onSetUpBottomAppBar = { bottomAppBarState = it },
+                                    )
                                 }
                             }
                         },
@@ -617,7 +645,7 @@ fun Home(
                                         scope.launch {
                                             onShowSnackbar(
                                                 "No account added, please add account to continue",
-                                                ""
+                                                "",
                                             )
                                         }
                                     } else {
@@ -653,7 +681,7 @@ fun Home(
                                 }
                             },
                             sheetState = sheetState,
-                            containerColor = MaterialTheme.colorScheme.background
+                            containerColor = MaterialTheme.colorScheme.background,
                         ) {
                             LazyColumn(modifier = Modifier.padding(16.dp)) {
                                 items(channels) { channel ->
@@ -663,14 +691,15 @@ fun Home(
                                         description = channel.description,
                                         icon = channel.icon,
                                         onClick = {
-                                            scope.launch {
-                                                sheetState.hide()
-                                            }.invokeOnCompletion {
-                                                bottomSheetVisible = false
-                                                scope.launch {
-                                                    channelAuthManager.authenticateUser(channel)
+                                            scope
+                                                .launch {
+                                                    sheetState.hide()
+                                                }.invokeOnCompletion {
+                                                    bottomSheetVisible = false
+                                                    scope.launch {
+                                                        channelAuthManager.authenticateUser(channel)
+                                                    }
                                                 }
-                                            }
                                         },
                                     )
                                     HalfVerticalSpacer()
@@ -698,8 +727,9 @@ fun Home(
         }
         val isMobilePlatform = when (val state = appUiState) {
             AppUiState.Loading -> false
-            is AppUiState.Success -> state.platform.type == SupportedPlatformType.Android
-                    || state.platform.type == SupportedPlatformType.iOS
+            is AppUiState.Success ->
+                state.platform.type == SupportedPlatformType.Android ||
+                    state.platform.type == SupportedPlatformType.iOS
         }
         AnimatedVisibility(!isOnline && isMobilePlatform) {
             Box(modifier = Modifier.fillMaxWidth().height(48.dp).background(Color.Red))

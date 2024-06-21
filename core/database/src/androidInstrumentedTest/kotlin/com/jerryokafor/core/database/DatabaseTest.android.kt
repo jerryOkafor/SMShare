@@ -31,8 +31,9 @@ import androidx.test.core.app.ApplicationProvider
 
 internal actual fun createTestDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> {
     val context = ApplicationProvider.getApplicationContext<Context>()
-    return Room.inMemoryDatabaseBuilder(
-        context = context,
-        klass = AppDatabase::class.java
-    ).allowMainThreadQueries()
+    return Room
+        .inMemoryDatabaseBuilder(
+            context = context,
+            klass = AppDatabase::class.java,
+        ).allowMainThreadQueries()
 }

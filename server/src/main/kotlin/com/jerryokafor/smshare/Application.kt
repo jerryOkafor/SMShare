@@ -3,12 +3,15 @@ package com.jerryokafor.smshare
 import com.jerryokafor.smshare.injection.appModule
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.cors.routing.CORS
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 

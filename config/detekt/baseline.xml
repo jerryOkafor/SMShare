@@ -1,0 +1,113 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:CreateAccountVIewModel.kt$CreateAccountViewModel${ }</ID>
+    <ID>ForbiddenComment:AppDatabase.kt$DB$// FIXME: Added a hack to resolve below issue:</ID>
+    <ID>FunctionNaming:MainViewController.kt$fun MainViewController()</ID>
+    <ID>InvalidPackageDeclaration:Account.kt$package com.jerryokafor.smshare.core.model</ID>
+    <ID>InvalidPackageDeclaration:Analytics.kt$package com.jerryokafor.smshare.screens.analytics</ID>
+    <ID>InvalidPackageDeclaration:AnalyticsItem.kt$package com.jerryokafor.smshare.component</ID>
+    <ID>InvalidPackageDeclaration:AndroidChannelAuthManager.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:App.android.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:App.desktop.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:App.ios.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:App.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:AppViewModel.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:ChannelConfig.kt$package com.jerryokafor.smshare.channel</ID>
+    <ID>InvalidPackageDeclaration:ChannelImage.kt$package com.jerryokafor.smshare.component</ID>
+    <ID>InvalidPackageDeclaration:ChannelWithName.kt$package com.jerryokafor.smshare.component</ID>
+    <ID>InvalidPackageDeclaration:Color.kt$package com.jerryokafor.smshare.theme</ID>
+    <ID>InvalidPackageDeclaration:ComposeMessage.kt$package com.jerryokafor.smshare.screens.compose</ID>
+    <ID>InvalidPackageDeclaration:ComposeMessageViewModel.kt$package com.jerryokafor.smshare.screens.compose</ID>
+    <ID>InvalidPackageDeclaration:Constants.kt$package com.jerryokafor.smshare.core.rpc</ID>
+    <ID>InvalidPackageDeclaration:Datastore.native.kt$package com.jerryokafor.core.datastore</ID>
+    <ID>InvalidPackageDeclaration:DesktopChannelAuthManager.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:Drafts.kt$package com.jerryokafor.smshare.screens.drafts</ID>
+    <ID>InvalidPackageDeclaration:FacebookChannelConfig.kt$package com.jerryokafor.smshare.channel</ID>
+    <ID>InvalidPackageDeclaration:IOSChannelAuthManager.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:Injection.android.kt$package com.jerryokafor.smshare.injection</ID>
+    <ID>InvalidPackageDeclaration:Injection.ios.kt$package com.jerryokafor.smshare.injection</ID>
+    <ID>InvalidPackageDeclaration:Injection.jvm.kt$package com.jerryokafor.smshare.injection</ID>
+    <ID>InvalidPackageDeclaration:Injection.kt$package com.jerryokafor.smshare.core.domain.injection</ID>
+    <ID>InvalidPackageDeclaration:Injection.kt$package com.jerryokafor.smshare.injection</ID>
+    <ID>InvalidPackageDeclaration:Injection.native.kt$package com.jerryokafor.core.datastore</ID>
+    <ID>InvalidPackageDeclaration:LinkedInChannelConfig.kt$package com.jerryokafor.smshare.channel</ID>
+    <ID>InvalidPackageDeclaration:LoginScreen.kt$package com.jerryokafor.smshare.screens.login</ID>
+    <ID>InvalidPackageDeclaration:MainActivity.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:NavItem.kt$package com.jerryokafor.smshare.navigation</ID>
+    <ID>InvalidPackageDeclaration:NewChannelConnectionButton.kt$package com.jerryokafor.smshare.component</ID>
+    <ID>InvalidPackageDeclaration:Platform.android.kt$package com.jerryokafor.smshare.platform</ID>
+    <ID>InvalidPackageDeclaration:Platform.desktop.kt$package com.jerryokafor.smshare.platform</ID>
+    <ID>InvalidPackageDeclaration:Platform.ios.kt$package com.jerryokafor.smshare.platform</ID>
+    <ID>InvalidPackageDeclaration:Platform.kt$package com.jerryokafor.smshare.platform</ID>
+    <ID>InvalidPackageDeclaration:PostItem.kt$package com.jerryokafor.smshare.component</ID>
+    <ID>InvalidPackageDeclaration:Posts.kt$package com.jerryokafor.smshare.screens.posts</ID>
+    <ID>InvalidPackageDeclaration:SMSShareButton.kt$package com.jerryokafor.smshare.component</ID>
+    <ID>InvalidPackageDeclaration:SMSShareTextButton.kt$package com.jerryokafor.smshare.component</ID>
+    <ID>InvalidPackageDeclaration:SMShareApp.kt$package com.jerryokafor.smshare</ID>
+    <ID>InvalidPackageDeclaration:SMShareNkiri.kt$package com.jerryokafor.smshare.theme</ID>
+    <ID>InvalidPackageDeclaration:Settings.kt$package com.jerryokafor.smshare.screens.settings</ID>
+    <ID>InvalidPackageDeclaration:Shape.kt$package com.jerryokafor.smshare.theme</ID>
+    <ID>InvalidPackageDeclaration:SideNav.kt$package com.jerryokafor.smshare.screens.navigation</ID>
+    <ID>InvalidPackageDeclaration:Space.kt$package com.jerryokafor.smshare.theme</ID>
+    <ID>InvalidPackageDeclaration:TagsScreen.kt$package com.jerryokafor.smshare.tags</ID>
+    <ID>InvalidPackageDeclaration:Type.kt$package com.jerryokafor.smshare.theme</ID>
+    <ID>InvalidPackageDeclaration:User.kt$package com.jerryokafor.smshare.core.model</ID>
+    <ID>InvalidPackageDeclaration:UserData.kt$package com.jerryokafor.core.datastore</ID>
+    <ID>InvalidPackageDeclaration:UserDataStore.kt$package com.jerryokafor.core.datastore</ID>
+    <ID>InvalidPackageDeclaration:UserPreferencesSerializer.kt$package com.jerryokafor.core.datastore</ID>
+    <ID>InvalidPackageDeclaration:UserService.kt$package com.jerryokafor.smshare.core.domain</ID>
+    <ID>InvalidPackageDeclaration:UserService.kt$package com.jerryokafor.smshare.core.rpc</ID>
+    <ID>InvalidPackageDeclaration:XChannelConfig.kt$package com.jerryokafor.smshare.channel</ID>
+    <ID>InvalidPackageDeclaration:main.kt$package com.jerryokafor.smshare</ID>
+    <ID>MagicNumber:Analytics.kt$15</ID>
+    <ID>MagicNumber:App.kt$0xFF14142B</ID>
+    <ID>MagicNumber:App.kt$0xFF25253C</ID>
+    <ID>MagicNumber:App.kt$0xFFF8F9FE</ID>
+    <ID>MagicNumber:App.kt$0xFFFFFFFF</ID>
+    <ID>MagicNumber:ChannelImage.kt$0.95f</ID>
+    <ID>MagicNumber:ChannelImage.kt$5f</ID>
+    <ID>MagicNumber:DesktopChannelAuthManager.kt$DesktopChannelAuthManager$32</ID>
+    <ID>MagicNumber:DesktopChannelAuthManager.kt$DesktopChannelAuthManager$5</ID>
+    <ID>MagicNumber:Drafts.kt$15</ID>
+    <ID>MagicNumber:Java.kt$17</ID>
+    <ID>MagicNumber:LoginViewModel.kt$LoginViewModel$20_00</ID>
+    <ID>MagicNumber:NetworkConnectivityObserver.kt$NetworkConnectivityObserver$5000</ID>
+    <ID>MagicNumber:Posts.kt$15</ID>
+    <ID>MagicNumber:SideNav.kt$10</ID>
+    <ID>MagicNumber:SideNav.kt$4f</ID>
+    <ID>MagicNumber:StringUtil.kt$32</ID>
+    <ID>MagicNumber:UserService.kt$DefaultUserService$200</ID>
+    <ID>MatchingDeclarationName:CreateAccountVIewModel.kt$CreateAccountViewModel : ViewModelKoinComponent</ID>
+    <ID>MatchingDeclarationName:Platform.android.kt$Platform</ID>
+    <ID>MatchingDeclarationName:Platform.desktop.kt$Platform</ID>
+    <ID>MatchingDeclarationName:Platform.ios.kt$Platform</ID>
+    <ID>MatchingDeclarationName:Platform.wasmJs.kt$WasmPlatform : Platform</ID>
+    <ID>MatchingDeclarationName:SideNav.kt$SideNavMenuAction</ID>
+    <ID>MayBeConst:Analytics.kt$val analyticsRoute = "analytics"</ID>
+    <ID>MayBeConst:Drafts.kt$val draftsRoute = "drafts"</ID>
+    <ID>MayBeConst:Posts.kt$val postsRoute = "posts"</ID>
+    <ID>SpreadOperator:AppDatabase.kt$(*MIGRATIONS)</ID>
+    <ID>TooGenericExceptionThrown:DesktopChannelAuthManager.kt$DesktopChannelAuthManager$throw RuntimeException("Received a response with no code")</ID>
+    <ID>TooGenericExceptionThrown:NetworkConnectivityObserver.kt$NetworkConnectivityObserver$throw RuntimeException(e)</ID>
+    <ID>TopLevelPropertyNaming:AddNewConnectionChannel.kt$const val addNewConnectionRoute = "addNewConnection"</ID>
+    <ID>TopLevelPropertyNaming:ComposeMessage.kt$const val composeMessageAccountArg = "accountId"</ID>
+    <ID>TopLevelPropertyNaming:ComposeMessage.kt$const val composeMessageRoute = "compose"</ID>
+    <ID>TopLevelPropertyNaming:CreateAccountScreen.kt$const val signUpRoute = "singup"</ID>
+    <ID>TopLevelPropertyNaming:LoginScreen.kt$const val signInRoute = "signin"</ID>
+    <ID>TopLevelPropertyNaming:Settings.kt$const val settingRoute = "settings"</ID>
+    <ID>TopLevelPropertyNaming:TagsScreen.kt$const val tageRoute = "tags"</ID>
+    <ID>UnusedParameter:CreateAccountScreen.kt$onShowSnackbar: suspend (String, String?) -&gt; Boolean = { _, _ -&gt; false }</ID>
+    <ID>UnusedParameter:CreateAccountVIewModel.kt$CreateAccountViewModel$email: String</ID>
+    <ID>UnusedParameter:CreateAccountVIewModel.kt$CreateAccountViewModel$password: String</ID>
+    <ID>UnusedParameter:LoginScreen.kt$onShowSnackbar: suspend (String, String?) -&gt; Boolean = { _, _ -&gt; false }</ID>
+    <ID>UnusedParameter:LoginViewModel.kt$LoginViewModel$email: String</ID>
+    <ID>UnusedParameter:LoginViewModel.kt$LoginViewModel$password: String</ID>
+    <ID>UnusedPrivateMember:NetworkConnectivityObserver.kt$NetworkConnectivityObserver$private fun checkNetworkConnectivity(): Boolean</ID>
+    <ID>UnusedPrivateProperty:SMShareNkiri.kt$/** * Dynamic Colors are supported on API level 31 and above * */ val dynamicColor = isDynamicColor // &amp;&amp; supportsDynamicTheming()</ID>
+    <ID>VariableNaming:SMShareNkiri.kt$val SMShareShape = SMShareShape()</ID>
+    <ID>WildcardImport:AnalyticsItem.kt$import androidx.compose.foundation.layout.*</ID>
+    <ID>WildcardImport:AnalyticsItem.kt$import androidx.compose.material3.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

@@ -38,7 +38,7 @@ import com.jerryokafor.smshare.SMShareTopAppBarState
 @Composable
 fun TagsScreen(
     onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
-    onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {}
+    onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
 ) {
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
@@ -49,16 +49,16 @@ fun TagsScreen(
     }
 }
 
-
 const val tageRoute = "tags"
+
 fun NavGraphBuilder.tagsScreen(
     onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
-    onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {}
+    onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
 ) {
     composable(route = tageRoute) {
         TagsScreen(
             onSetupTopAppBar = onSetupTopAppBar,
-            onSetUpBottomAppBar = onSetUpBottomAppBar
+            onSetUpBottomAppBar = onSetUpBottomAppBar,
         )
     }
 }

@@ -27,7 +27,6 @@ package com.jerryokafor.core.database
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
-
 class AccountDaoTest : DatabaseTest() {
     private val accountDao: AccountDao = database.getAccountDao()
 
@@ -40,7 +39,7 @@ class AccountDaoTest : DatabaseTest() {
             accessToken = "Letha",
             expiresInt = 6947,
             scope = "Chanse",
-            created = "Ladawn"
+            created = "Ladawn",
         )
 
         accountDao.insert(accountEntity)

@@ -8,9 +8,8 @@ import okio.use
 internal object UserPreferencesSerializer : OkioSerializer<UserData> {
     override val defaultValue: UserData = UserData()
 
-    override suspend fun readFrom(source: BufferedSource): UserData {
-        return json.decodeFromString<UserData>(source.readUtf8())
-    }
+    override suspend fun readFrom(source: BufferedSource): UserData =
+        json.decodeFromString<UserData>(source.readUtf8())
 
     override suspend fun writeTo(
         t: UserData,

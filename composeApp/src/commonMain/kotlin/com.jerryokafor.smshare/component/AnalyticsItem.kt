@@ -46,15 +46,14 @@ fun AnalyticsItemPreview() {
 fun AnalyticsItem() {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.surface,
         ),
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RectangleShape,
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
     ) {
-
         Text(
             text = "Just closed a \$10K deal \uD83E\uDD73\n" +
                 "\n" +
@@ -67,27 +66,29 @@ fun AnalyticsItem() {
                 "business:\n",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(16.dp),
-            maxLines = 3
+            maxLines = 3,
         )
         OneVerticalSpacer()
         HorizontalDivider(thickness = 0.5.dp)
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             PostAnalytics(0, "Reach")
             PostAnalytics(0, "Likes")
             PostAnalytics(0, "Share")
             PostAnalytics(0, "Mentions")
             PostAnalytics(0, "Clicks")
-
         }
     }
 }
 
 @Composable
-private fun PostAnalytics(count: Int, title: String) {
+private fun PostAnalytics(
+    count: Int,
+    title: String,
+) {
     Column(modifier = Modifier, horizontalAlignment = Alignment.Start) {
         Text(text = "$count")
         Text(text = title, style = MaterialTheme.typography.labelSmall)

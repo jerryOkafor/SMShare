@@ -13,12 +13,11 @@ data class SMShareShape(
     val large: RoundedCornerShape = RoundedCornerShape(16.dp),
     val pill: RoundedCornerShape = RoundedCornerShape(percent = 50),
 ) {
-    fun toMaterialShapes() =
-        Shapes(
-            small = small,
-            medium = medium,
-            large = large,
-        )
+    fun toMaterialShapes() = Shapes(
+        small = small,
+        medium = medium,
+        large = large,
+    )
 }
 
 internal val LocalIheNkiriShape = staticCompositionLocalOf { SMShareShape() }

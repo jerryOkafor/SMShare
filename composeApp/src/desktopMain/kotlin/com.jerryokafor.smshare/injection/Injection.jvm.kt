@@ -36,7 +36,7 @@ fun desktopModule() = module {
     includes(
         jvmDataStoreModule(),
         jvmDBModule(),
-        jvmNetworkModule()
+        jvmNetworkModule(),
     )
     single<ChannelAuthManager> { DesktopChannelAuthManager() }
 

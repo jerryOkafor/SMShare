@@ -25,7 +25,9 @@
 package com.jerryokafor.smshare.platform
 
 enum class SupportedPlatformType {
-    Android, iOS, Desktop
+    Android,
+    iOS,
+    Desktop,
 }
 
 expect class Platform {

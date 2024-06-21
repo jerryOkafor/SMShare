@@ -49,8 +49,9 @@ import java.security.SecureRandom
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 
-class DesktopChannelAuthManager(coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)) :
-    ChannelAuthManager {
+class DesktopChannelAuthManager(
+    coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
+) : ChannelAuthManager {
     private var coroutineScope: CoroutineScope = coroutineScope
         private set
 
@@ -128,6 +129,9 @@ class DesktopChannelAuthManager(coroutineScope: CoroutineScope = CoroutineScope(
         val sr = SecureRandom()
         val code = ByteArray(32)
         sr.nextBytes(code)
-        return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(code)
+        return java.util.Base64
+            .getUrlEncoder()
+            .withoutPadding()
+            .encodeToString(code)
     }
 }

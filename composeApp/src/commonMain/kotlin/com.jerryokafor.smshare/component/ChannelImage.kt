@@ -39,12 +39,11 @@ import smshare.composeapp.generated.resources.ic_linkedin
 import smshare.composeapp.generated.resources.ic_twitter
 
 @Composable
-fun iconIndicatorForAccountType(type: AccountType) =
-    when (type) {
-        AccountType.LINKEDIN -> painterResource(Res.drawable.ic_linkedin)
-        AccountType.TWITTER_X -> painterResource(Res.drawable.ic_twitter)
-        AccountType.FACEBOOK -> painterResource(Res.drawable.ic_facebook)
-    }
+fun iconIndicatorForAccountType(type: AccountType) = when (type) {
+    AccountType.LINKEDIN -> painterResource(Res.drawable.ic_linkedin)
+    AccountType.TWITTER_X -> painterResource(Res.drawable.ic_twitter)
+    AccountType.FACEBOOK -> painterResource(Res.drawable.ic_facebook)
+}
 
 @Composable
 fun ChannelImage(
@@ -56,7 +55,8 @@ fun ChannelImage(
     var imageSize by remember { mutableStateOf(IntSize.Zero) }
     Box(
         modifier =
-            Modifier.wrapContentSize()
+            Modifier
+                .wrapContentSize()
                 .onGloballyPositioned {
                     imageSize = it.size
                 },
@@ -70,8 +70,7 @@ fun ChannelImage(
                     .aspectRatio(1f)
                     .graphicsLayer {
                         compositingStrategy = CompositingStrategy.Offscreen
-                    }
-                    .drawWithCache {
+                    }.drawWithCache {
                         val path = Path()
                         path.addOval(
                             oval =
@@ -126,7 +125,8 @@ fun ChannelImage(
 
         Box(
             modifier =
-                Modifier.matchParentSize()
+                Modifier
+                    .matchParentSize()
                     .padding(
                         bottom = space / 2.6f,
                         end = space / 2.6f,
@@ -134,8 +134,10 @@ fun ChannelImage(
         ) {
             Image(
                 modifier =
-                    Modifier.size(dotSizeDp)
-                        .clip(CircleShape).align(Alignment.BottomEnd),
+                    Modifier
+                        .size(dotSizeDp)
+                        .clip(CircleShape)
+                        .align(Alignment.BottomEnd),
                 contentScale = ContentScale.FillHeight,
                 painter = indicator,
                 contentDescription = null,

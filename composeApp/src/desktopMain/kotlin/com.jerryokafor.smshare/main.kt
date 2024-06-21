@@ -30,7 +30,6 @@ import androidx.compose.ui.window.rememberWindowState
 import com.jerryokafor.smshare.injection.desktopModule
 import com.jerryokafor.smshare.injection.initKoin
 
-
 private val koin = initKoin {
     modules(desktopModule())
 }.koin
@@ -43,5 +42,6 @@ fun main() = application {
         title = "SM Share",
         content = {
             App()
-        })
+        },
+    )
 }

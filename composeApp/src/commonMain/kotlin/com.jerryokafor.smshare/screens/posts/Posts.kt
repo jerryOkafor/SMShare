@@ -27,11 +27,10 @@ private fun PostsPreview() {
     }
 }
 
-
 @Composable
 fun Posts(
     onSetupTopAppBar: () -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit = {}
+    onSetUpBottomAppBar: () -> Unit = {},
 ) {
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
@@ -44,7 +43,7 @@ fun Posts(
     Box(Modifier.fillMaxSize()) {
         LazyColumn(
             Modifier.fillMaxSize().padding(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(15) {
                 PostItem()
@@ -57,12 +56,12 @@ val postsRoute = "posts"
 
 fun NavGraphBuilder.postsScreen(
     onSetupTopAppBar: () -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit
+    onSetUpBottomAppBar: () -> Unit,
 ) {
     composable(route = postsRoute) {
         Posts(
             onSetupTopAppBar = onSetupTopAppBar,
-            onSetUpBottomAppBar = onSetUpBottomAppBar
+            onSetUpBottomAppBar = onSetUpBottomAppBar,
         )
     }
 }

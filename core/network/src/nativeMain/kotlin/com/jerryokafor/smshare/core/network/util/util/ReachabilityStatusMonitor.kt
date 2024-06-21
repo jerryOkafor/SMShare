@@ -31,9 +31,9 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import platform.Foundation.NSLog
 import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
-import platform.Foundation.NSLog
 
 class ReachabilityStatusMonitor : NetworkMonitor {
     @OptIn(ExperimentalForeignApi::class)
@@ -50,7 +50,6 @@ class ReachabilityStatusMonitor : NetworkMonitor {
                     channel.trySend(true)
                 }
             }
-
 
             val unreachableCallback = { _: Reachability? ->
                 dispatch_async(dispatch_get_main_queue()) {
@@ -70,11 +69,9 @@ class ReachabilityStatusMonitor : NetworkMonitor {
             }
         }
 
-
         awaitClose {
-            //stop
+            // stop
             reachability?.stopNotifier()
         }
-
     }.conflate()
 }

@@ -4,6 +4,8 @@ plugins {
     kotlin("native.cocoapods")
     id("com.jerryokafor.smshare.android.library")
     id("com.jerryokafor.smshare.multiplatform")
+    id("com.jerryokafor.smshare.android.detekt")
+    id("com.jerryokafor.smshare.android.ktlint")
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -67,12 +69,11 @@ kotlin {
             version = libs.versions.reachability.get()
         }
     }
-
 }
 
 android {
     namespace = "com.jerryokafor.smshare.core.network"
 
-    //Include our manifest with required permission for merger
+    // Include our manifest with required permission for merger
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 }

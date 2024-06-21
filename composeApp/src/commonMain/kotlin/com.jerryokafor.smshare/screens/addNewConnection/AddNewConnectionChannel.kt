@@ -30,7 +30,8 @@ fun AddNewConnectionChannel(onBackPress: () -> Unit) {
         val sheetState = rememberModalBottomSheetState()
 
         val onDismissRequest: () -> Unit = {
-            scope.launch { sheetState.hide() }
+            scope
+                .launch { sheetState.hide() }
                 .invokeOnCompletion { onBackPress() }
         }
 
@@ -41,7 +42,8 @@ fun AddNewConnectionChannel(onBackPress: () -> Unit) {
             // Sheet content
             Column(
                 modifier =
-                    Modifier.fillMaxWidth()
+                    Modifier
+                        .fillMaxWidth()
                         .height(300.dp)
                         .padding(16.dp),
             ) {

@@ -4,7 +4,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import java.io.File
 
-
 private fun appDir(): File {
     val os = System.getProperty("os.name").lowercase()
     return when {
@@ -30,5 +29,4 @@ fun createAppDatabase(): RoomDatabase.Builder<AppDatabase> {
     return Room.databaseBuilder<AppDatabase>(
         name = dbFile.absolutePath,
     )
-
 }

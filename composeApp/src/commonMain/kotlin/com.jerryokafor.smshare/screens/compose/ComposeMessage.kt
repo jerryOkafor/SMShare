@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -61,9 +60,9 @@ import androidx.navigation.navArgument
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.ChannelImage
-import com.jerryokafor.smshare.screens.navigation.ChannelItemMenu
 import com.jerryokafor.smshare.component.SMSShareTextButton
 import com.jerryokafor.smshare.component.iconIndicatorForAccountType
+import com.jerryokafor.smshare.screens.navigation.ChannelItemMenu
 import com.jerryokafor.smshare.theme.FillingSpacer
 import com.jerryokafor.smshare.theme.OneVerticalSpacer
 import com.jerryokafor.smshare.theme.ThreeVerticalSpacer
@@ -145,7 +144,7 @@ fun ComposeMessage(
                     },
                     actions = {},
                 )
-            }
+            },
         )
 
         currentNnSetUpBottomAppBar(
@@ -188,11 +187,11 @@ fun ComposeMessage(
             maxLines = 10,
             textStyle = MaterialTheme.typography.bodyLarge,
             colors =
-            RichTextEditorDefaults.richTextEditorColors(
-                containerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-            ),
+                RichTextEditorDefaults.richTextEditorColors(
+                    containerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
             placeholder = { Text("What are we doing today?") },
             shape = RichTextEditorDefaults.outlinedShape,
         )
@@ -241,11 +240,12 @@ fun ComposeMessage(
                         Text("Select account")
                         FillingSpacer()
                         SMSShareTextButton(onClick = {
-                            scope.launch {
-                                sheetState.hide()
-                            }.invokeOnCompletion {
-                                showBottomSheet = false
-                            }
+                            scope
+                                .launch {
+                                    sheetState.hide()
+                                }.invokeOnCompletion {
+                                    showBottomSheet = false
+                                }
                         }) {
                             Text("Done")
                         }
@@ -279,7 +279,7 @@ fun ComposeMessage(
                     HorizontalDivider(
                         modifier = Modifier
                             .padding(start = 80.dp, end = 8.dp),
-                        thickness = 0.5.dp
+                        thickness = 0.5.dp,
                     )
                 }
 
@@ -287,20 +287,22 @@ fun ComposeMessage(
                     HorizontalDivider(
                         modifier = Modifier
                             .padding(start = 80.dp, end = 8.dp),
-                        thickness = 0.5.dp
+                        thickness = 0.5.dp,
                     )
                     Surface(onClick = {
-                        scope.launch {
-                            sheetState.hide()
-                        }.invokeOnCompletion {
-                            showBottomSheet = false
-                            scope.launch {
-                                onShowSnackbar("Coming soon", null)
+                        scope
+                            .launch {
+                                sheetState.hide()
+                            }.invokeOnCompletion {
+                                showBottomSheet = false
+                                scope.launch {
+                                    onShowSnackbar("Coming soon", null)
+                                }
                             }
-                        }
                     }, color = Color.Transparent) {
                         Row(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(start = 16.dp, end = 16.dp, bottom = 8.dp, top = 8.dp),
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically,
@@ -328,7 +330,7 @@ fun ComposeMessage(
                     HorizontalDivider(
                         modifier = Modifier
                             .padding(start = 80.dp, end = 8.dp),
-                        thickness = 0.5.dp
+                        thickness = 0.5.dp,
                     )
                 }
                 item { ThreeVerticalSpacer() }
@@ -360,7 +362,7 @@ fun ComposeControlButton(
             Text(
                 text = text,
                 color = color,
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium,
             )
         }
     }
@@ -378,7 +380,9 @@ fun NavGraphBuilder.composeMessageScreen(
 ) {
     composable(
         route = composeMessageRoutePattern,
-        arguments = listOf(navArgument(name = composeMessageAccountArg) { type = NavType.LongType })
+        arguments = listOf(
+            navArgument(name = composeMessageAccountArg) { type = NavType.LongType },
+        ),
     ) { bavBackstackEntry ->
         val accountId = bavBackstackEntry.arguments?.getLong(composeMessageAccountArg)
         ComposeMessage(
@@ -391,6 +395,9 @@ fun NavGraphBuilder.composeMessageScreen(
     }
 }
 
-fun NavController.navigateToCompose(accountId: Long?, navOptions: NavOptions? = null) {
+fun NavController.navigateToCompose(
+    accountId: Long?,
+    navOptions: NavOptions? = null,
+) {
     navigate("$composeMessageRoute?accountId=$accountId", navOptions)
 }

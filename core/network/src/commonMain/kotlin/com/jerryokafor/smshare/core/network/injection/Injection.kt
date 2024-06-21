@@ -10,17 +10,17 @@ import org.koin.dsl.module
 
 @OptIn(ExperimentalSerializationApi::class)
 fun commonNetworkModule() = module {
-        single<HttpClient> {
-            HttpClient {
-                install(ContentNegotiation) {
-                    val json =
-                        Json {
-                            ignoreUnknownKeys = true
-                            isLenient = true
-                            namingStrategy = JsonNamingStrategy.SnakeCase
-                        }
-                    json(json)
-                }
+    single<HttpClient> {
+        HttpClient {
+            install(ContentNegotiation) {
+                val json =
+                    Json {
+                        ignoreUnknownKeys = true
+                        isLenient = true
+                        namingStrategy = JsonNamingStrategy.SnakeCase
+                    }
+                json(json)
             }
         }
     }
+}

@@ -9,6 +9,7 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.compose.compiler.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
 }
 
 gradlePlugin {
@@ -32,6 +33,16 @@ gradlePlugin {
             register("androidApplication") {
                 id = "com.jerryokafor.smshare.android.application"
                 implementationClass = "com.jerryokafor.smshare.AndroidApplicationConventionPlugin"
+            }
+
+            register("detekt") {
+                id = "com.jerryokafor.smshare.android.detekt"
+                implementationClass = "com.jerryokafor.smshare.DetektConventionPlugin"
+            }
+
+            register("ktlint") {
+                id = "com.jerryokafor.smshare.android.ktlint"
+                implementationClass = "com.jerryokafor.smshare.KtLintConventionPlugin"
             }
         }
     }

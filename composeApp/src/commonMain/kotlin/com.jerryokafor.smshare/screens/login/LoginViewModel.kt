@@ -11,9 +11,14 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-data class LoginUiState(val isLoading: Boolean = false, val loginComplete: Boolean = false)
+data class LoginUiState(
+    val isLoading: Boolean = false,
+    val loginComplete: Boolean = false,
+)
 
-class LoginViewModel : ViewModel(), KoinComponent {
+class LoginViewModel :
+    ViewModel(),
+    KoinComponent {
     private val userDataStore: UserDataStore by inject()
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()

@@ -15,7 +15,7 @@ fun iOSModules() = module {
     includes(
         nativeDBModule(),
         nativeUserDatastoreModule(),
-        iosNetworkModules()
+        iosNetworkModules(),
     )
 
     single { Platform() }

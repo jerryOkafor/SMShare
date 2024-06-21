@@ -61,7 +61,7 @@ private fun SettingsPreview() {
 @Composable
 fun Settings(
     onSetupTopAppBar: () -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit = {}
+    onSetUpBottomAppBar: () -> Unit = {},
 ) {
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
@@ -72,10 +72,12 @@ fun Settings(
     }
     Box(Modifier.fillMaxSize()) {
         Column(
-            Modifier.fillMaxSize().padding(horizontal = 8.dp, vertical = 8.dp)
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp, vertical = 8.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             SettingsMenuSection(heading = "Accounts") {
                 SettingsItem(title = "Push Notifications", icon = Icons.Default.Notifications)
@@ -96,7 +98,7 @@ fun Settings(
                 MeniItemDivider()
                 SettingsItem(
                     title = "Restore in-App Subscriptions",
-                    icon = Icons.Default.FlashlightOn
+                    icon = Icons.Default.FlashlightOn,
                 )
             }
 
@@ -114,24 +116,23 @@ fun Settings(
 
             SettingsMenuSection(
                 heading = "Hot zone",
-                headingColor = MaterialTheme.colorScheme.error
+                headingColor = MaterialTheme.colorScheme.error,
             ) {
                 SettingsItem(
                     title = "Logout",
                     icon = Icons.AutoMirrored.Filled.Logout,
                     iconBackground = MaterialTheme.colorScheme.error.copy(alpha = 0.5f),
-                    iconTintColor = MaterialTheme.colorScheme.error
+                    iconTintColor = MaterialTheme.colorScheme.error,
                 )
                 MeniItemDivider()
                 SettingsItem(
                     title = "Delete Account",
                     icon = Icons.Default.Delete,
                     iconBackground = MaterialTheme.colorScheme.error.copy(alpha = 0.5f),
-                    iconTintColor = MaterialTheme.colorScheme.error
+                    iconTintColor = MaterialTheme.colorScheme.error,
                 )
             }
         }
-
     }
 }
 
@@ -139,12 +140,12 @@ const val settingRoute = "settings"
 
 fun NavGraphBuilder.settingsScreen(
     onSetupTopAppBar: () -> Unit = {},
-    onSetUpBottomAppBar: () -> Unit
+    onSetUpBottomAppBar: () -> Unit,
 ) {
     composable(settingRoute) {
         Settings(
             onSetupTopAppBar = onSetupTopAppBar,
-            onSetUpBottomAppBar = onSetUpBottomAppBar
+            onSetUpBottomAppBar = onSetUpBottomAppBar,
         )
     }
 }
@@ -157,7 +158,7 @@ fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
 private fun SettingsMenuSection(
     heading: String,
     headingColor: Color? = null,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Column {
         Text(
@@ -165,12 +166,12 @@ private fun SettingsMenuSection(
             modifier = Modifier.padding(start = 16.dp),
             color = headingColor ?: Color.Unspecified,
             style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
         )
         OneVerticalSpacer()
         Surface(
             shape = RoundedCornerShape(10.dp),
-            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
         ) {
             Column {
                 content()
@@ -184,7 +185,7 @@ private fun MeniItemDivider(modifier: Modifier = Modifier) {
     HorizontalDivider(
         thickness = 0.5.dp,
         modifier = modifier.padding(start = 60.dp, end = 8.dp),
-        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
     )
 }
 
@@ -195,27 +196,27 @@ private fun SettingsItem(
     textColor: Color? = null,
     iconTintColor: Color? = null,
     iconBackground: Color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Surface(
         shape = RoundedCornerShape(2.dp),
         color = Color.Transparent,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier.padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             OneHorizontalSpacer()
             Surface(
                 shape = RoundedCornerShape(10.dp),
-                color = iconBackground
+                color = iconBackground,
             ) {
                 Icon(
                     modifier = Modifier.padding(8.dp),
                     imageVector = icon,
                     contentDescription = "",
-                    tint = iconTintColor ?: LocalContentColor.current
+                    tint = iconTintColor ?: LocalContentColor.current,
                 )
             }
             TwoHorizontalSpacer()

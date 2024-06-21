@@ -1,14 +1,15 @@
-//package com.jerryokafor.smshare
+@file:Suppress("ktlint:standard:no-empty-file")
+// package com.jerryokafor.smshare
 //
-//import com.jerryokafor.smshare.core.model.User
-//import com.jerryokafor.smshare.core.rpc.UserData
-//import com.jerryokafor.smshare.core.rpc.UserService
-//import kotlinx.coroutines.delay
-//import kotlinx.coroutines.flow.Flow
-//import kotlinx.coroutines.flow.flow
-//import kotlin.coroutines.CoroutineContext
+// import com.jerryokafor.smshare.core.model.User
+// import com.jerryokafor.smshare.core.rpc.UserData
+// import com.jerryokafor.smshare.core.rpc.UserService
+// import kotlinx.coroutines.delay
+// import kotlinx.coroutines.flow.Flow
+// import kotlinx.coroutines.flow.flow
+// import kotlin.coroutines.CoroutineContext
 //
-//class RemoteUserService(override val coroutineContext: CoroutineContext) : UserService {
+// class RemoteUserService(override val coroutineContext: CoroutineContext) : UserService {
 //    override suspend fun hello(
 //        user: String,
 //        userData: UserData,
@@ -38,4 +39,4 @@
 //            token = "andsnldnlsnldnlsndnsndlnslndlnsl",
 //        )
 //    }
-//}
+// }

@@ -50,7 +50,8 @@ fun SMSShareTextButton(
         if (isLoading) {
             CircularProgressIndicator(
                 modifier =
-                    Modifier.align(Alignment.Center)
+                    Modifier
+                        .align(Alignment.Center)
                         .size(30.dp),
                 strokeCap = StrokeCap.Round,
                 strokeWidth = 1.dp,

@@ -115,24 +115,23 @@ data class SMSShareTypography(
             letterSpacing = 0.sp,
         ),
 ) {
-    internal fun toMaterialTypography() =
-        Typography(
-            displayLarge = displayLarge,
-            displayMedium = displayMedium,
-            displaySmall = displaySmall,
-            headlineLarge = headlineLarge,
-            headlineMedium = headlineMedium,
-            headlineSmall = headlineSmall,
-            titleLarge = titleLarge,
-            titleMedium = titleMedium,
-            titleSmall = titleSmall,
-            bodyLarge = bodyLarge,
-            bodyMedium = bodyMedium,
-            bodySmall = bodySmall,
-            labelLarge = labelLarge,
-            labelMedium = labelMedium,
-            labelSmall = labelSmall,
-        )
+    internal fun toMaterialTypography() = Typography(
+        displayLarge = displayLarge,
+        displayMedium = displayMedium,
+        displaySmall = displaySmall,
+        headlineLarge = headlineLarge,
+        headlineMedium = headlineMedium,
+        headlineSmall = headlineSmall,
+        titleLarge = titleLarge,
+        titleMedium = titleMedium,
+        titleSmall = titleSmall,
+        bodyLarge = bodyLarge,
+        bodyMedium = bodyMedium,
+        bodySmall = bodySmall,
+        labelLarge = labelLarge,
+        labelMedium = labelMedium,
+        labelSmall = labelSmall,
+    )
 }
 
 internal val LocalIhenkiriTypography = staticCompositionLocalOf { SMSShareTypography() }

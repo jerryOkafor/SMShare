@@ -77,12 +77,13 @@ import kotlin.math.min
 
 sealed interface SideNavMenuAction {
     data object Logout : SideNavMenuAction
+
     data object AddNewConnection : SideNavMenuAction
+
     data object ManageTags : SideNavMenuAction
 }
 
 fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
-
     override val spacing = space
 
     override fun Density.arrange(
@@ -113,7 +114,7 @@ fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
 @Composable
 fun SideNav(
     accounts: List<Account>,
-    onClose: (SideNavMenuAction?) -> Unit
+    onClose: (SideNavMenuAction?) -> Unit,
 ) {
     ModalDrawerSheet(
         modifier = Modifier.width(280.dp),
@@ -121,7 +122,7 @@ fun SideNav(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = spacedByWithFooter(0.dp)
+            verticalArrangement = spacedByWithFooter(0.dp),
         ) {
             item {
                 Text(
@@ -130,7 +131,7 @@ fun SideNav(
                         start = 16.dp,
                         end = 16.dp,
                         top = 16.dp,
-                        bottom = 8.dp
+                        bottom = 8.dp,
                     ),
                     style = MaterialTheme.typography.titleLarge,
                 )
@@ -145,7 +146,10 @@ fun SideNav(
                     ) {
                         onClose(null)
                     }
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp),thickness = 0.5.dp)
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 8.dp),
+                        thickness = 0.5.dp,
+                    )
                     SideNavMenu(
                         title = "Calendar",
                         subTitle = "See your schedule wide",
@@ -162,8 +166,8 @@ fun SideNav(
                         start = 16.dp,
                         end = 16.dp,
                         top = 16.dp,
-                        bottom = 8.dp
-                    )
+                        bottom = 8.dp,
+                    ),
                 )
                 MenuGroup {
                     accounts.forEachIndexed { index, account ->
@@ -175,23 +179,24 @@ fun SideNav(
                             onClick = { onClose(null) },
                         )
 
-                        //Add divider except for the last item
+                        // Add divider except for the last item
                         if (index < accounts.size - 1) {
                             HorizontalDivider(
                                 modifier = Modifier
                                     .height(0.5.dp)
-                                    .padding(start = 80.dp, end = 8.dp)
+                                    .padding(start = 80.dp, end = 8.dp),
                             )
                         }
                     }
 
                     if (accounts.isEmpty()) {
                         Row(
-                            modifier = Modifier.padding(
-                                vertical = 8.dp,
-                                horizontal = 16.dp
-                            ).fillParentMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
+                            modifier = Modifier
+                                .padding(
+                                    vertical = 8.dp,
+                                    horizontal = 16.dp,
+                                ).fillParentMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
                         ) { Text("No Account", color = MaterialTheme.colorScheme.error) }
                     }
                 }
@@ -209,9 +214,9 @@ fun SideNav(
                     MoreMenuItem(
                         title = stringResource(Res.string.title_manage_tags),
                         icon = Icons.Default.Tag,
-                        onClick = { onClose(SideNavMenuAction.ManageTags) })
+                        onClick = { onClose(SideNavMenuAction.ManageTags) },
+                    )
                 }
-
             }
 
             item {
@@ -221,15 +226,15 @@ fun SideNav(
                         start = 16.dp,
                         end = 16.dp,
                         top = 16.dp,
-                        bottom = 8.dp
-                    )
+                        bottom = 8.dp,
+                    ),
                 )
                 MenuGroup(modifier = Modifier) {
                     MoreMenuItem(
                         title = stringResource(Res.string.title_logout),
                         color = Color.Red,
                         icon = Icons.AutoMirrored.Filled.Logout,
-                        onClick = { onClose(SideNavMenuAction.Logout) }
+                        onClick = { onClose(SideNavMenuAction.Logout) },
                     )
                 }
                 Spacer(modifier = Modifier.height(50.dp))
@@ -241,7 +246,7 @@ fun SideNav(
 @Composable
 fun MenuGroup(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Surface(
         modifier = modifier,
@@ -264,7 +269,8 @@ fun SideNavMenu(
 ) {
     Surface(onClick = onClick) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(start = 16.dp, end = 8.dp, bottom = 8.dp, top = 8.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
@@ -312,7 +318,8 @@ fun ChannelItemMenu(
 ) {
     Surface(onClick = onClick, color = color) {
         Row(
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
                 .padding(start = 16.dp, end = 8.dp, bottom = 8.dp, top = 8.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
@@ -341,7 +348,8 @@ fun MoreMenuItem(
 ) {
     Surface(onClick = onClick) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(start = 16.dp, end = 8.dp, bottom = 8.dp, top = 8.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,

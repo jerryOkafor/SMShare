@@ -8,22 +8,23 @@ import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
 
+@Suppress("TopLevelPropertyNaming", "ktlint:standard:property-naming")
 internal const val dataStoreFileName = "sms.share_pb"
 
 val json = Json { ignoreUnknownKeys = true }
 
-class UserDataStore(private val produceFilePath: () -> String) {
-    private val db =
-        DataStoreFactory.create(
-            storage =
-                OkioStorage(
-                    fileSystem = FileSystem.SYSTEM,
-                    serializer = UserPreferencesSerializer,
-                    producePath = {
-                        produceFilePath().toPath()
-                    },
-                ),
-        )
+class UserDataStore(
+    private val produceFilePath: () -> String,
+) {
+    private val db = DataStoreFactory.create(
+        storage = OkioStorage(
+            fileSystem = FileSystem.SYSTEM,
+            serializer = UserPreferencesSerializer,
+            producePath = {
+                produceFilePath().toPath()
+            },
+        ),
+    )
 
     val user: Flow<UserData>
         get() = db.data
