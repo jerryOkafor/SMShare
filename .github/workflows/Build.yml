@@ -26,6 +26,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Decrypt large secret
+        shell: bash
+        run: |
+          ./scripts/decrypt_secret.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
 
