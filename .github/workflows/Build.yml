@@ -90,22 +90,30 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-konan-
 
+      - name: Install Dependencies
+        run: |
+          cd Example
+          pod install --repo-update
+        shell: bash
+
       - name: Build iOS app
         run: |
-          xcodebuild -allowProvisioningUpdates \
-          -project iosApp/iosApp.xcodeproj \
+          xcodebuild \
+          -workspace iosApp/iosApp.xcworkspace \
           -configuration Debug \
           -scheme iosApp \
           -sdk iphoneos \
+          -allowProvisioningUpdates \
           -destination name='iPhone 14' build
 
 #      - name: Run iOS unit tests
 #        run: |
-#          xcodebuild -allowProvisioningUpdates \
-#          -project iosApp/iosApp.xcodeproj \
+#          xcodebuild \
+#          -workspace iosApp/iosApp.xcworkspace \
 #          -configuration Debug \
 #          -scheme iosApp -sdk iphoneos \
 #          -destination name='iPhone 14' test \
+#          -allowProvisioningUpdates \
 #          -test-timeouts-enabled YES
 
   build-android:
@@ -148,8 +156,8 @@ jobs:
       - name: Build
         run: ./gradlew :composeApp:assemble
 
-#      - name: Test Android
-#        run: ./gradlew clean testDebugUnitTest -p composeApp/
+  #      - name: Test Android
+  #        run: ./gradlew clean testDebugUnitTest -p composeApp/
 
   build-desktop:
     name: BuildComposeApp(Desktop)
