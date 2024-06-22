@@ -92,7 +92,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd Example
+          cd iosApp
           pod install --repo-update
         shell: bash
 
@@ -106,15 +106,15 @@ jobs:
           -allowProvisioningUpdates \
           -destination name='iPhone 14' build
 
-#      - name: Run iOS unit tests
-#        run: |
-#          xcodebuild \
-#          -workspace iosApp/iosApp.xcworkspace \
-#          -configuration Debug \
-#          -scheme iosApp -sdk iphoneos \
-#          -destination name='iPhone 14' test \
-#          -allowProvisioningUpdates \
-#          -test-timeouts-enabled YES
+  #      - name: Run iOS unit tests
+  #        run: |
+  #          xcodebuild \
+  #          -workspace iosApp/iosApp.xcworkspace \
+  #          -configuration Debug \
+  #          -scheme iosApp -sdk iphoneos \
+  #          -destination name='iPhone 14' test \
+  #          -allowProvisioningUpdates \
+  #          -test-timeouts-enabled YES
 
   build-android:
     runs-on: macos-latest
