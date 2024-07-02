@@ -168,7 +168,7 @@ jobs:
 
   test-android:
     name: Test Android UI
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     needs:
       - build-android
 
