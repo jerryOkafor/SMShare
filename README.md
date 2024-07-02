@@ -240,6 +240,7 @@ or Using Gradle command
 - [Understanding and Configuring your Kotlin Multiplatform Mobile Test Suite](https://touchlab.co/understanding-and-configuring-your-kmm-test-suite)
 - [KMM-PicSplash](https://github.com/cvivek07/KMM-PicSplash)
 - [Native distributions & local execution](https://github.com/JetBrains/compose-multiplatform/tree/master/tutorials/Native_distributions_and_local_execution)
+- [GitHub Actions: Firebase Test Lab](https://medium.com/firebase-developers/github-actions-firebase-test-lab-4bc830685a99)
 
 ## Contributions
 

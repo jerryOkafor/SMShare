@@ -67,6 +67,7 @@ kotlin {
         // https://github.com/tonymillion/Reachability
         pod("Reachability") {
             version = libs.versions.reachability.get()
+            headers = "Reachability-umbrella.h"
         }
     }
 }
