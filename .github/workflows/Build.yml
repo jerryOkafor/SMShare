@@ -204,6 +204,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-konan-
 
+      - name: Build APK
+        run: ./gradlew assembleDebug
+
+
       - name: Build Android Test APK
         run: ./gradlew assembleAndroidTest
 
