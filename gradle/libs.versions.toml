@@ -3,16 +3,19 @@ kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
 annotationVersion = "1.6.11"
 
-agp = "8.5.0"
+androidGradlePlugin = "8.5.0"
 iosDeploymentVersion = "17.5"
 reachability = "3.7.5"
 
-composeMultiplatform = "1.6.11"
+composeMultiplatform = "1.7.0-alpha01"
 #https://androidx.dev/storage/compose-compiler/repository
 kotlinCompilerPlugin = "1.5.14"
-navigationCompose = "2.7.0-alpha07"
+navigationCompose = "2.8.0-alpha08"
+richeditorCompose = "1.0.0-rc05"
+uiTestJunit4Android = "1.6.8"
 uiToolingPreviewAndroid = "1.7.0-beta04"
 windowSizeClass = "0.5.0"
+flexibleBottomsheetMaterial3 = "0.1.3"
 
 # Room
 room = "2.7.0-alpha04"
@@ -71,8 +74,13 @@ ktlint = "1.3.0"
 jacoco = "0.8.12"
 lint = "31.4.0"
 testParameterInjector = "1.12"
+firebaseTestLab = "2.6.2"
 
 [libraries]
+androidx-ui-test-junit4-android = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "uiTestJunit4Android" }
+flexible-bottomsheet-material3 = { module = "com.github.skydoves:flexible-bottomsheet-material3", version.ref = "flexibleBottomsheetMaterial3" }
+richeditor-compose = { module = "com.mohamedrejeb.richeditor:richeditor-compose", version.ref = "richeditorCompose" }
 tools-desugarjdklibs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "esugaJdkLibs" }
 
 # Kotlin
@@ -190,16 +198,18 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 # build-logic dependencies
-android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+android-gradlePlugin-api = { module = "com.android.tools.build:gradle-api", version.ref = "androidGradlePlugin" }
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 compose-compiler-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 compose-gradlePlugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "composeMultiplatform" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 detekt-gradlePlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+firebase-testLab-gradlePlugin = { module = "firebase.test.lab:plugin", version.ref = "firebaseTestLab" }
 
 [plugins]
-androidApplication = { id = "com.android.application", version.ref = "agp" }
-androidLibrary = { id = "com.android.library", version.ref = "agp" }
+androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 cacheFix = { id = "org.gradle.android.cache-fix", version.ref = "cacheFix" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -215,3 +225,13 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 io-gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+firebase-testLab = { id = "firebase.test.lab", version.ref = "firebaseTestLab" }
+
+
+# Plugins defined by this project
+smshare-android-application = { id = "com.jerryokafor.smshare.android.application", version = "unspecified" }
+smshare-android-library = { id = "com.jerryokafor.smshare.android.library", version = "unspecified" }
+smshare-kotlin-multiplatform = { id = "com.jerryokafor.smshare.multiplatform", version = "unspecified" }
+smshare-firebase-testLab = { id = "com.jerryokafor.smshare.firebase.testLab", version = "unspecified" }
+smshare-detekt = { id = "com.jerryokafor.smshare.detekt", version = "unspecified" }
+smshare-ktlint = { id = "com.jerryokafor.smshare.ktlint", version = "unspecified" }

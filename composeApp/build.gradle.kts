@@ -3,16 +3,17 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
+    alias(libs.plugins.smshare.android.application)
     alias(libs.plugins.kotlinMultiplatform)
-    id("com.jerryokafor.smshare.android.application")
-    id("com.jerryokafor.smshare.android.detekt")
-    id("com.jerryokafor.smshare.android.ktlint")
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
 //    alias(libs.plugins.kotlinx.rpc.platform)
+    alias(libs.plugins.smshare.detekt)
+    alias(libs.plugins.smshare.ktlint)
 }
 
 kotlin {
+
 //    @OptIn(ExperimentalWasmDsl::class)
 //    wasmJs {
 //        moduleName = "composeApp"
@@ -37,8 +38,8 @@ kotlin {
             sourceSetTree.set(KotlinSourceSetTree.test)
 
             dependencies {
-                implementation("androidx.compose.ui:ui-test-junit4-android:1.6.8")
-                debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
+//                implementation(libs.androidx.ui.test.junit4.android)
+                debugImplementation(libs.androidx.ui.test.manifest)
             }
         }
     }
@@ -56,12 +57,11 @@ kotlin {
         }
     }
 
+    composeCompiler {
+        enableStrongSkippingMode = true
+    }
+
     sourceSets {
-
-        all {
-            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
-        }
-
         val desktopMain by getting
         val desktopTest by getting
 
@@ -98,8 +98,8 @@ kotlin {
 
             implementation(libs.navigation.compose)
 
-            implementation("com.mohamedrejeb.richeditor:richeditor-compose:1.0.0-rc05")
-            implementation("com.github.skydoves:flexible-bottomsheet-material3:0.1.3")
+            implementation(libs.richeditor.compose)
+            implementation(libs.flexible.bottomsheet.material3)
 
             api(libs.koin.core)
             api(libs.koin.test)
@@ -108,8 +108,6 @@ kotlin {
         }
 
         commonTest.dependencies {
-//            implementation(libs.kotlin.test)
-
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
         }
@@ -167,10 +165,10 @@ android {
         implementation(libs.androidx.activity.ktx)
         implementation(libs.androidx.browser)
 
-//        testImplementation(libs.junit)
-//
-//        androidTestImplementation(libs.androidx.test.junit)
-//        androidTestImplementation(libs.androidx.espresso.core)
+        testImplementation(libs.junit)
+
+        androidTestImplementation(libs.androidx.test.junit)
+        androidTestImplementation(libs.androidx.espresso.core)
     }
 }
 

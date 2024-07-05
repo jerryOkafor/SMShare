@@ -1,9 +1,9 @@
 package com.jerryokafor.smshare
 
+import com.android.build.api.dsl.LibraryExtension
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.api.variant.HasUnitTestBuilder
 import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.LibraryExtension
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
@@ -24,6 +24,7 @@ fun Project.configureAndroid() {
                 .get()
                 .toString()
                 .toInt()
+
             targetSdk = libs
                 .findVersion("android-targetSdk")
                 .get()
@@ -71,9 +72,9 @@ fun Project.configureAndroid() {
     }
 }
 
-private fun Project.android(action: BaseExtension.() -> Unit) =
+fun Project.android(action: BaseExtension.() -> Unit) =
     extensions.configure<BaseExtension>(action)
 
-private fun Project.androidComponents(action: AndroidComponentsExtension<*, *, *>.() -> Unit) {
+fun Project.androidComponents(action: AndroidComponentsExtension<*, *, *>.() -> Unit) {
     extensions.configure(AndroidComponentsExtension::class.java, action)
 }

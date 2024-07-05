@@ -7,32 +7,30 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 pluginManagement {
     includeBuild("build-logic")
     repositories {
+        maven { url = uri("") }
+        gradlePluginPortal()
         google {
-            mavenContent {
-                includeGroupAndSubgroups("androidx")
-                includeGroupAndSubgroups("com.android")
-                includeGroupAndSubgroups("com.google")
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
             }
         }
-        maven(url = "https://plugins.gradle.org/m2/")
-        maven(url = "https://maven.pkg.jetbrains.space/public/p/krpc/maven")
         mavenCentral()
         gradlePluginPortal()
+        maven(url = "https://plugins.gradle.org/m2/")
+        maven(url = "https://maven.pkg.jetbrains.space/public/p/krpc/maven")
     }
 }
 
 dependencyResolutionManagement {
     repositories {
-        google {
-            mavenContent {
-                includeGroupAndSubgroups("androidx")
-                includeGroupAndSubgroups("com.android")
-                includeGroupAndSubgroups("com.google")
-            }
-        }
+        maven { url = uri("") }
+        google()
+        mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
         maven(url = "https://plugins.gradle.org/m2/")
         maven(url = "https://maven.pkg.jetbrains.space/public/p/krpc/maven")
-        mavenCentral()
     }
 }
 

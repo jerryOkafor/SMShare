@@ -15,4 +15,5 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.buildKonfig) apply false
     alias(libs.plugins.io.gitlab.arturbosch.detekt) apply false
+//    alias(libs.plugins.firebase.testLab) apply false
 }

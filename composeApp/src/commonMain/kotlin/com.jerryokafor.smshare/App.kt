@@ -370,7 +370,7 @@ fun Home(
 
     val hapticFeedback = LocalHapticFeedback.current
     val mainBottomNavigation: @Composable () -> Unit = {
-        NavigationBar(modifier = Modifier.background(Color.Red)) {
+        NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
             listOf(
                 NavItem.Posts(),
                 NavItem.Drafts(),

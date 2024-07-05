@@ -2,10 +2,10 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
-    id("com.jerryokafor.smshare.android.library")
-    id("com.jerryokafor.smshare.multiplatform")
-    id("com.jerryokafor.smshare.android.detekt")
-    id("com.jerryokafor.smshare.android.ktlint")
+    alias(libs.plugins.smshare.android.library)
+    alias(libs.plugins.smshare.kotlin.multiplatform)
+    alias(libs.plugins.smshare.detekt)
+    alias(libs.plugins.smshare.ktlint)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
