@@ -55,6 +55,7 @@ kotlin {
         val desktopMain by getting
         val desktopTest by getting
 
+        @Suppress("UnusedPrivateProperty")
         val androidUnitTest by getting {
             dependencies {
                 implementation(libs.junit)

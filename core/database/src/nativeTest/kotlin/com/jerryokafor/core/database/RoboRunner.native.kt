@@ -1,3 +1,4 @@
+@file:Suppress("MatchingDeclarationName", "ktlint:standard:filename")
 /*
  * MIT License
  *
