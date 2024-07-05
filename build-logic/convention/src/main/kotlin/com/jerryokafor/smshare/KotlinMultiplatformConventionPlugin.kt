@@ -26,7 +26,7 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
             iosArm64()
             iosSimulatorArm64()
 
-            jvm()
+            jvm("desktop")
 
             targets.withType<KotlinNativeTarget>().configureEach {
                 binaries.configureEach {

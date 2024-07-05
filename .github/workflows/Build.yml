@@ -350,6 +350,6 @@ jobs:
 
       - name: Test Desktop
         run: |
-          ./gradlew clean desktopTest -p composeApp  cleanJvmTest jvmTest
+          ./gradlew clean desktopTest
 #
 #    # https://proandroiddev.com/optimising-ci-build-times-of-a-kotlin-multiplatform-project-2a430055f383

@@ -14,6 +14,9 @@ version = "1.0.0"
 
 kotlin {
     sourceSets {
+        val desktopMain by getting
+        val desktopTest by getting
+
         androidMain.dependencies {
             implementation(libs.ktor.client.android)
             implementation(libs.dev.whyoleg.cryptography.provider.jdk)
@@ -39,7 +42,7 @@ kotlin {
             implementation(libs.dev.whyoleg.cryptography.provider.apple)
         }
 
-        jvmMain.dependencies {
+        desktopMain.dependencies {
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
             implementation(libs.dev.whyoleg.cryptography.provider.jdk)
