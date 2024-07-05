@@ -72,8 +72,7 @@ fun Project.configureAndroid() {
     }
 }
 
-fun Project.android(action: BaseExtension.() -> Unit) =
-    extensions.configure<BaseExtension>(action)
+fun Project.android(action: BaseExtension.() -> Unit) = extensions.configure<BaseExtension>(action)
 
 fun Project.androidComponents(action: AndroidComponentsExtension<*, *, *>.() -> Unit) {
     extensions.configure(AndroidComponentsExtension::class.java, action)

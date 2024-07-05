@@ -13,9 +13,9 @@
         android:theme="@style/Theme.SMShare.Splash">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,6 +34,8 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
+
+        <activity android:name="androidx.activity.ComponentActivity" />
     </application>
 
 </manifest>

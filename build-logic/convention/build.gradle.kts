@@ -19,6 +19,7 @@ dependencies {
     compileOnly(libs.compose.compiler.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.firebase.testLab.gradlePlugin)
+    compileOnly(libs.kover.gradlePlugin)
     implementation(gradleKotlinDsl())
 }
 
@@ -54,6 +55,14 @@ gradlePlugin {
             implementationClass = "com.jerryokafor.smshare.KtLintConventionPlugin"
         }
 
+        register("firebaseTestLab") {
+            id = "com.jerryokafor.smshare.firebase.testLab"
+            implementationClass = "com.jerryokafor.smshare.FirebaseTestLabConvention"
+        }
+        register("testCoverage") {
+            id = "com.jerryokafor.smshare.coverage"
+            implementationClass = "com.jerryokafor.smshare.CoverageConventionPlugin"
+        }
     }
 }
 

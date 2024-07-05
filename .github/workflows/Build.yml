@@ -213,57 +213,57 @@ jobs:
   #      - name: Test Android
   #        run: ./gradlew clean testDebugUnitTest -p composeApp/
 
-  android-instrumented-test:
-    name: Android Instrument Test
-    runs-on: ubuntu-latest
-    needs:
-      - build-android
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Decrypt large secret
-        shell: bash
-        run: |
-          ./scripts/decrypt_secret.sh
-        env:
-          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
-
-      - name: Set Up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: 17
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Setup Kotlin/Native compile(Konan) Cache
-        if: always()
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.konan/caches
-            ~/.konan/dependencies
-            ~/.konan/kotlin-native-prebuilt-macos-*
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
-          restore-keys: |
-            ${{ runner.os }}-konan-
-
-      - name: Build APK
-        run: ./gradlew assembleDebug
-
-
-      - name: Build Android Test APK
-        run: ./gradlew assembleAndroidTest
-
-      - name: Run Android tests on Firebase Test Lab
-        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
-        with:
-          arg-spec: 'android-device.yml:android-pixel-4'
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+  #  android-instrumented-test:
+  #    name: Android Instrument Test
+  #    runs-on: ubuntu-latest
+  #    needs:
+  #      - build-android
+  #
+  #    steps:
+  #      - name: Checkout
+  #        uses: actions/checkout@v4
+  #
+  #      - name: Decrypt large secret
+  #        shell: bash
+  #        run: |
+  #          ./scripts/decrypt_secret.sh
+  #        env:
+  #          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+  #
+  #      - name: Set Up JDK 17
+  #        uses: actions/setup-java@v4
+  #        with:
+  #          distribution: "zulu"
+  #          java-version: 17
+  #
+  #      - name: Setup Gradle
+  #        uses: gradle/actions/setup-gradle@v3
+  #
+  #      - name: Setup Kotlin/Native compile(Konan) Cache
+  #        if: always()
+  #        uses: actions/cache@v4
+  #        with:
+  #          path: |
+  #            ~/.konan/caches
+  #            ~/.konan/dependencies
+  #            ~/.konan/kotlin-native-prebuilt-macos-*
+  #          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
+  #          restore-keys: |
+  #            ${{ runner.os }}-konan-
+  #
+  #      - name: Build APK
+  #        run: ./gradlew assembleDebug
+  #
+  #
+  #      - name: Build Android Test APK
+  #        run: ./gradlew assembleAndroidTest
+  #
+  #      - name: Run Android tests on Firebase Test Lab
+  #        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+  #        with:
+  #          arg-spec: 'android-device.yml:android-pixel-4'
+  #        env:
+  #          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
   android-unit-test:
     name: Android Unit Test
@@ -348,7 +348,8 @@ jobs:
       - name: Build
         run: ./gradlew :composeApp:desktopJar
 
-#      - name: Test Desktop
-#        run: ./gradlew clean desktopTest -p composeApp
+      - name: Test Desktop
+        run: |
+          ./gradlew clean desktopTest -p composeApp  cleanJvmTest jvmTest
 #
 #    # https://proandroiddev.com/optimising-ci-build-times-of-a-kotlin-multiplatform-project-2a430055f383

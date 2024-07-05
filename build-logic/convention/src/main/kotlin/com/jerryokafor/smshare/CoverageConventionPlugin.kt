@@ -22,13 +22,31 @@
  * SOFTWARE.
  */
 
-package com.jerryokafor.core.database
+package com.jerryokafor.smshare
 
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import kotlinx.kover.gradle.plugin.dsl.KoverProjectExtension
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.findByType
 
-internal actual fun createTestDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> = Room
-    .inMemoryDatabaseBuilder {
-        AppDatabase::class.instantiateImpl()
-    }.setDriver(BundledSQLiteDriver())
+class CoverageConventionPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply("org.jetbrains.kotlinx.kover")
+
+            extensions.findByType<KoverProjectExtension>()?.apply {
+                reports {
+                }
+                currentProject {
+                    instrumentation {
+                        disabledForTestTasks.add(":composeApp:testDebugUnitTest")
+                    }
+                    createVariant("custom") {
+                        add("debug")
+                        add("jvm")
+                    }
+                }
+            }
+        }
+    }
+}

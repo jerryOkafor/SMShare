@@ -22,13 +22,6 @@
  * SOFTWARE.
  */
 
-package com.jerryokafor.core.database
+package com.jerryokafor.smshare
 
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-
-internal actual fun createTestDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> = Room
-    .inMemoryDatabaseBuilder {
-        AppDatabase::class.instantiateImpl()
-    }.setDriver(BundledSQLiteDriver())
+actual abstract class UsingContextTest actual constructor()

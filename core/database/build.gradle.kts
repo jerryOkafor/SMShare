@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
-
 plugins {
     alias(libs.plugins.smshare.android.library)
     alias(libs.plugins.smshare.kotlin.multiplatform)
@@ -9,32 +6,21 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.smshare.coverage)
 }
 
 kotlin {
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        instrumentedTestVariant {
-            sourceSetTree.set(KotlinSourceSetTree.test)
-        }
-    }
+    androidTarget {}
 
     sourceSets {
         androidUnitTest {
             dependencies {
                 implementation(libs.junit)
                 implementation(libs.androidx.test.junit)
-                implementation("org.robolectric:robolectric:4.12.2")
+                implementation(libs.robolectric)
             }
         }
-        androidInstrumentedTest {
-            dependencies {
-                implementation(libs.androidx.test.junit)
-                implementation(libs.androidx.test.junit.ktx)
-                implementation(libs.androidx.espresso.core)
-                implementation(libs.google.truth)
-            }
-        }
+
         androidMain {
             dependencies {
                 implementation(libs.androidx.room.runtime.android)
@@ -48,7 +34,8 @@ kotlin {
                 implementation(projects.core.model)
 
                 api(libs.androidx.room.runtime)
-                implementation(libs.androidx.sqlite.bundled)
+                api(libs.androidx.sqlite.bundled)
+
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.datetime)
             }
@@ -58,18 +45,10 @@ kotlin {
             dependencies {
                 implementation(libs.kotlinx.coroutines.test)
                 implementation(libs.kotlin.test)
-                implementation(libs.kotlin.test.common)
-                implementation(libs.kotlin.test.annotations.common)
-            }
-        }
 
-        jvmTest.dependencies {
-            implementation(libs.kotlin.test)
-//            implementation(libs.kotlin.test.junit5)
-            implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
-            implementation("org.junit.jupiter:junit-jupiter-engine:5.5.2")
-            implementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
-            implementation("org.junit.jupiter:junit-jupiter-params:5.5.2")
+//                implementation(libs.kotlin.test.common)
+//                implementation(libs.kotlin.test.annotations.common)
+            }
         }
     }
 }
@@ -83,7 +62,7 @@ android {
     }
 
     dependencies {
-        androidTestImplementation(libs.androidx.test.runner)
+        testImplementation(libs.junit)
     }
 }
 

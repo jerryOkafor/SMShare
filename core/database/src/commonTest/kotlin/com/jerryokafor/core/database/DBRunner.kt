@@ -24,11 +24,4 @@
 
 package com.jerryokafor.core.database
 
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-
-internal actual fun createTestDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> = Room
-    .inMemoryDatabaseBuilder {
-        AppDatabase::class.instantiateImpl()
-    }.setDriver(BundledSQLiteDriver())
+expect abstract class DBRunner()

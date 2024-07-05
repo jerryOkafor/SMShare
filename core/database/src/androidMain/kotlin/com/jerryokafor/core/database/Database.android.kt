@@ -12,5 +12,4 @@ fun createRoomDatabase(app: Application): RoomDatabase.Builder<AppDatabase> {
             context = app,
             name = dbFile.absolutePath,
         ).enableMultiInstanceInvalidation()
-//        .setAutoCloseTimeout()
 }

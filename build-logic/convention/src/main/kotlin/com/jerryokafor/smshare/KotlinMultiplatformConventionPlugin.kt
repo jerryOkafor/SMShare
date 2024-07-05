@@ -16,7 +16,9 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
         extensions.configure<KotlinMultiplatformExtension> {
             applyDefaultHierarchyTemplate()
 
-            if (pluginManager.hasPlugin("com.android.library")) {
+            if (pluginManager.hasPlugin("com.android.library") ||
+                pluginManager.hasPlugin("com.android.application")
+            ) {
                 androidTarget()
             }
 

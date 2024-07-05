@@ -39,7 +39,9 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import kotlin.test.Test
 
-class ExampleTest {
+expect abstract class UsingContextTest()
+
+class ExampleTest : UsingContextTest() {
     @OptIn(ExperimentalTestApi::class)
     @Test
     fun myTest() = runComposeUiTest {

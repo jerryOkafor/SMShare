@@ -1,18 +1,18 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSetTree
 
 plugins {
-    alias(libs.plugins.smshare.android.application)
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.smshare.android.application)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
 //    alias(libs.plugins.kotlinx.rpc.platform)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
+    alias(libs.plugins.smshare.coverage)
 }
 
 kotlin {
+    applyDefaultHierarchyTemplate()
 
 //    @OptIn(ExperimentalWasmDsl::class)
 //    wasmJs {
@@ -32,17 +32,7 @@ kotlin {
 //    }
 
     // Run instrumented (emulator) tests for Android
-    androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        instrumentedTestVariant {
-            sourceSetTree.set(KotlinSourceSetTree.test)
-
-            dependencies {
-//                implementation(libs.androidx.ui.test.junit4.android)
-                debugImplementation(libs.androidx.ui.test.manifest)
-            }
-        }
-    }
+    androidTarget {}
 
     jvm("desktop")
 
@@ -64,6 +54,19 @@ kotlin {
     sourceSets {
         val desktopMain by getting
         val desktopTest by getting
+
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.junit)
+                implementation(libs.androidx.test.junit)
+                implementation(libs.robolectric)
+
+                implementation(libs.androidx.ui.test.junit4.android)
+                implementation(libs.androidx.ui.test.manifest)
+
+                implementation("androidx.fragment:fragment-testing:1.8.1")
+            }
+        }
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -140,26 +143,32 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerPlugin.get()
     }
+
     dependencies {
         implementation(libs.androidx.core.splashscreen)
         implementation(libs.androidx.activity.ktx)
