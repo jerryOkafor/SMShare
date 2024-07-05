@@ -61,7 +61,7 @@ jobs:
         run: ./gradlew detekt ktlintCheck
 
   build-ios:
-    name: Build iOS
+    name: Build, Test iOS
     runs-on: macos-latest
     needs:
       - verify_code_quality
@@ -113,66 +113,13 @@ jobs:
           -allowProvisioningUpdates \
           -destination name='iPhone 14' build
 
-  #      - name: Run iOS unit tests
-  #        run: |
-  #          xcodebuild \
-  #          -workspace iosApp/iosApp.xcworkspace \
-  #          -configuration Debug \
-  #          -scheme iosApp -sdk iphoneos \
-  #          -destination name='iPhone 14' test \
-  #          -allowProvisioningUpdates \
-  #          -test-timeouts-enabled YES
-
-  ios-simulator-test:
-    name: iOS simulator tests
-    runs-on: macos-latest
-    needs:
-      - build-ios
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Decrypt large secret
-        shell: bash
-        run: |
-          ./scripts/decrypt_secret.sh
-        env:
-          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
-
-      - name: Set Up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: 17
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Setup Kotlin/Native compile(Konan) Cache
-        if: always()
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.konan/caches
-            ~/.konan/dependencies
-            ~/.konan/kotlin-native-prebuilt-macos-*
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
-          restore-keys: |
-            ${{ runner.os }}-konan-
-
-      - name: Install Dependencies
-        run: |
-          cd iosApp
-          pod install --repo-update
-        shell: bash
-
       - name: Run iOS simulator Tests
         run: |
           ./gradlew :composeApp:iosSimulatorArm64Test :core:database:iosSimulatorArm64Test
 
   build-android:
     runs-on: macos-latest
-    name: Build Android
+    name: Build, Test Android
     needs:
       - verify_code_quality
     steps:
@@ -210,105 +157,13 @@ jobs:
       - name: Build
         run: ./gradlew :composeApp:assembleDebug
 
-  #      - name: Test Android
-  #        run: ./gradlew clean testDebugUnitTest -p composeApp/
-
-  #  android-instrumented-test:
-  #    name: Android Instrument Test
-  #    runs-on: ubuntu-latest
-  #    needs:
-  #      - build-android
-  #
-  #    steps:
-  #      - name: Checkout
-  #        uses: actions/checkout@v4
-  #
-  #      - name: Decrypt large secret
-  #        shell: bash
-  #        run: |
-  #          ./scripts/decrypt_secret.sh
-  #        env:
-  #          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
-  #
-  #      - name: Set Up JDK 17
-  #        uses: actions/setup-java@v4
-  #        with:
-  #          distribution: "zulu"
-  #          java-version: 17
-  #
-  #      - name: Setup Gradle
-  #        uses: gradle/actions/setup-gradle@v3
-  #
-  #      - name: Setup Kotlin/Native compile(Konan) Cache
-  #        if: always()
-  #        uses: actions/cache@v4
-  #        with:
-  #          path: |
-  #            ~/.konan/caches
-  #            ~/.konan/dependencies
-  #            ~/.konan/kotlin-native-prebuilt-macos-*
-  #          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
-  #          restore-keys: |
-  #            ${{ runner.os }}-konan-
-  #
-  #      - name: Build APK
-  #        run: ./gradlew assembleDebug
-  #
-  #
-  #      - name: Build Android Test APK
-  #        run: ./gradlew assembleAndroidTest
-  #
-  #      - name: Run Android tests on Firebase Test Lab
-  #        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
-  #        with:
-  #          arg-spec: 'android-device.yml:android-pixel-4'
-  #        env:
-  #          SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-
-  android-unit-test:
-    name: Android Unit Test
-    runs-on: ubuntu-latest
-    needs:
-      - build-android
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Decrypt large secret
-        shell: bash
-        run: |
-          ./scripts/decrypt_secret.sh
-        env:
-          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
-
-      - name: Set Up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: "zulu"
-          java-version: 17
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Setup Kotlin/Native compile(Konan) Cache
-        if: always()
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.konan/caches
-            ~/.konan/dependencies
-            ~/.konan/kotlin-native-prebuilt-macos-*
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
-          restore-keys: |
-            ${{ runner.os }}-konan-
-
       - name: Run Android Unit tests
         run: |
           ./gradlew :core:domain:cleanTestDebugUnitTest :core:domain:testDebugUnitTest
 
+
   build-desktop:
-    name: Build Desktop
+    name: Build, Test Desktop
     runs-on: macos-latest
     needs:
       - verify_code_quality
