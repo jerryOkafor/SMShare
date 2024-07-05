@@ -15,7 +15,6 @@ version = "1.0.0"
 kotlin {
     sourceSets {
         val desktopMain by getting
-        val desktopTest by getting
 
         androidMain.dependencies {
             implementation(libs.ktor.client.android)
