@@ -220,10 +220,10 @@ or Using Gradle command
 
 ## Todo
 
-- [ ] Add KtLint and Detekt
-- [ ] Add Detekt
-- [ ] Add Kover
-- [ ] Add Codecov
+- [X] Add KtLint and Detekt
+- [X] Add Detekt
+- [X] Add Kover
+- [X] Add Codecov
 - [ ] Add Code style to readme
 - [ ] Add Contributors section
 - [ ] Add License section

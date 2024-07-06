@@ -159,7 +159,7 @@ jobs:
 
       - name: Run Android Unit tests
         run: |
-          ./gradlew :core:domain:cleanTestDebugUnitTest :core:domain:testDebugUnitTest
+          ./gradlew testDebugUnitTest
 
       - name: Generate Coverage Report
         run: |
