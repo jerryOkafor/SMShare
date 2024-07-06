@@ -2,6 +2,7 @@
 
 ![kotlin-version](https://img.shields.io/badge/kotlin-2.0.0-blue?logo=kotlin)
 [![Build SMS Share](https://github.com/jerryOkafor/SMShare/actions/workflows/Build.yml/badge.svg)](https://github.com/jerryOkafor/SMShare/actions/workflows/Build.yml)
+[![codecov](https://codecov.io/gh/jerryOkafor/SMShare/graph/badge.svg?token=NW5DWNC9FS)](https://codecov.io/gh/jerryOkafor/SMShare)
 
 [<img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
 alt="Get it on Google Play Store"
@@ -9,6 +10,7 @@ height="80">](#)
 [<img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
 alt="Get it on App Store"
 height="80">](#)
+
 
 SMShare is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop. The UI of SMSahre is
 written completely in Jetpack Compose and shareed accross iOS, Android and Desktop.
