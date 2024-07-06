@@ -240,4 +240,3 @@ smshare-kotlin-multiplatform = { id = "com.jerryokafor.smshare.multiplatform", v
 smshare-firebase-testLab = { id = "com.jerryokafor.smshare.firebase.testLab", version = "unspecified" }
 smshare-detekt = { id = "com.jerryokafor.smshare.detekt", version = "unspecified" }
 smshare-ktlint = { id = "com.jerryokafor.smshare.ktlint", version = "unspecified" }
-smshare-coverage = { id = "com.jerryokafor.smshare.coverage", version = "unspecified" }

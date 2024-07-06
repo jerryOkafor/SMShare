@@ -8,7 +8,6 @@ plugins {
 //    alias(libs.plugins.kotlinx.rpc.platform)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
-    alias(libs.plugins.smshare.coverage)
 }
 
 kotlin {

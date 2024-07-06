@@ -1,3 +1,5 @@
+import kotlinx.coroutines.flow.merge
+
 plugins {
     // this is necessary to avoid the plugins to be loaded multiple times
     // in each subproject's classloader
@@ -15,6 +17,40 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.buildKonfig) apply false
     alias(libs.plugins.io.gitlab.arturbosch.detekt) apply false
-    alias(libs.plugins.kotlinx.kover) apply false
-//    alias(libs.plugins.firebase.testLab) apply false
+    alias(libs.plugins.kotlinx.kover)
+}
+
+kover {
+    merge {
+        allProjects()
+    }
+    reports {
+        total {
+            filters {
+                excludes {
+                    classes(".*BuildConfig.*")
+                }
+            }
+
+            xml {
+                title = "SM Share XML Report"
+                onCheck = false
+                xmlFile = layout.buildDirectory.file("/kover/$name/report.xml").get()
+            }
+
+            html {
+                title = "SM Share HTML Report"
+                onCheck = false
+                charset = "UTF-8"
+                htmlDir.set(layout.buildDirectory.dir("/kover/$name/report/html").get())
+            }
+            binary {
+                file = layout.buildDirectory.file("/kover/$name/report.ic").get()
+            }
+        }
+    }
+}
+
+tasks.register("clean", Delete::class) {
+    delete(rootProject.layout.buildDirectory)
 }

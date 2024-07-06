@@ -161,6 +161,15 @@ jobs:
         run: |
           ./gradlew :core:domain:cleanTestDebugUnitTest :core:domain:testDebugUnitTest
 
+      - name: Generate Coverage Report
+        run: |
+          ./gradlew koverXMLReportDebug
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
 
   build-desktop:
     name: Build, Test Desktop
