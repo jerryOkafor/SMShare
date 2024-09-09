@@ -1,27 +1,21 @@
 package com.jerryokafor.core.database
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.migration.Migration
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 
+@Suppress("NO_ACTUAL_FOR_EXPECT")
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase>
+
 @Database(entities = [AccountEntity::class], version = 1)
-abstract class AppDatabase :
-    RoomDatabase(),
-    DB {
+@ConstructedBy(AppDatabaseConstructor::class)
+abstract class AppDatabase : RoomDatabase() {
     abstract fun getAccountDao(): AccountDao
-
-    override fun clearAllTables() {
-        super.clearAllTables()
-    }
-}
-
-// FIXME: Added a hack to resolve below issue:
-// Class 'AppDatabase_Impl' is not abstract and does not implement abstract base class member 'clearAllTables'.
-interface DB {
-    fun clearAllTables() {}
 }
 
 val MIGRATIONS = arrayOf<Migration>()

@@ -1,16 +1,15 @@
 plugins {
     alias(libs.plugins.smshare.android.library)
     alias(libs.plugins.smshare.kotlin.multiplatform)
-    alias(libs.plugins.smshare.detekt)
-    alias(libs.plugins.smshare.ktlint)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.androidx.room)
+    alias(libs.plugins.smshare.detekt)
+    alias(libs.plugins.smshare.ktlint)
+
 }
 
 kotlin {
-    androidTarget {}
-
     sourceSets {
         androidUnitTest {
             dependencies {
@@ -19,16 +18,7 @@ kotlin {
                 implementation(libs.robolectric)
             }
         }
-
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.room.runtime.android)
-            }
-        }
         commonMain {
-            kotlin {
-                srcDir("build/generated/ksp/metadata")
-            }
             dependencies {
                 implementation(projects.core.model)
 
@@ -65,24 +55,15 @@ android {
     }
 }
 
-// https://issuetracker.google.com/issues/342905180
-// More info: https://github.com/google/ksp/blob/00862a18967eed6832b28e081212e5f3250eb191/examples/multiplatform/workload/build.gradle.kts#L43
 dependencies {
-    add("kspCommonMainMetadata", libs.androidx.room.compiler)
-//    add("kspAndroid", libs.androidx.room.compiler)
-//    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-//    add("kspIosX64", libs.androidx.room.compiler)
-//    add("kspIosArm64", libs.androidx.room.compiler)
-//    add("kspJvm", libs.androidx.room.compiler)
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspDesktop", libs.androidx.room.compiler)
 }
 
 room {
     schemaDirectory("$projectDir/schemas")
     generateKotlin = true
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
 }

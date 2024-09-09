@@ -79,6 +79,7 @@ kotlin {
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
             implementation(projects.core.config)
+            implementation(projects.core.network)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

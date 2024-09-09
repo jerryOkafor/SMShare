@@ -24,7 +24,6 @@ private fun appDir(): File {
 }
 
 fun createAppDatabase(): RoomDatabase.Builder<AppDatabase> {
-//        val dbFile = File(System.getProperty("java.io.tmpdir"), DB_NAME)
     val dbFile = File(appDir().also { if (!it.exists()) it.mkdirs() }, DB_NAME)
     return Room.databaseBuilder<AppDatabase>(
         name = dbFile.absolutePath,

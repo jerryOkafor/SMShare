@@ -2,26 +2,22 @@ package com.jerryokafor.core.database
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
-import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
 
-@OptIn(ExperimentalForeignApi::class)
-fun createAppDatabase(): RoomDatabase.Builder<AppDatabase> {
-    val documentDirectory: NSURL? = NSFileManager.defaultManager.URLForDirectory(
+private fun documentDirectory(): String {
+    val documentDirectory = NSFileManager.defaultManager.URLForDirectory(
         directory = NSDocumentDirectory,
         inDomain = NSUserDomainMask,
         appropriateForURL = null,
         create = false,
         error = null,
     )
+    return requireNotNull(documentDirectory?.path)
+}
 
-    val dbFilePath = requireNotNull(documentDirectory).path + "/$DB_NAME"
-
-    return Room.databaseBuilder<AppDatabase>(
-        name = dbFilePath,
-        factory = { AppDatabase::class.instantiateImpl() },
-    )
+fun createAppDatabase(): RoomDatabase.Builder<AppDatabase> {
+    val dbFilePath = documentDirectory() + "/$DB_NAME"
+    return Room.databaseBuilder<AppDatabase>(name = dbFilePath)
 }

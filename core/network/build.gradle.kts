@@ -44,6 +44,7 @@ kotlin {
         desktopMain.dependencies {
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
+
             implementation(libs.dev.whyoleg.cryptography.provider.jdk)
         }
     }

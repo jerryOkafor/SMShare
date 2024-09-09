@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.jerryokafor.smshare.core.network.util.util
+package com.jerryokafor.smshare.core.network.util
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -32,7 +32,6 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.core.content.getSystemService
-import com.jerryokafor.smshare.core.network.util.NetworkMonitor
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -84,7 +83,7 @@ class ConnectivityManagerNetworkMonitor(
         }
     }.conflate()
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "ObsoleteSdkInt")
     @Suppress("DEPRECATION")
     private fun ConnectivityManager.isCurrentlyConnected() = when {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
