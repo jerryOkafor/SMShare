@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
-//    alias(libs.plugins.kotlinx.rpc.platform)
+    alias(libs.plugins.kotlinx.rpc)
     alias(libs.plugins.kotlinx.serialization)
     application
 
@@ -18,7 +18,7 @@ application {
 }
 
 dependencies {
-//    implementation(projects.core.rpc)
+    implementation(projects.core.rpc)
     implementation(projects.core.model)
 
     implementation(libs.kotlinx.coroutines.core.jvm)
@@ -34,12 +34,12 @@ dependencies {
     implementation(libs.koin.logger.slf4j)
 
     // Kotlinx RPC
-//    implementation(libs.kotlinx.rpc.runtime.server)
-//    implementation(libs.kotlinx.rpc.runtime.serialization.json)
-//    implementation(libs.kotlinx.rpc.transport.ktor.server)
+    implementation(libs.kotlinx.rpc.server)
+    implementation(libs.kotlinx.rpc.serialization.json)
+    implementation(libs.kotlinx.rpc.transport.ktor.server)
 
     testImplementation(libs.ktor.server.tests)
-//    testImplementation(libs.kotlinx.rpc.runtime.client)
-//    testImplementation(libs.kotlinx.rpc.transport.ktor.client)
-//    testImplementation(libs.kotlin.test.junit)
+    testImplementation(libs.kotlinx.rpc.client)
+    testImplementation(libs.kotlinx.rpc.transport.ktor.client)
+    testImplementation(libs.kotlin.test.junit)
 }

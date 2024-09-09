@@ -1,5 +1,3 @@
-import kotlinx.coroutines.flow.merge
-
 plugins {
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.androidLibrary) apply false
@@ -11,8 +9,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.cacheFix) apply false
-//    alias(libs.plugins.kotlinx.rpc) apply false
-//    alias(libs.plugins.kotlinx.rpc.platform) apply false
+    alias(libs.plugins.kotlinx.rpc) apply false
     alias(libs.plugins.buildKonfig) apply false
     alias(libs.plugins.io.gitlab.arturbosch.detekt) apply false
     alias(libs.plugins.kotlinx.kover)

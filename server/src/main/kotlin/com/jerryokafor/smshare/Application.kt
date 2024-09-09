@@ -1,5 +1,6 @@
 package com.jerryokafor.smshare
 
+import com.jerryokafor.smshare.core.rpc.UserService
 import com.jerryokafor.smshare.injection.appModule
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
@@ -12,6 +13,9 @@ import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
+import kotlinx.rpc.serialization.json
+import kotlinx.rpc.transport.ktor.server.RPC
+import kotlinx.rpc.transport.ktor.server.rpc
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
@@ -29,20 +33,17 @@ fun Application.module() {
         slf4jLogger()
         modules(appModule)
     }
-
-//    install(RPC)
-
+    install(RPC)
     installCORS()
-
     routing {
-//        rpc("/api") {
-//            rpcConfig {
-//                serialization {
-//                    json()
-//                }
-//            }
-//            registerService<UserService> { ctx -> RemoteUserService(ctx) }
-//        }
+        rpc("/api") {
+            rpcConfig {
+                serialization {
+                    json()
+                }
+            }
+            registerService<UserService> { ctx -> RemoteUserService(ctx) }
+        }
         get("/") {
             call.respondText("Hello from Ktor")
         }

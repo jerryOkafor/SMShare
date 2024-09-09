@@ -8,18 +8,13 @@ plugins {
 
 kotlin {
 
-    sourceSets.commonMain {
-        kotlin.srcDir("build/generated/ksp/metadata")
-    }
-
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.model)
-
             implementation(libs.kotlinx.coroutines.core)
-
-            implementation(libs.kotlinx.rpc.runtime)
             implementation(libs.kotlinx.serialization.json)
+
+            api(libs.kotlinx.rpc.core)
         }
     }
 }
