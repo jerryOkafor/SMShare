@@ -25,8 +25,8 @@
 package com.jerryokafor.smshare.core.network.injection
 
 import android.content.Context
-import com.jerryokafor.smshare.core.network.util.NetworkMonitor
 import com.jerryokafor.smshare.core.network.util.ConnectivityManagerNetworkMonitor
+import com.jerryokafor.smshare.core.network.util.NetworkMonitor
 import org.koin.dsl.module
 
 fun commonAndroidNetworkModules(context: Context) = module {

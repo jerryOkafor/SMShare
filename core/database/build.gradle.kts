@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.androidx.room)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
-
 }
 
 kotlin {
