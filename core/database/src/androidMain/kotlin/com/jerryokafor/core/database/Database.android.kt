@@ -6,7 +6,8 @@ import androidx.room.RoomDatabase
 
 fun createRoomDatabase(app: Application): RoomDatabase.Builder<AppDatabase> {
     val dbFile = app.getDatabasePath(DB_NAME)
-    return Room.databaseBuilder<AppDatabase>(
+    return Room
+        .databaseBuilder<AppDatabase>(
             context = app,
             name = dbFile.absolutePath,
         ).enableMultiInstanceInvalidation()
