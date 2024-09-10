@@ -29,6 +29,4 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 
 internal actual fun createTestDatabaseBuilder(): RoomDatabase.Builder<AppDatabase> = Room
-    .inMemoryDatabaseBuilder {
-        AppDatabase::class.instantiateImpl()
-    }.setDriver(BundledSQLiteDriver())
+    .inMemoryDatabaseBuilder<AppDatabase>().setDriver(BundledSQLiteDriver())
