@@ -84,11 +84,11 @@ object SMShareNkiri {
 
     val typography: SMSShareTypography
         @Composable
-        get() = LocalIhenkiriTypography.current
+        get() = LocalSMSShareTypography.current
 
     val shape: SMShareShape
         @Composable
-        get() = LocalIheNkiriShape.current
+        get() = LocalSMSShareShape.current
 
     val color: ColorScheme
         @Composable
@@ -96,7 +96,7 @@ object SMShareNkiri {
 
     val extraColor: SMShareColorScheme
         @Composable
-        get() = LocalIheNkiriColorScheme.current
+        get() = LocalSMSShareColorScheme.current
 
     object Icons
 }
@@ -128,9 +128,9 @@ fun SMShareTheme(
 
     CompositionLocalProvider(
         LocalSMShareSpacing provides SMShareSpacing(),
-        LocalIhenkiriTypography provides SMSShareTypography(),
-        LocalIheNkiriColorScheme provides colorScheme.second,
-        LocalIheNkiriShape provides SMShareShape,
+        LocalSMSShareTypography provides SMSShareTypography(),
+        LocalSMSShareColorScheme provides colorScheme.second,
+        LocalSMSShareShape provides SMShareShape,
     ) {
         MaterialTheme(
             colorScheme = colorScheme.first,

@@ -134,4 +134,4 @@ data class SMSShareTypography(
     )
 }
 
-internal val LocalIhenkiriTypography = staticCompositionLocalOf { SMSShareTypography() }
+internal val LocalSMSShareTypography = staticCompositionLocalOf { SMSShareTypography() }

@@ -88,4 +88,4 @@ fun iheNKiriLightColorScheme(): SMShareColorScheme =
 fun iheNKiriDarkColorScheme(): SMShareColorScheme =
     SMShareColorScheme(extraColor = md_theme_dark_outline)
 
-val LocalIheNkiriColorScheme = staticCompositionLocalOf { iheNKiriLightColorScheme() }
+val LocalSMSShareColorScheme = staticCompositionLocalOf { iheNKiriLightColorScheme() }

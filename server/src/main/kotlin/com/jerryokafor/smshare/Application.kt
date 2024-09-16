@@ -1,5 +1,6 @@
 package com.jerryokafor.smshare
 
+import com.apurebase.kgraphql.GraphQL
 import com.jerryokafor.smshare.core.rpc.UserService
 import com.jerryokafor.smshare.injection.appModule
 import io.ktor.http.HttpHeaders
@@ -35,6 +36,16 @@ fun Application.module() {
     }
     install(RPC)
     installCORS()
+
+    install(GraphQL) {
+        playground = true
+        schema {
+            query("hello") {
+                resolver { -> "World" }
+            }
+        }
+    }
+
     routing {
         rpc("/api") {
             rpcConfig {
@@ -44,6 +55,7 @@ fun Application.module() {
             }
             registerService<UserService> { ctx -> RemoteUserService(ctx) }
         }
+        
         get("/") {
             call.respondText("Hello from Ktor")
         }

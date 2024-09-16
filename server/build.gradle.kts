@@ -38,6 +38,10 @@ dependencies {
     implementation(libs.kotlinx.rpc.serialization.json)
     implementation(libs.kotlinx.rpc.transport.ktor.server)
 
+    //Graph QL
+    implementation("com.apurebase:kgraphql:0.19.0")
+    implementation("com.apurebase:kgraphql-ktor:0.19.0")
+
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlinx.rpc.client)
     testImplementation(libs.kotlinx.rpc.transport.ktor.client)

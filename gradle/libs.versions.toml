@@ -6,6 +6,7 @@ annotationVersion = "1.6.11"
 androidGradlePlugin = "8.6.0"
 iosDeploymentVersion = "17.5"
 reachability = "3.7.5"
+appoloGraphql = "4.0.0"
 
 composeMultiplatform = "1.7.0-alpha01"
 #https://androidx.dev/storage/compose-compiler/repository
@@ -232,7 +233,7 @@ androidx-room = { id = "androidx.room", version.ref = "room" }
 buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 io-gitlab-arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
-
+appoloGraphql = { id = "com.apollographql.apollo", version.ref = "appoloGraphql" }
 
 # Plugins defined by this project
 smshare-android-application = { id = "com.jerryokafor.smshare.android.application", version = "unspecified" }

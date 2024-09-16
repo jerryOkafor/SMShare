@@ -142,7 +142,10 @@ To run the server code, you can run the gradle command below:
 ./gradlew :server:run
 ```
 
-Open: `http://0.0.0.0:8080/` to see the response from the server.
+Open: `http://0.0.0.0:8080/` or `http://localhost:8080/`  to see the response from the server.
+
+To access server from your Android device, run `adb reverse tcp:8080 tcp:8080` and then access the
+app on `http://<PC IP>:8080/`
 
 #### Testing Locally from your phone, run the following command:
 

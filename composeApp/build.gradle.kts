@@ -5,7 +5,9 @@ plugins {
     alias(libs.plugins.smshare.android.application)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-//    alias(libs.plugins.kotlinx.rpc.platform)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.kotlinx.rpc)
+    alias(libs.plugins.appoloGraphql)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
 }
@@ -80,6 +82,7 @@ kotlin {
             implementation(projects.core.datastore)
             implementation(projects.core.config)
             implementation(projects.core.network)
+            implementation(projects.core.rpc)
 
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -93,9 +96,16 @@ kotlin {
             // ViewModel
             implementation(libs.androidx.lifecycle.viewmodel)
 
-//            implementation(libs.kotlinx.rpc.runtime.client)
-//            implementation(libs.kotlinx.rpc.runtime.serialization.json)
-//            implementation(libs.kotlinx.rpc.transport.ktor.client)
+            //RPC
+            implementation(libs.kotlinx.rpc.client)
+            implementation(libs.kotlinx.rpc.serialization.json)
+            implementation(libs.kotlinx.rpc.transport.ktor.client)
+
+            //Apollo GraphQL
+            implementation("com.apollographql.apollo:apollo-runtime:4.0.0")
+
+
+            //Ktor
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.websockets)
@@ -190,6 +200,33 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.jerryokafor.smshare"
             packageVersion = "1.0.0"
+        }
+    }
+}
+
+
+apollo {
+    service("service") {
+        packageName.set("com.jerryokafor.smshare.graphql")
+        codegenModels.set("operationBased")
+        generateDataBuilders.set(true)
+        generateFragmentImplementations.set(true)
+        generateSchema.set(true)
+//        mapScalar(
+//            "LocalDateTime",
+//            "kotlinx.datetime.LocalDateTime",
+//            "com.apollographql.apollo.adapter.KotlinxLocalDateTimeAdapter"
+//        )
+//
+//        mapScalar(
+//            "LocalDate",
+//            "kotlinx.datetime.LocalDate",
+//            "com.apollographql.apollo.adapter.KotlinxLocalDateAdapter"
+//        )
+
+        introspection {
+            endpointUrl.set("http://localhost:8080/graphql")
+            schemaFile.set(file("src/commonMain/graphql/schema.graphqls"))
         }
     }
 }

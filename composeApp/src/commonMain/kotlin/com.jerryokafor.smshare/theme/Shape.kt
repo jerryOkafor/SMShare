@@ -20,4 +20,4 @@ data class SMShareShape(
     )
 }
 
-internal val LocalIheNkiriShape = staticCompositionLocalOf { SMShareShape() }
+internal val LocalSMSShareShape = staticCompositionLocalOf { SMShareShape() }
