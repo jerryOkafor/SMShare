@@ -32,6 +32,8 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.atomicfu)
 
+            implementation(libs.koin.core)
+
             api(libs.androidx.datastore.core.okio)
             api(libs.androidx.datastore.preferences.core)
             implementation(libs.squareup.okio)

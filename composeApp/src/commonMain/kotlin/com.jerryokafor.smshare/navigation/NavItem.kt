@@ -4,11 +4,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object Auth
 
 sealed interface NavItem {
     val title: @Composable () -> String

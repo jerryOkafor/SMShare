@@ -91,7 +91,7 @@ private fun ComposeMessagePreview() {
 fun ComposeMessage(
     onSetupTopAppBar: (SMShareTopAppBarState) -> Unit = {},
     onSetUpBottomAppBar: (SMShareBottomAppBarState) -> Unit = { _ -> },
-    onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
+    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
     defaultAccountId: Long? = null,
     onCancel: () -> Unit = {},
 ) {
@@ -102,13 +102,13 @@ fun ComposeMessage(
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val onAttachContent: () -> Unit = {
-        scope.launch { onShowSnackbar("Coming soon", null) }
+        scope.launch { onShowSnackbar("Coming soon", null, false) }
     }
     val onOpenDraft: () -> Unit = {
-        scope.launch { onShowSnackbar("Coming soon", null) }
+        scope.launch { onShowSnackbar("Coming soon", null, false) }
     }
     val onAddTagClick: () -> Unit = {
-        scope.launch { onShowSnackbar("Coming soon", null) }
+        scope.launch { onShowSnackbar("Coming soon", null, false) }
     }
 
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
@@ -296,7 +296,7 @@ fun ComposeMessage(
                             }.invokeOnCompletion {
                                 showBottomSheet = false
                                 scope.launch {
-                                    onShowSnackbar("Coming soon", null)
+                                    onShowSnackbar("Coming soon", null, false)
                                 }
                             }
                     }, color = Color.Transparent) {
@@ -375,7 +375,7 @@ val composeMessageRoutePattern = "compose?$composeMessageAccountArg={$composeMes
 fun NavGraphBuilder.composeMessageScreen(
     onSetupTopAppBar: (SMShareTopAppBarState) -> Unit = {},
     onSetUpBottomAppBar: (SMShareBottomAppBarState) -> Unit,
-    onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
+    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
     onCancel: () -> Unit,
 ) {
     composable(

@@ -6,20 +6,22 @@ import com.jerryokafor.smshare.channel.ChannelConfig
 import com.jerryokafor.smshare.channel.FacebookChannelConfig
 import com.jerryokafor.smshare.channel.LinkedInChannelConfig
 import com.jerryokafor.smshare.channel.XChannelConfig
+import com.jerryokafor.smshare.core.common.injection.dispatcherModule
 import com.jerryokafor.smshare.core.domain.injection.domainModule
 import com.jerryokafor.smshare.core.network.injection.commonNetworkModule
 import com.jerryokafor.smshare.screens.compose.ComposeMessageViewModel
-import org.koin.compose.viewmodel.dsl.viewModelOf
+import com.jerryokafor.smshare.screens.login.LoginViewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 import screens.createAccount.CreateAccountViewModel
-import screens.login.LoginViewModel
 
 fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication = startKoin {
     appDeclaration()
     modules(
+        dispatcherModule,
         commonModule(),
         domainModule(),
         commonNetworkModule(),

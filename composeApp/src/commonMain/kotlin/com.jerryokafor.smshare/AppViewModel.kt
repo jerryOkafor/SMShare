@@ -6,17 +6,14 @@ import co.touchlab.kermit.Logger
 import com.jerryokafor.core.database.AccountEntity
 import com.jerryokafor.core.database.AppDatabase
 import com.jerryokafor.core.database.toDomainModel
-import com.jerryokafor.core.datastore.UserData
-import com.jerryokafor.core.datastore.UserDataStore
+import com.jerryokafor.core.datastore.model.UserData
+import com.jerryokafor.core.datastore.store.UserDataStore
 import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfig
 import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.Account
 import com.jerryokafor.smshare.core.network.util.NetworkMonitor
-import com.jerryokafor.smshare.core.rpc.UserService
 import com.jerryokafor.smshare.platform.Platform
-import io.ktor.client.HttpClient
-import io.ktor.client.request.url
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,12 +24,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.rpc.serialization.json
-import kotlinx.rpc.streamScoped
-import kotlinx.rpc.transport.ktor.client.installRPC
-import kotlinx.rpc.transport.ktor.client.rpc
-import kotlinx.rpc.transport.ktor.client.rpcConfig
-import kotlinx.rpc.withService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -89,29 +80,29 @@ open class AppViewModel :
             initialValue = emptyList(),
         )
 
-    init {
-        viewModelScope.launch {
-            try {
-                val rpcClient = HttpClient { installRPC() }.rpc {
-                    url("ws://192.168.68.101:8080/api")
-
-                    rpcConfig {
-                        serialization {
-                            json()
-                        }
-                    }
-                }
-
-                streamScoped {
-                    rpcClient.withService<UserService>().subscribeToNews().collect { news ->
-                        Logger.withTag("Testing").d("Testing News: $news")
-                    }
-                }
-            } catch (e: Exception) {
-                Logger.withTag("Testing").e(e.message ?: "")
-            }
-        }
-    }
+//    init {
+//        viewModelScope.launch {
+//            try {
+//                val rpcClient = HttpClient { installRPC() }.rpc {
+//                    url("ws://192.168.68.101:8080/api")
+//
+//                    rpcConfig {
+//                        serialization {
+//                            json()
+//                        }
+//                    }
+//                }
+//
+//                streamScoped {
+//                    rpcClient.withService<RPCUserService>().subscribeToNews().collect { news ->
+//                        Logger.withTag("Testing").d("Testing News: $news")
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                Logger.withTag("Testing").e(e.message ?: "")
+//            }
+//        }
+//    }
 
     fun logout() {
         viewModelScope.launch {

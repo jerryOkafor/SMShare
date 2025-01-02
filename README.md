@@ -147,6 +147,18 @@ Open: `http://0.0.0.0:8080/` or `http://localhost:8080/`  to see the response fr
 To access server from your Android device, run `adb reverse tcp:8080 tcp:8080` and then access the
 app on `http://<PC IP>:8080/`
 
+##### Using Docker
+
+```bash
+./gradlew buildImage
+```
+
+##### Load image into docker
+
+```bash
+docker load < build/jib-image.tar
+```
+
 #### Testing Locally from your phone, run the following command:
 
 ##### Android

@@ -23,10 +23,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -37,21 +35,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.SMSShareButton
 import com.jerryokafor.smshare.component.SMSShareTextButton
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
-import screens.login.LoginViewModel
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.compose_multiplatform
 
@@ -63,48 +62,61 @@ fun LoginScreenPreview() {
     }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun LoginScreen(
     onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
     onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
     onCreateAccountClick: () -> Unit = {},
     onLoginComplete: () -> Unit = {},
-    onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
+    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
 ) {
     val viewModel: LoginViewModel = koinViewModel<LoginViewModel>()
-
-    val uiState by viewModel.uiState.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
-
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
+    val currentOnLoginComplete by rememberUpdatedState(onLoginComplete)
+    val currentOnShowSnackbar by rememberUpdatedState(onShowSnackbar)
 
     LaunchedEffect(true) {
         currentOnSetupTopAppBar(null)
         currentOnSetUpBottomAppBar(null)
     }
-    val onLoginClick: () -> Unit = {
-        viewModel.login(email, password)
+
+    LaunchedEffect(viewModel, uiState) {
+        launch {
+            snapshotFlow { uiState.loginComplete }
+                .filter { it }
+                .collect { isLoggedIn ->
+                    if (isLoggedIn) {
+                        currentOnLoginComplete()
+                    }
+                }
+        }
+        launch {
+            snapshotFlow { uiState.error }
+                .filter { it != null }
+                .collect { error ->
+                    currentOnShowSnackbar(error!!, "", false)
+                }
+        }
+
+        launch {
+            snapshotFlow { uiState.toast }
+                .filter { it != null }
+                .collect { error ->
+                    currentOnShowSnackbar(error!!, "", true)
+                }
+        }
     }
 
-    val currentOnLoginComplete by rememberUpdatedState(onLoginComplete)
-    coroutineScope.launch {
-        snapshotFlow { uiState.loginComplete }
-            .filter { it }
-            .collect { isLoggedIn ->
-                if (isLoggedIn) {
-                    currentOnLoginComplete()
-                }
-            }
+    val onLoginClick: () -> Unit = {
+        viewModel.login()
     }
+
 
     Column(
-        modifier =
-            Modifier
+        modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
                 .imePadding()
@@ -123,8 +135,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
+                value = viewModel.userName,
+                onValueChange = { viewModel.onUserNameChange(it) },
                 placeholder = { Text("Enter email") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -137,8 +149,8 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
+                value = viewModel.password,
+                onValueChange = { viewModel.onPasswordChange(it) },
                 placeholder = { Text("Enter password") },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -179,26 +191,36 @@ fun LoginScreen(
     }
 }
 
-const val signInRoute = "signin"
 
-fun NavGraphBuilder.signInScreen(
-    onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
-    onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
-    onCreateAccountClick: () -> Unit = {},
-    onLoginComplete: () -> Unit = {},
-    onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
+data object AuthDestinations {
+    @Serializable
+    data object SignIn
+
+    @Serializable
+    data object SignUp
+
+}
+
+inline fun <reified T : Any> NavGraphBuilder.signInScreen(
+    noinline onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
+    noinline onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
+    noinline onCreateAccountClick: () -> Unit = {},
+    noinline onLoginComplete: () -> Unit = {},
+    noinline onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
 ) {
-    composable(signInRoute) {
-        LoginScreen(
-            onSetupTopAppBar = onSetupTopAppBar,
-            onSetUpBottomAppBar = onSetUpBottomAppBar,
-            onCreateAccountClick = onCreateAccountClick,
-            onLoginComplete = onLoginComplete,
-            onShowSnackbar = onShowSnackbar,
-        )
+    navigation<T>(startDestination = AuthDestinations.SignIn) {
+        composable<AuthDestinations.SignIn> {
+            LoginScreen(
+                onSetupTopAppBar = onSetupTopAppBar,
+                onSetUpBottomAppBar = onSetUpBottomAppBar,
+                onCreateAccountClick = onCreateAccountClick,
+                onLoginComplete = onLoginComplete,
+                onShowSnackbar = onShowSnackbar,
+            )
+        }
     }
 }
 
 fun NavController.navigateToSignIn(navOptions: NavOptions? = null) {
-    navigate(route = signInRoute, navOptions = navOptions)
+    navigate(route = AuthDestinations.SignIn, navOptions = navOptions)
 }

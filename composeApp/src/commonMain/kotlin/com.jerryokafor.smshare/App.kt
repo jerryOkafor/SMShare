@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -70,7 +68,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -83,7 +80,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
@@ -91,14 +87,15 @@ import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.component.ChannelWithName
 import com.jerryokafor.smshare.component.NewChannelConnectionButton
 import com.jerryokafor.smshare.component.iconIndicatorForAccountType
+import com.jerryokafor.smshare.navigation.Auth
 import com.jerryokafor.smshare.navigation.NavItem
 import com.jerryokafor.smshare.platform.SupportedPlatformType
 import com.jerryokafor.smshare.screens.analytics.analyticsScreen
 import com.jerryokafor.smshare.screens.compose.composeMessageScreen
 import com.jerryokafor.smshare.screens.compose.navigateToCompose
 import com.jerryokafor.smshare.screens.drafts.draftsScreen
+import com.jerryokafor.smshare.screens.login.AuthDestinations
 import com.jerryokafor.smshare.screens.login.navigateToSignIn
-import com.jerryokafor.smshare.screens.login.signInRoute
 import com.jerryokafor.smshare.screens.login.signInScreen
 import com.jerryokafor.smshare.screens.navigation.SideNav
 import com.jerryokafor.smshare.screens.navigation.SideNavMenuAction
@@ -232,7 +229,7 @@ fun Home(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAppReady: () -> Unit = {},
-    onShowSnackbar: suspend (String, String?) -> Boolean = { msg, act ->
+    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { msg, act, isSuccess ->
         snackbarHostState.showSnackbar(
             message = msg,
             actionLabel = act,
@@ -498,30 +495,20 @@ fun Home(
 
                                 val onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit =
                                     { topAppBarState = it }
+
                                 NavHost(
                                     modifier = Modifier.fillMaxSize(),
                                     navController = navController,
-                                    startDestination = "splash",
+                                    startDestination = Auth,
                                 ) {
-                                    composable("splash") {
-                                        Box(modifier = Modifier.fillMaxSize()) {
-                                            CircularProgressIndicator(
-                                                modifier = Modifier
-                                                    .size(24.dp)
-                                                    .align(Alignment.Center),
-                                                strokeWidth = 1.dp,
-                                                strokeCap = StrokeCap.Round,
-                                            )
-                                        }
-                                    }
                                     // SignIn
-                                    signInScreen(
+                                    signInScreen<Auth>(
                                         onSetupTopAppBar = onSetupTopAppBar,
                                         onCreateAccountClick = {
                                             navController.navigateToSignUp(
                                                 navOptions =
                                                     navOptions {
-                                                        popUpTo(signInRoute) {
+                                                        popUpTo(AuthDestinations.SignIn) {
                                                             inclusive = true
                                                         }
                                                         launchSingleTop = true
@@ -531,7 +518,7 @@ fun Home(
                                         onLoginComplete = {
                                             navController.navigateToPosts(
                                                 navOptions {
-                                                    popUpTo(signInRoute) {
+                                                    popUpTo(AuthDestinations.SignIn) {
                                                         inclusive = true
                                                     }
                                                     launchSingleTop = true
@@ -549,6 +536,16 @@ fun Home(
                                             navController.navigateToSignIn(
                                                 navOptions {
                                                     popUpTo(signUpRoute) {
+                                                        inclusive = true
+                                                    }
+                                                    launchSingleTop = true
+                                                },
+                                            )
+                                        },
+                                        onSignUpComplete = {
+                                            navController.navigateToPosts(
+                                                navOptions {
+                                                    popUpTo(AuthDestinations.SignIn) {
                                                         inclusive = true
                                                     }
                                                     launchSingleTop = true
@@ -646,6 +643,7 @@ fun Home(
                                             onShowSnackbar(
                                                 "No account added, please add account to continue",
                                                 "",
+                                                false
                                             )
                                         }
                                     } else {

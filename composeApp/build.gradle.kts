@@ -6,8 +6,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.kotlinx.rpc)
-    alias(libs.plugins.appoloGraphql)
+//    alias(libs.plugins.kotlinx.rpc)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
 }
@@ -53,6 +52,11 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
+            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
+            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+        }
         val desktopMain by getting
         val desktopTest by getting
 
@@ -66,7 +70,7 @@ kotlin {
                 implementation(libs.androidx.ui.test.junit4.android)
                 implementation(libs.androidx.ui.test.manifest)
 
-                implementation("androidx.fragment:fragment-testing:1.8.1")
+                implementation("androidx.fragment:fragment-testing:1.8.5")
             }
         }
 
@@ -77,13 +81,13 @@ kotlin {
         }
 
         commonMain.dependencies {
+            implementation(projects.core.common)
             implementation(projects.core.database)
             implementation(projects.core.domain)
             implementation(projects.core.datastore)
             implementation(projects.core.config)
             implementation(projects.core.network)
-            implementation(projects.core.rpc)
-
+//            implementation(projects.core.rpc)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
@@ -93,16 +97,15 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.dev.chrisbanes.windowSizeClass)
 
+            implementation(libs.kotlinx.datetime)
+
             // ViewModel
-            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.viewmodel.compose)
 
             //RPC
-            implementation(libs.kotlinx.rpc.client)
-            implementation(libs.kotlinx.rpc.serialization.json)
-            implementation(libs.kotlinx.rpc.transport.ktor.client)
-
-            //Apollo GraphQL
-            implementation("com.apollographql.apollo:apollo-runtime:4.0.0")
+//            implementation(libs.kotlinx.rpc.client)
+//            implementation(libs.kotlinx.rpc.serialization.json)
+//            implementation(libs.kotlinx.rpc.transport.ktor.client)
 
 
             //Ktor
@@ -118,7 +121,7 @@ kotlin {
             api(libs.koin.core)
             api(libs.koin.test)
             api(libs.koin.compose)
-            api(libs.koin.compose.viewmodel.kmp)
+            api(libs.koin.compose.viewmodel)
         }
 
         commonTest.dependencies {
@@ -168,8 +171,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     buildFeatures {
@@ -200,33 +203,6 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.jerryokafor.smshare"
             packageVersion = "1.0.0"
-        }
-    }
-}
-
-
-apollo {
-    service("service") {
-        packageName.set("com.jerryokafor.smshare.graphql")
-        codegenModels.set("operationBased")
-        generateDataBuilders.set(true)
-        generateFragmentImplementations.set(true)
-        generateSchema.set(true)
-//        mapScalar(
-//            "LocalDateTime",
-//            "kotlinx.datetime.LocalDateTime",
-//            "com.apollographql.apollo.adapter.KotlinxLocalDateTimeAdapter"
-//        )
-//
-//        mapScalar(
-//            "LocalDate",
-//            "kotlinx.datetime.LocalDate",
-//            "com.apollographql.apollo.adapter.KotlinxLocalDateAdapter"
-//        )
-
-        introspection {
-            endpointUrl.set("http://localhost:8080/graphql")
-            schemaFile.set(file("src/commonMain/graphql/schema.graphqls"))
         }
     }
 }

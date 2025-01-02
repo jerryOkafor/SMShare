@@ -9,10 +9,11 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.cacheFix) apply false
-    alias(libs.plugins.kotlinx.rpc) apply false
+//    alias(libs.plugins.kotlinx.rpc) apply false
     alias(libs.plugins.buildKonfig) apply false
     alias(libs.plugins.io.gitlab.arturbosch.detekt) apply false
     alias(libs.plugins.kotlinx.kover)
+    id("org.flywaydb.flyway") version "8.5.4" apply false
 }
 
 kover {

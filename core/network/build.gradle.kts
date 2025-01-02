@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.smshare.android.library)
     alias(libs.plugins.smshare.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.appoloGraphql)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
 }
@@ -34,6 +35,10 @@ kotlin {
 
             implementation(libs.dev.whyoleg.cryptography.random)
             implementation(libs.dev.whyoleg.cryptography.core)
+
+            //Apollo GraphQL
+            api("com.apollographql.apollo:apollo-runtime:4.0.0")
+            api("com.apollographql.adapters:apollo-adapters-kotlinx-datetime:0.0.4")
         }
 
         iosMain.dependencies {
@@ -80,4 +85,33 @@ android {
 
     // Include our manifest with required permission for merger
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+}
+
+
+
+apollo {
+    service("service") {
+        packageName.set("com.jerryokafor.smshare.graphql")
+        codegenModels.set("operationBased")
+        generateDataBuilders.set(true)
+        generateFragmentImplementations.set(true)
+        generateSchema.set(true)
+
+        mapScalar(
+            "LocalDateTime",
+            "kotlinx.datetime.LocalDateTime",
+            "com.apollographql.adapter.datetime.KotlinxLocalDateTimeAdapter"
+        )
+
+        mapScalar(
+            "LocalDate",
+            "kotlinx.datetime.LocalDate",
+            "com.apollographql.adapter.datetime.KotlinxLocalDateAdapter"
+        )
+
+        introspection {
+            endpointUrl.set("http://localhost:8080/graphql")
+            schemaFile.set(file("src/commonMain/graphql/schema.graphqls"))
+        }
+    }
 }

@@ -28,12 +28,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -42,6 +44,8 @@ import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.SMSShareButton
 import com.jerryokafor.smshare.component.SMSShareTextButton
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -57,29 +61,59 @@ fun CreateAccountScreenPreview() {
     }
 }
 
+
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun CreateAccountScreen(
     onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
     onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
     onLoginClick: () -> Unit = {},
-    onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
+    onSignUpComplete: () -> Unit = {},
+    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
 ) {
     val viewModel: CreateAccountViewModel = koinViewModel<CreateAccountViewModel>()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
+    val currentOnSignUpComplete by rememberUpdatedState(onSignUpComplete)
+    val currentOnShowSnackbar by rememberUpdatedState(onShowSnackbar)
 
     LaunchedEffect(true) {
         currentOnSetupTopAppBar(null)
         currentOnSetUpBottomAppBar(null)
     }
 
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+    LaunchedEffect(viewModel, uiState) {
+        launch {
+            snapshotFlow { uiState.createAccountComplete }
+                .filter { it }
+                .collect { signUpComplete ->
+                    if (signUpComplete) {
+                        currentOnSignUpComplete()
+                    }
+                }
+        }
+        launch {
+            snapshotFlow { uiState.error }
+                .filter { it != null }
+                .collect { error ->
+                    currentOnShowSnackbar(error!!, "", false)
+                }
+        }
+
+        launch {
+            snapshotFlow { uiState.toast }
+                .filter { it != null }
+                .collect { error ->
+                    currentOnShowSnackbar(error!!, "", true)
+                }
+        }
+    }
+
 
     val onCreateAccount: () -> Unit = {
-        viewModel.createAccount(email, password)
+        viewModel.createAccount()
     }
 
     Column(
@@ -103,8 +137,8 @@ fun CreateAccountScreen(
             Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = email,
-                onValueChange = { email = it },
+                value = viewModel.email,
+                onValueChange = { viewModel.onEmailChange(it) },
                 placeholder = { Text("Enter email") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -117,8 +151,8 @@ fun CreateAccountScreen(
             Spacer(modifier = Modifier.height(4.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
+                value = viewModel.password,
+                onValueChange = { viewModel.onPasswordChange(it) },
                 placeholder = { Text("Enter password") },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -145,6 +179,7 @@ fun CreateAccountScreen(
         SMSShareButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = onCreateAccount,
+            isLoading = uiState.isLoading
         ) {
             Text("Create account")
         }
@@ -152,6 +187,7 @@ fun CreateAccountScreen(
         SMSShareTextButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = onLoginClick,
+            enabled = !uiState.isLoading
         ) {
             Text("Already have and account? Login")
         }
@@ -164,13 +200,15 @@ fun NavGraphBuilder.signUpScreen(
     onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
     onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
     onLoginClick: () -> Unit = {},
-    onShowSnackbar: suspend (String, String?) -> Boolean = { _, _ -> false },
+    onSignUpComplete: () -> Unit = {},
+    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
 ) {
     composable(route = signUpRoute) {
         CreateAccountScreen(
             onSetupTopAppBar = onSetupTopAppBar,
             onSetUpBottomAppBar = onSetUpBottomAppBar,
             onLoginClick = onLoginClick,
+            onSignUpComplete = onSignUpComplete,
             onShowSnackbar = onShowSnackbar,
         )
     }

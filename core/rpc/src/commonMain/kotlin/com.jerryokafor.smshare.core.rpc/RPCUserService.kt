@@ -11,7 +11,7 @@ data class UserData(
     val lastName: String,
 )
 
-interface UserService : RPC {
+interface RPCUserService : RPC {
     suspend fun hello(
         user: String,
         userData: UserData,

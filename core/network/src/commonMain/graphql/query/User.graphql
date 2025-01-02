@@ -1,0 +1,10 @@
+query  UserProfile{
+    user {
+        profile {
+            id
+        }
+        settings {
+            id
+        }
+    }
+}

@@ -64,7 +64,7 @@ buildCache {
 include(":composeApp")
 include(":server")
 include(":core:common")
- include(":core:rpc")
+// include(":core:rpc")
 include(":core:model")
 include(":core:database")
 include(":core:datastore")

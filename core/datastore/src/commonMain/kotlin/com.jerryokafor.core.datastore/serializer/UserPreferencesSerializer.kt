@@ -1,11 +1,13 @@
-package com.jerryokafor.core.datastore
+package com.jerryokafor.core.datastore.serializer
 
 import androidx.datastore.core.okio.OkioSerializer
+import com.jerryokafor.core.datastore.model.UserData
+import kotlinx.serialization.json.Json
 import okio.BufferedSink
 import okio.BufferedSource
 import okio.use
 
-internal object UserPreferencesSerializer : OkioSerializer<UserData> {
+internal class UserPreferencesSerializer(private val json: Json) : OkioSerializer<UserData> {
     override val defaultValue: UserData = UserData()
 
     override suspend fun readFrom(source: BufferedSource): UserData =
