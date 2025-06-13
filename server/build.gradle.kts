@@ -62,7 +62,6 @@ dependencies {
     implementation(libs.jetbrains.exposed.jdbc)
     implementation(libs.jetbrains.exposed.dao)
 
-
     // Utils
     implementation(libs.postgres.postgresql)
     implementation(libs.zaxxer.hikaricp)
