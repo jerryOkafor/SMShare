@@ -2,7 +2,6 @@ import com.jerryokafor.smshare.configureKotlinServer
 import com.jerryokafor.smshare.configurePowerAssert
 import io.ktor.plugin.features.DockerPortMapping
 import io.ktor.plugin.features.DockerPortMappingProtocol
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinJvm)
