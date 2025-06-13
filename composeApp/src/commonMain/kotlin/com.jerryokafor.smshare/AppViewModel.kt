@@ -97,7 +97,8 @@ open class AppViewModel :
 
     init {
         viewModelScope.launch {
-            userDataStore.user.takeWhile { startDestination.value == null }
+            userDataStore.user
+                .takeWhile { startDestination.value == null }
                 .collectLatest { userData ->
                     val startDestination: Any = if (userData.isLoggedIn) Posts else Auth
                     _startDestination.update { startDestination }
@@ -107,19 +108,22 @@ open class AppViewModel :
         viewModelScope.launch {
             try {
                 Logger.withTag("Testing").d("Starting KRPC call")
-                val userService = HttpClient { installKrpc() }.rpc {
-                    url {
-                        host = DEV_SERVER_HOST
-                        port = 8080
-                        encodedPath = "/api"
-                    }
 
-                    rpcConfig {
-                        serialization {
-                            json()
+                @Suppress("MagicNumber")
+                val userService = HttpClient { installKrpc() }
+                    .rpc {
+                        url {
+                            host = DEV_SERVER_HOST
+                            port = 8080
+                            encodedPath = "/api"
                         }
-                    }
-                }.withService<RPCUserService>()
+
+                        rpcConfig {
+                            serialization {
+                                json()
+                            }
+                        }
+                    }.withService<RPCUserService>()
 
                 Logger.withTag("Testing").d("KRPC client service: $userService")
 
@@ -129,9 +133,8 @@ open class AppViewModel :
 //                userService.subscribeToNews().collect { news ->
 //                    Logger.withTag("Testing").d("Testing News: $news")
 //                }
-
             } catch (e: Throwable) {
-                Logger.withTag("Testing").e("Error: ${e.message}",e)
+                Logger.withTag("Testing").e("Error: ${e.message}", e)
             }
         }
     }

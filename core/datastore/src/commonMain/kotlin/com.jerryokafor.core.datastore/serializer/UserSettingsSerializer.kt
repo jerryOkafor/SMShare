@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.core.datastore.serializer
 
 import androidx.datastore.core.okio.OkioSerializer
@@ -7,7 +9,9 @@ import okio.BufferedSink
 import okio.BufferedSource
 import okio.use
 
-internal class UserSettingsSerializer(private val json: Json) : OkioSerializer<UserSettings> {
+internal class UserSettingsSerializer(
+    private val json: Json,
+) : OkioSerializer<UserSettings> {
     override val defaultValue: UserSettings = UserSettings()
 
     override suspend fun readFrom(source: BufferedSource): UserSettings =

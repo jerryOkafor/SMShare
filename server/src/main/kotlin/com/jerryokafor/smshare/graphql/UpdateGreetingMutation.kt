@@ -6,5 +6,4 @@ import com.expediagroup.graphql.server.operations.Mutation
 class UpdateGreetingMutation : Mutation {
     @GraphQLDescription("Modify Greetings, and returns it")
     fun updateGreeting(greeting: String) = "Hello update greetings $greeting"
-
 }

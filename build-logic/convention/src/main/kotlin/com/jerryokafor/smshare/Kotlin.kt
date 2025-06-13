@@ -6,7 +6,7 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-const val JVMLanguageVersion = 22
+const val JVMLanguageVersion = 21
 val JVMTarget = JvmTarget.JVM_21
 
 fun Project.configureKotlin() {

@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.core.datastore.model
 
 import kotlinx.serialization.Serializable
@@ -5,5 +7,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserData(
     val isLoggedIn: Boolean = false,
-    val token: String? = null
+    val token: String? = null,
 )

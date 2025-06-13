@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.smshare.screens.auth.login
 
 import androidx.compose.foundation.Image
@@ -36,18 +38,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.SMSShareButton
 import com.jerryokafor.smshare.component.SMSShareTextButton
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -108,10 +104,10 @@ fun LoginScreen(
 
     Column(
         modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .imePadding()
-                .verticalScroll(rememberScrollState()),
+            .fillMaxSize()
+            .padding(16.dp)
+            .imePadding()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -135,6 +131,8 @@ fun LoginScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         var passwordVisible by rememberSaveable { mutableStateOf(false) }
+        val visualTransformation =
+            if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
         Column {
             Text("Enter password")
             Spacer(modifier = Modifier.height(4.dp))
@@ -143,7 +141,7 @@ fun LoginScreen(
                 value = viewModel.password,
                 onValueChange = { viewModel.onPasswordChange(it) },
                 placeholder = { Text("Enter password") },
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = visualTransformation,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
                 trailingIcon = {

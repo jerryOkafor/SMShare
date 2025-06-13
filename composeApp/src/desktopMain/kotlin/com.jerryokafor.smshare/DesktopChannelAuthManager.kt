@@ -26,14 +26,9 @@ package com.jerryokafor.smshare
 
 import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfig
-import io.ktor.server.application.call
-import io.ktor.server.engine.embeddedServer
 import io.ktor.server.engine.stop
-import io.ktor.server.netty.Netty
 import io.ktor.server.netty.NettyApplicationEngine
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

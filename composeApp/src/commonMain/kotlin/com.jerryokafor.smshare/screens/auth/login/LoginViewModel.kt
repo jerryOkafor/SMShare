@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.smshare.screens.auth.login
 
 import androidx.compose.runtime.mutableStateOf
@@ -23,13 +25,14 @@ import org.koin.core.component.inject
 data class LoginUiState(
     val isLoading: Boolean = false,
     val successMessage: String? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )
 
 @OptIn(SavedStateHandleSaveableApi::class)
 class LoginViewModel(
-    savedStateHandle: SavedStateHandle
-) : ViewModel(), KoinComponent {
+    savedStateHandle: SavedStateHandle,
+) : ViewModel(),
+    KoinComponent {
     private val userRepository: UserRepository by inject()
 
     var userName by savedStateHandle.saveable(stateSaver = TextFieldValue.Saver) {
@@ -42,25 +45,24 @@ class LoginViewModel(
     }
         private set
 
-
-    private val _uiState =  MutableStateFlow(LoginUiState())
+    private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
     fun login() {
         val userNameStr = userName.text
         val passwordStr = password.text
 
-        userRepository.login(userNameStr, passwordStr)
+        userRepository
+            .login(userNameStr, passwordStr)
             .onStart {
                 _uiState.update { current: LoginUiState -> current.copy(isLoading = true) }
-            }
-            .onEach {
+            }.onEach {
                 when (it) {
                     is Failure -> {
                         _uiState.update { current: LoginUiState ->
                             current.copy(
                                 isLoading = false,
-                                errorMessage = it.errorResponse
+                                errorMessage = it.errorResponse,
                             )
                         }
                     }
@@ -69,7 +71,7 @@ class LoginViewModel(
                         _uiState.update { current: LoginUiState ->
                             current.copy(
                                 isLoading = false,
-                                successMessage = "Login Successful"
+                                successMessage = "Login Successful",
                             )
                         }
                     }
@@ -85,10 +87,11 @@ class LoginViewModel(
         this.password = password
     }
 
-    fun handleSuccessMessage(){
+    fun handleSuccessMessage() {
         _uiState.update { it.copy(successMessage = null) }
     }
-    fun handleErrorMessage(){
+
+    fun handleErrorMessage() {
         _uiState.update { it.copy(errorMessage = null) }
     }
 }

@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.core.datastore.store
 
 import androidx.datastore.core.DataStoreFactory

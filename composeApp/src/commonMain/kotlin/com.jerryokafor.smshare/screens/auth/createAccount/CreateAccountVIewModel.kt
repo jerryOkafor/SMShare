@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.smshare.screens.auth.createAccount
 
 import androidx.compose.runtime.mutableStateOf
@@ -20,11 +22,15 @@ data class CreateAccountUIState(
     val isLoading: Boolean = false,
     val createAccountComplete: Boolean = false,
     val errorMessage: String? = null,
-    val successMessage: String? = null
+    val successMessage: String? = null,
 )
 
 @OptIn(SavedStateHandleSaveableApi::class)
-class CreateAccountViewModel(savedStateHandle: SavedStateHandle) : ViewModel(), KoinComponent {
+class CreateAccountViewModel(
+    savedStateHandle: SavedStateHandle,
+) : ViewModel(),
+    KoinComponent {
+    @Suppress("UnusedPrivateProperty")
     private val userDataStore: UserDataStore by inject()
 
     var email by savedStateHandle.saveable(stateSaver = TextFieldValue.Saver) {
@@ -49,6 +55,7 @@ class CreateAccountViewModel(savedStateHandle: SavedStateHandle) : ViewModel(), 
     }
 
     fun createAccount() {
+        @Suppress("MagicNumber")
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             delay(3_000)
@@ -56,10 +63,11 @@ class CreateAccountViewModel(savedStateHandle: SavedStateHandle) : ViewModel(), 
         }
     }
 
-    fun handleSuccessMessage(){
+    fun handleSuccessMessage() {
         _uiState.update { it.copy(successMessage = null) }
     }
-    fun handleErrorMessage(){
+
+    fun handleErrorMessage() {
         _uiState.update { it.copy(errorMessage = null) }
     }
 }

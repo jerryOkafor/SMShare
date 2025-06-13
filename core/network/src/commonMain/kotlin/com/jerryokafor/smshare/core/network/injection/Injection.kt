@@ -13,7 +13,8 @@ import org.koin.dsl.module
 @OptIn(ExperimentalSerializationApi::class)
 fun commonNetworkModule() = module {
     single {
-        ApolloClient.Builder()
+        ApolloClient
+            .Builder()
             .serverUrl("http://${Config.IP_ADDRESS}:${Config.API_PORT}/graphql")
             .build()
     }

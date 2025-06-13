@@ -1,4 +1,3 @@
-import com.jerryokafor.smshare.JVMLanguageVersion
 import com.jerryokafor.smshare.configureKotlinServer
 import io.ktor.plugin.features.DockerPortMapping
 import io.ktor.plugin.features.DockerPortMappingProtocol
@@ -45,7 +44,6 @@ dependencies {
     implementation(libs.ktor.server.host.common.jvm)
     implementation(libs.ktor.network.tls.certificates)
 
-
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger.slf4j)
 
@@ -56,7 +54,7 @@ dependencies {
     testImplementation(libs.kotlinx.rpc.client)
     testImplementation(libs.kotlinx.rpc.transport.ktor.client)
 
-    //Graph QL
+    // Graph QL
     implementation(libs.expediagroup.graphql.kotlin.ktor.server)
 
     implementation("org.postgresql:postgresql:42.2.2")
@@ -75,7 +73,7 @@ dependencies {
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.test.junit)
-//    testImplementation(libs.ktor.server.tests)
+    testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
@@ -90,9 +88,9 @@ ktor {
                 DockerPortMapping(
                     outsideDocker = 80,
                     insideDocker = 8080,
-                    protocol = DockerPortMappingProtocol.TCP
-                )
-            )
+                    protocol = DockerPortMappingProtocol.TCP,
+                ),
+            ),
         )
 
 //        externalRegistry.set(
@@ -117,5 +115,3 @@ graphql {
         packages = listOf("com.jerryokafor.smshare")
     }
 }
-
-

@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename", "MatchingDeclarationName")
+
 package com.jerryokafor.smshare
 
 import com.auth0.jwk.JwkProvider
@@ -26,18 +28,17 @@ import org.koin.ktor.ext.inject
 @ContactDirective(
     name = "SMS Share GraphQL Schema",
     url = "https://myteam.slack.com/archives/teams-chat-room-url",
-    description = "send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall)."
+    description = "send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall).",
 )
 @GraphQLDescription("SMS Share GraphQL Schema Description")
 class SMSShareSchema : Schema
-
 
 fun Application.installGraphQLModule(jwkProvider: JwkProvider) {
     val userRepository by inject<DefaultUserRepository>()
     val authUtil = AuthUtil(
         environment = environment,
         userRepository = userRepository,
-        jwkProvider = jwkProvider
+        jwkProvider = jwkProvider,
     )
 
     install(GraphQL) {
@@ -45,13 +46,13 @@ fun Application.installGraphQLModule(jwkProvider: JwkProvider) {
             packages = listOf("com.jerryokafor.smshare")
 
             queries = listOf(
-                HelloWorldQuery()
+                HelloWorldQuery(),
             )
 
             mutations = listOf(
                 UpdateGreetingMutation(),
                 LoginMutationService(userRepository, authUtil),
-                CreateUserMutationService(userRepository, authUtil)
+                CreateUserMutationService(userRepository, authUtil),
             )
 
             schemaObject = SMSShareSchema()
@@ -66,7 +67,6 @@ fun Application.installGraphQLModule(jwkProvider: JwkProvider) {
         graphQLPostRoute()
         graphQLSDLRoute()
         graphiQLRoute()
-
     }
     install(StatusPages) {
         defaultGraphQLStatusPages()

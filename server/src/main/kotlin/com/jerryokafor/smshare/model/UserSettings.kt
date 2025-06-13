@@ -6,7 +6,6 @@ object UserSettings : Table() {
     val id = integer("id").autoIncrement()
 }
 
-
 data class UserSetting(
-    val id: Int = -1
+    val id: Int = -1,
 )

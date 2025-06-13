@@ -37,7 +37,7 @@ kotlin {
             implementation(libs.dev.whyoleg.cryptography.random)
             implementation(libs.dev.whyoleg.cryptography.core)
 
-            //Apollo GraphQL
+            // Apollo GraphQL
             api("com.apollographql.apollo:apollo-runtime:4.0.0")
             api("com.apollographql.adapters:apollo-adapters-kotlinx-datetime:0.0.4")
         }
@@ -88,8 +88,6 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 }
 
-
-
 apollo {
     service("service") {
         packageName.set("com.jerryokafor.smshare.graphql")
@@ -101,13 +99,13 @@ apollo {
         mapScalar(
             "LocalDateTime",
             "kotlinx.datetime.LocalDateTime",
-            "com.apollographql.adapter.datetime.KotlinxLocalDateTimeAdapter"
+            "com.apollographql.adapter.datetime.KotlinxLocalDateTimeAdapter",
         )
 
         mapScalar(
             "LocalDate",
             "kotlinx.datetime.LocalDate",
-            "com.apollographql.adapter.datetime.KotlinxLocalDateAdapter"
+            "com.apollographql.adapter.datetime.KotlinxLocalDateAdapter",
         )
 
         introspection {

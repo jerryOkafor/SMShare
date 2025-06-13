@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.smshare.screens.auth.createAccount
 
 import androidx.compose.foundation.Image
@@ -57,7 +59,6 @@ fun CreateAccountScreenPreview() {
     }
 }
 
-
 @Composable
 fun CreateAccountScreen(
     onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
@@ -108,7 +109,6 @@ fun CreateAccountScreen(
         }
     }
 
-
     val onCreateAccount: () -> Unit = {
         viewModel.createAccount()
     }
@@ -143,6 +143,8 @@ fun CreateAccountScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         var passwordVisible by rememberSaveable { mutableStateOf(false) }
+        val visualTransformation =
+            if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
         Column {
             Text("Enter password")
             Spacer(modifier = Modifier.height(4.dp))
@@ -151,7 +153,7 @@ fun CreateAccountScreen(
                 value = viewModel.password,
                 onValueChange = { viewModel.onPasswordChange(it) },
                 placeholder = { Text("Enter password") },
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = visualTransformation,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 singleLine = true,
                 trailingIcon = {
@@ -176,7 +178,7 @@ fun CreateAccountScreen(
         SMSShareButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = onCreateAccount,
-            isLoading = uiState.isLoading
+            isLoading = uiState.isLoading,
         ) {
             Text("Create account")
         }
@@ -184,7 +186,7 @@ fun CreateAccountScreen(
         SMSShareTextButton(
             modifier = Modifier.fillMaxWidth(),
             onClick = onLoginClick,
-            enabled = !uiState.isLoading
+            enabled = !uiState.isLoading,
         ) {
             Text("Already have and account? Login")
         }

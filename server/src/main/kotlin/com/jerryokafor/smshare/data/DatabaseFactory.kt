@@ -1,6 +1,5 @@
 package com.jerryokafor.smshare.data
 
-
 import com.jerryokafor.smshare.model.Users
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -18,11 +17,15 @@ interface DatabaseFactory {
     fun create(): Database
 }
 
-class DatabaseFactoryImpl(isTest: Boolean = true) : DatabaseFactory {
-
+@Suppress("UnusedPrivateProperty")
+class DatabaseFactoryImpl(
+    isTest: Boolean = true,
+) : DatabaseFactory {
     @Volatile
+    @Suppress("ktlint:standard:property-naming", "VariableNaming")
     private var INSTANCE: Database? = null
 
+    @Suppress("MagicNumber")
     private fun h2Hikari(): HikariDataSource {
         val config = HikariConfig().apply {
             driverClassName = "org.h2.Driver"
@@ -34,7 +37,6 @@ class DatabaseFactoryImpl(isTest: Boolean = true) : DatabaseFactory {
         }
         return HikariDataSource(config)
     }
-
 
     override fun create(): Database {
         synchronized(this) {
@@ -71,11 +73,11 @@ fun Application.configureDatabase() {
     val databaseFactory by inject<DatabaseFactory>()
     databaseFactory.create()
 
-    //Init DB
+    // Init DB
     SchemaDefinition.createSchema()
 }
 
-//object DatabaseFactory {
+// object DatabaseFactory {
 //
 //    fun init(environment: ApplicationEnvironment) {
 //        val dbUrl = ""
@@ -106,4 +108,4 @@ fun Application.configureDatabase() {
 //
 //        return HikariDataSource(config)
 //    }
-//}
+// }

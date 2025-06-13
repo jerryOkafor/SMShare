@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename", "InvalidPackageDeclaration", "MatchingDeclarationName")
+
 package com.jerryokafor.smshare.screens.auth
 
 import androidx.navigation.NavController
@@ -11,15 +13,16 @@ import com.jerryokafor.smshare.screens.auth.createAccount.CreateAccountScreen
 import com.jerryokafor.smshare.screens.auth.login.LoginScreen
 import kotlinx.serialization.Serializable
 
+@Suppress("MatchingDeclarationName")
 data object AuthDestinations {
     @Serializable
     data object SignIn
 
     @Serializable
     data object SignUp
-
 }
 
+@Suppress("LongParameterList")
 inline fun <reified T : Any> NavGraphBuilder.installAuth(
     noinline onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
     noinline onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},

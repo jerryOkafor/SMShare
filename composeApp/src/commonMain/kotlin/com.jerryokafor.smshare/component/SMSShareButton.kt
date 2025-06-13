@@ -44,8 +44,8 @@ fun SMSShareButton(
             elevation = elevation,
             border = border,
             contentPadding = contentPadding,
-            interactionSource = interactionSource
-        ){
+            interactionSource = interactionSource,
+        ) {
             if (!isLoading) content()
         }
         if (isLoading) {

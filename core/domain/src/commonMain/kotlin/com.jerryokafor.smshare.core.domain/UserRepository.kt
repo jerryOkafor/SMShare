@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.smshare.core.domain
 
 import com.apollographql.apollo.ApolloClient
@@ -12,22 +14,33 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 interface UserRepository {
+    fun login(
+        userName: String,
+        password: String,
+    ): Flow<Outcome<Unit>>
 
-    fun login(userName: String, password: String): Flow<Outcome<Unit>>
-
-    fun createAccount(email: String, password: String): Flow<Outcome<Unit>>
+    fun createAccount(
+        email: String,
+        password: String,
+    ): Flow<Outcome<Unit>>
 }
 
 class DefaultUserRepository(
     private val userDataStore: UserDataStore,
     private val apolloClient: ApolloClient,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
 ) : UserRepository {
-    override fun login(userName: String, password: String) = flow {
+    @Suppress("ktlint:standard:max-line-length")
+    override fun login(
+        userName: String,
+        password: String,
+    ) = flow {
         try {
-            val response = apolloClient.mutation(
-                LoginUserMutation(userName = userName, password = password)
-            ).execute().dataAssertNoErrors.login
+            val response = apolloClient
+                .mutation(
+                    LoginUserMutation(userName = userName, password = password),
+                ).execute()
+                .dataAssertNoErrors.login
 
             userDataStore.loginUser(response.accessToken!!)
             emit(Success(Unit))
@@ -36,17 +49,24 @@ class DefaultUserRepository(
             emit(
                 Failure(
                     errorResponse = e.message ?: "Error login in user, please try again",
-                    throwable = e.cause
-                )
+                    throwable = e.cause,
+                ),
             )
         }
     }.flowOn(ioDispatcher)
 
-    override fun createAccount(email: String, password: String): Flow<Outcome<Unit>> = flow {
+    override fun createAccount(
+        email: String,
+        password: String,
+    ): Flow<Outcome<Unit>> = flow {
         try {
-            val response = apolloClient.mutation(
-                CreateUserMutation(input = CreateUserInput(email, firstName = "", lastName = ""))
-            ).execute().dataAssertNoErrors.createUser
+            val response = apolloClient
+                .mutation(
+                    CreateUserMutation(
+                        input = CreateUserInput(email, firstName = "", lastName = ""),
+                    ),
+                ).execute()
+                .dataAssertNoErrors.createUser
 
             userDataStore.loginUser(response.accessToken!!)
             emit(Success(Unit))
@@ -54,8 +74,8 @@ class DefaultUserRepository(
             emit(
                 Failure(
                     errorResponse = e.message ?: "Error creating user, please try again",
-                    throwable = e.cause
-                )
+                    throwable = e.cause,
+                ),
             )
         }
     }.flowOn(ioDispatcher)

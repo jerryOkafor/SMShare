@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration", "MatchingDeclarationName")
+
 package com.jerryokafor.smshare.navigation
 
 import androidx.compose.material.icons.Icons
@@ -29,7 +31,10 @@ sealed interface BottomNavItem {
     val icon: @Composable () -> Unit
     val isSelected: (navController: NavController) -> Boolean
 
-    fun navigate(navController: NavController, navOptions: NavOptions)
+    fun navigate(
+        navController: NavController,
+        navOptions: NavOptions,
+    )
 
     data class PostsNavItem(
         override val title: @Composable () -> String = { "Posts" },
@@ -42,9 +47,8 @@ sealed interface BottomNavItem {
     ) : BottomNavItem {
         override fun navigate(
             navController: NavController,
-            navOptions: NavOptions
+            navOptions: NavOptions,
         ) = navController.navigateToPosts(navOptions)
-
     }
 
     data class DraftsBottomNavItem(
@@ -58,9 +62,8 @@ sealed interface BottomNavItem {
     ) : BottomNavItem {
         override fun navigate(
             navController: NavController,
-            navOptions: NavOptions
+            navOptions: NavOptions,
         ) = navController.navigateToDrafts(navOptions)
-
     }
 
     data class AnalyticsBottomNavItem(
@@ -74,7 +77,7 @@ sealed interface BottomNavItem {
     ) : BottomNavItem {
         override fun navigate(
             navController: NavController,
-            navOptions: NavOptions
+            navOptions: NavOptions,
         ) = navController.navigateToAnalytics(navOptions)
     }
 
@@ -89,7 +92,7 @@ sealed interface BottomNavItem {
     ) : BottomNavItem {
         override fun navigate(
             navController: NavController,
-            navOptions: NavOptions
+            navOptions: NavOptions,
         ) = navController.navigateToSettings(navOptions)
     }
 }

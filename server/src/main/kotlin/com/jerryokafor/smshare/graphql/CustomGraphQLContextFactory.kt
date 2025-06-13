@@ -16,12 +16,12 @@ class CustomGraphQLContextFactory : DefaultKtorGraphQLContextFactory() {
                 "user" to User(
                     email = "fake@site.com",
                     firstName = "Someone",
-                    lastName = "You Don't know"
-                )
+                    lastName = "You Don't know",
+                ),
             ).also { map ->
                 request.headers["my-custom-header"]?.let { customHeader ->
                     map["customHeader"] = customHeader
                 }
-            }
+            },
         )
 }

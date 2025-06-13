@@ -294,10 +294,21 @@ fun Home(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val title = when {
-        currentDestination?.hasRoute<Posts>() == true -> stringResource(Res.string.main_nav_title_posts)
-        currentDestination?.hasRoute<Drafts>() == true -> stringResource(Res.string.main_nav_title_drafts)
-        currentDestination?.hasRoute<Analytics>() == true -> stringResource(Res.string.main_nav_title_analytics)
-        currentDestination?.hasRoute<Settings>() == true -> stringResource(Res.string.main_nav_title_settings)
+        currentDestination?.hasRoute<Posts>() == true -> stringResource(
+            Res.string.main_nav_title_posts,
+        )
+
+        currentDestination?.hasRoute<Drafts>() == true -> stringResource(
+            Res.string.main_nav_title_drafts,
+        )
+
+        currentDestination?.hasRoute<Analytics>() == true -> stringResource(
+            Res.string.main_nav_title_analytics,
+        )
+
+        currentDestination?.hasRoute<Settings>() == true -> stringResource(
+            Res.string.main_nav_title_settings,
+        )
         else -> ""
     }
 
@@ -404,7 +415,9 @@ fun Home(
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
-                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        CompositionLocalProvider(
+                            LocalLayoutDirection provides LayoutDirection.Ltr,
+                        ) {
                             SideNav(
                                 accounts = accounts,
                                 onClose = { sideNavMenAction ->
@@ -414,11 +427,11 @@ fun Home(
                                             when (sideNavMenAction) {
                                                 SideNavMenuAction.Logout -> {
                                                     viewModel.logout()
+                                                    val popUpToRout =
+                                                        navController.graph.startDestinationRoute!!
                                                     navController.navigateToSignIn(
                                                         navOptions {
-                                                            popUpTo(
-                                                                navController.graph.startDestinationRoute!!,
-                                                            ) {
+                                                            popUpTo(popUpToRout) {
                                                                 inclusive = true
                                                             }
                                                             launchSingleTop = true
@@ -515,7 +528,10 @@ fun Home(
                                                     },
                                                 )
                                             },
-                                            onCreateAccountClick = { navController.navigateToSignUp() },
+                                            onCreateAccountClick = {
+                                                navController
+                                                    .navigateToSignUp()
+                                            },
                                             onLoginComplete = {
                                                 navController.navigateToPosts(
                                                     navOptions = navOptions {
@@ -617,7 +633,7 @@ fun Home(
                                                 onShowSnackbar(
                                                     "No account added, please add account to continue",
                                                     "",
-                                                    false
+                                                    false,
                                                 )
                                             }
                                         } else {
@@ -663,14 +679,17 @@ fun Home(
                                             description = channel.description,
                                             icon = channel.icon,
                                             onClick = {
-                                                scope.launch {
-                                                    sheetState.hide()
-                                                }.invokeOnCompletion {
-                                                    bottomSheetVisible = false
-                                                    scope.launch {
-                                                        channelAuthManager.authenticateUser(channel)
+                                                scope
+                                                    .launch {
+                                                        sheetState.hide()
+                                                    }.invokeOnCompletion {
+                                                        bottomSheetVisible = false
+                                                        scope.launch {
+                                                            channelAuthManager.authenticateUser(
+                                                                channel,
+                                                            )
+                                                        }
                                                     }
-                                                }
                                             },
                                         )
                                         HalfVerticalSpacer()
@@ -690,7 +709,7 @@ fun Home(
                 AppUiState.Loading -> false
                 is AppUiState.Success ->
                     state.platform.type == SupportedPlatformType.Android ||
-                            state.platform.type == SupportedPlatformType.iOS
+                        state.platform.type == SupportedPlatformType.iOS
             }
             AnimatedVisibility(!isOnline && isMobilePlatform) {
                 Box(modifier = Modifier.fillMaxWidth().height(48.dp).background(Color.Red))
@@ -699,7 +718,8 @@ fun Home(
     }
 
     LaunchedEffect(startDestination) {
-        if (startDestination != null)
+        if (startDestination != null) {
             currentAnAppReady()
+        }
     }
 }

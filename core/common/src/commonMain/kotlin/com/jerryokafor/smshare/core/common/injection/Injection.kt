@@ -1,3 +1,5 @@
+@file:Suppress("MatchingDeclarationName")
+
 package com.jerryokafor.smshare.core.common.injection
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -8,26 +10,25 @@ import kotlinx.coroutines.SupervisorJob
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
+@Suppress("ktlint:standard:property-naming")
 object KoinNamed {
     const val defaultDispatcher = "defaultDispatcher"
     const val ioDispatcher = "iODispatcher"
     const val mainDispatcher = "mainDispatcher"
-
     const val appScope = "appScope"
 }
-
 
 val dispatcherModule = module {
     factory<CoroutineDispatcher>(named(KoinNamed.defaultDispatcher)) { Dispatchers.Default }
     factory<CoroutineDispatcher>(named(KoinNamed.ioDispatcher)) { Dispatchers.IO }
     factory<CoroutineDispatcher>(named(KoinNamed.mainDispatcher)) { Dispatchers.Main }
 
-    /*AppScope*/
+    // AppScope
     single<CoroutineScope>(named(KoinNamed.appScope)) {
         CoroutineScope(
             SupervisorJob() + get<CoroutineDispatcher>(
-                named(KoinNamed.defaultDispatcher)
-            )
+                named(KoinNamed.defaultDispatcher),
+            ),
         )
     }
 }

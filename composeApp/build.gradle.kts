@@ -1,7 +1,7 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.smshare.kotlin.multiplatform)
     alias(libs.plugins.smshare.android.application)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
@@ -102,12 +102,12 @@ kotlin {
             // ViewModel
             implementation(libs.viewmodel.compose)
 
-            //RPC
+            // RPC
             implementation(libs.kotlinx.rpc.client)
             implementation(libs.kotlinx.rpc.serialization.json)
             implementation(libs.kotlinx.rpc.transport.ktor.client)
 
-            //Ktor
+            // Ktor
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.websockets)

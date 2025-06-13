@@ -1,11 +1,10 @@
+@file:Suppress("MagicNumber", "UnusedPrivateProperty")
 
 package com.jerryokafor.smshare
 
 import com.auth0.jwk.JwkProviderBuilder
-import com.jerryokafor.smshare.core.rpc.RPCUserService
 import com.jerryokafor.smshare.data.configureDatabase
 import com.jerryokafor.smshare.injection.appModule
-import com.jerryokafor.smshare.service.RemoteRPCRPCUserService
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -16,24 +15,20 @@ import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.jwt.jwt
-import io.ktor.server.engine.embeddedServer
 import io.ktor.server.http.content.staticFiles
-import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.origin
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
-import kotlinx.rpc.krpc.ktor.server.Krpc
-import kotlinx.rpc.krpc.ktor.server.rpc
-import kotlinx.rpc.krpc.serialization.json.json
 import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain
+    .main(args)
 
 fun Application.module() {
     install(Koin) {
@@ -54,7 +49,7 @@ fun Application.module() {
         .rateLimited(10, 1, TimeUnit.MINUTES)
         .build()
 
-    //Init DB Connection
+    // Init DB Connection
     configureDatabase()
 
     install(Authentication) {
@@ -111,7 +106,11 @@ fun Application.installCORS() {
         allowCredentials = true
         allowSameOrigin = true
 
-        val allowedHosts = this@installCORS.environment.config.propertyOrNull("security.cors")?.getList()
+        val allowedHosts = this@installCORS
+            .environment.config
+            .propertyOrNull(
+                "security.cors",
+            )?.getList()
         allowedHosts?.forEach { host ->
             allowHost(host, listOf("http", "https", "ws", "wss"))
         }

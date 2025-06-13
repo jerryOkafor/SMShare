@@ -1,3 +1,5 @@
+@file:Suppress("MagicNumber")
+
 package com.jerryokafor.smshare.model
 
 import io.ktor.server.auth.Principal
@@ -17,7 +19,9 @@ object Users : IntIdTable() {
     val password = varchar("password", 255)
 }
 
-class UserDao(id: EntityID<Int>) : Entity<Int>(id) {
+class UserDao(
+    id: EntityID<Int>,
+) : Entity<Int>(id) {
     companion object : EntityClass<Int, UserDao>(Users)
 
     var firstName by Users.firstName
@@ -28,7 +32,6 @@ class UserDao(id: EntityID<Int>) : Entity<Int>(id) {
     var createdAt by Users.createdAt
 }
 
-
 @Serializable
 data class User(
     val id: Int = -1,
@@ -38,7 +41,6 @@ data class User(
     val email: String = "",
 //    val createdAt: Long = 0L,
     val token: String? = null,
-
     @Transient
-    val password: String? = null
+    val password: String? = null,
 ) : Principal

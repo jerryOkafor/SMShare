@@ -13,19 +13,23 @@ import org.jetbrains.exposed.sql.orWhere
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
-
-suspend fun <T> dbQueryOnIO(db: Database? = null, block: suspend () -> T): T =
-    newSuspendedTransaction(context = Dispatchers.IO, db = db) { block() }
+suspend fun <T> dbQueryOnIO(
+    db: Database? = null,
+    block: suspend () -> T,
+): T = newSuspendedTransaction(context = Dispatchers.IO, db = db) { block() }
 
 interface UserRepository {
-    suspend fun createUer(email: String, password: String)
+    suspend fun createUer(
+        email: String,
+        password: String,
+    )
 
     suspend fun updateUser(
         userName: String? = null,
         firstName: String? = null,
         lastName: String? = null,
         email: String? = null,
-        password: String? = null
+        password: String? = null,
     )
 
     suspend fun getUserByEmailOrUserName(userName: String): User?
@@ -33,9 +37,13 @@ interface UserRepository {
     suspend fun getAllUsers(): List<User>
 }
 
-class DefaultUserRepository(private val database: Database) : UserRepository {
-
-    override suspend fun createUer(email: String, password: String) {
+class DefaultUserRepository(
+    private val database: Database,
+) : UserRepository {
+    override suspend fun createUer(
+        email: String,
+        password: String,
+    ) {
         dbQueryOnIO(db = database) {
             Users.insert {
                 it[Users.email] = email
@@ -50,7 +58,7 @@ class DefaultUserRepository(private val database: Database) : UserRepository {
         firstName: String?,
         lastName: String?,
         email: String?,
-        password: String?
+        password: String?,
     ) {
         val predicates: Op<Boolean> = when {
             email != null -> Op.build { Users.email eq email }
@@ -85,29 +93,28 @@ class DefaultUserRepository(private val database: Database) : UserRepository {
 
     override suspend fun getUserByEmailOrUserName(userName: String): User? =
         dbQueryOnIO(db = database) {
-            Users.select(Users.columns)
+            Users
+                .select(Users.columns)
                 .where {
                     Users.userName eq userName
                 }.orWhere {
                     Users.email eq userName
-                }
-                .limit(1).singleOrNull()?.let { toUsers(it) }
-
+                }.limit(1)
+                .singleOrNull()
+                ?.let { toUsers(it) }
         }
 
     override suspend fun getAllUsers(): List<User> = dbQueryOnIO(db = database) {
         Users.selectAll().map { toUsers(it) }
     }
 
-    private fun toUsers(row: ResultRow): User {
-        return User(
-            id = row[Users.id].value,
-            firstName = row[Users.firstName],
-            lastName = row[Users.lastName],
-            email = row[Users.email],
-            userName = row[Users.userName],
+    private fun toUsers(row: ResultRow): User = User(
+        id = row[Users.id].value,
+        firstName = row[Users.firstName],
+        lastName = row[Users.lastName],
+        email = row[Users.email],
+        userName = row[Users.userName],
 //            createdAt = row[Users.createdAt],
-            password = row[Users.password]
-        )
-    }
+        password = row[Users.password],
+    )
 }

@@ -7,35 +7,28 @@ import org.jetbrains.exposed.sql.Database
 import org.junit.Before
 import kotlin.test.Test
 
-
 open class BaseDbTest {
-
     lateinit var database: Database
 
     @Before
     fun initDb() {
         database = DatabaseFactoryImpl(isTest = true).create()
-        //Init DB
+        // Init DB
         SchemaDefinition.createSchema()
-
     }
-
 }
 
-
 class DefaultUserRepositoryTest : BaseDbTest() {
-
     private lateinit var userRepo: DefaultUserRepository
 
     @Before
-    fun SetUp() {
+    fun setUp() {
         userRepo = DefaultUserRepository(database)
-
     }
 
     @Test
     fun `userRepo createUser`() = runTest {
+        @Suppress("UnusedPrivateProperty")
         val user = userRepo.createUer("email@test.com", "P@ssw0rd")
-
     }
 }

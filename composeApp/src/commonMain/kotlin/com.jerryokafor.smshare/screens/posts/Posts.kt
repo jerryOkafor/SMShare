@@ -53,7 +53,6 @@ fun Posts(
     }
 }
 
-
 @Serializable
 data object Posts
 

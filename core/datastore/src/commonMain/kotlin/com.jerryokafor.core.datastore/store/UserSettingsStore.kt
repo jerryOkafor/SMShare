@@ -1,3 +1,9 @@
+@file:Suppress(
+    "TopLevelPropertyNaming",
+    "ktlint:standard:property-naming",
+    "InvalidPackageDeclaration",
+)
+
 package com.jerryokafor.core.datastore.store
 
 import androidx.datastore.core.DataStoreFactory
@@ -10,13 +16,11 @@ import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
 
-
-@Suppress("TopLevelPropertyNaming", "ktlint:standard:property-naming")
 internal const val userSettingsStoreFileName = "sms-settings.share_pb"
 
 class UserSettingsStore(
     private val json: Json,
-    private val produceFilePath: () -> String
+    private val produceFilePath: () -> String,
 ) {
     private val db = DataStoreFactory.create(
         storage = OkioStorage(

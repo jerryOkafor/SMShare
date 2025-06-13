@@ -13,7 +13,7 @@ fun domainModule() = module {
         DefaultUserRepository(
             apolloClient = get(),
             userDataStore = get(),
-            ioDispatcher = get(named(KoinNamed.defaultDispatcher))
+            ioDispatcher = get(named(KoinNamed.defaultDispatcher)),
         )
     }
 }

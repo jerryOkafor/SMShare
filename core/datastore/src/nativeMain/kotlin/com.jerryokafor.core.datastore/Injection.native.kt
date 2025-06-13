@@ -7,4 +7,3 @@ fun nativeUserDatastoreModule() = module {
     single<UserDataStore> { createUserDataStore(json = get()) }
     single<UserSettingsStore> { createUserSettingsStore(json = get()) }
 }
-

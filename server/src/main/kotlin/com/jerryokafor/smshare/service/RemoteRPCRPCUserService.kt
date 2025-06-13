@@ -12,9 +12,7 @@ import kotlin.coroutines.CoroutineContext
 class RemoteRPCRPCUserService(
     override val coroutineContext: CoroutineContext,
 ) : RPCUserService {
-    override suspend fun hello(
-        message: String,
-    ): String = "Hello, welcome $message"
+    override suspend fun hello(message: String): String = "Hello, welcome $message"
 
     @Suppress("MagicNumber")
     override fun subscribeToNews(): Flow<String> = flow {

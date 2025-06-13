@@ -1,3 +1,5 @@
+@file:Suppress("InvalidPackageDeclaration")
+
 package com.jerryokafor.smshare.theme
 
 import androidx.annotation.VisibleForTesting
@@ -110,6 +112,7 @@ fun SMShareTheme(
     /**
      * Dynamic Colors are supported on API level 31 and above
      * */
+    @Suppress("UnusedPrivateProperty")
     val dynamicColor = isDynamicColor // && supportsDynamicTheming()
     val colorScheme =
         when {
@@ -124,18 +127,18 @@ fun SMShareTheme(
             isDarkTheme -> Pair(DarkColors, iheNKiriDarkColorScheme())
             else -> Pair(LightColors, iheNKiriLightColorScheme())
         }
-    val SMShareShape = SMShareShape()
+    val sMShareShape = SMShareShape()
 
     CompositionLocalProvider(
         LocalSMShareSpacing provides SMShareSpacing(),
         LocalSMSShareTypography provides SMSShareTypography(),
         LocalSMSShareColorScheme provides colorScheme.second,
-        LocalSMSShareShape provides SMShareShape,
+        LocalSMSShareShape provides sMShareShape,
     ) {
         MaterialTheme(
             colorScheme = colorScheme.first,
             typography = SMShareNkiri.typography.toMaterialTypography(),
-            shapes = SMShareShape.toMaterialShapes(),
+            shapes = sMShareShape.toMaterialShapes(),
             content = content,
         )
     }
