@@ -71,14 +71,21 @@ googleTruth = "1.4.4"
 archCoreTesting = "2.2.0"
 
 # code quality
-detekt = "1.23.6"
-ktlint = "1.3.0"
+detekt = "1.23.6" # => 1.23.8
+ktlint = "1.3.0" #=> 1.6.0
 jacoco = "0.8.12"
 lint = "31.4.0"
 testParameterInjector = "1.12"
 firebaseTestLab = "2.6.2"
-kover = "0.8.2"
+kover = "0.9.1"
 firebaseFirestoreKtx = "25.1.4"
+
+exposed = "0.54.0"
+sendgridJava = "4.4.1"
+postgresql = "42.2.2"
+h2 = "2.3.232"
+hikaricp = "2.7.8"
+jbcrypt = "0.4"
 
 [libraries]
 androidx-ui-test-junit4-android = { module = "androidx.compose.ui:ui-test-junit4-android", version.ref = "uiTestJunit4Android" }
@@ -178,6 +185,18 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 
 ## Flyway DB
 flywaydb-flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flywaydb" }
+
+# Exposed
+jetbrains-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+jetbrains-exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+jetbrains-exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+
+h2database-h2 = { module = "com.h2database:h2", version.ref = "h2" }
+zaxxer-hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
+postgres-postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+
+mindrot-jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
+sendgrid-java = { module = "com.sendgrid:sendgrid-java", version.ref = "sendgridJava" }
 
 ## Graph QL
 expediagroup-graphql-kotlin-ktor-server = { module = "com.expediagroup:graphql-kotlin-ktor-server", version.ref = "expediagroupGraphqlKotlinKtorServer" }

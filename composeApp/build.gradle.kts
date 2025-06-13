@@ -126,6 +126,7 @@ kotlin {
         commonTest.dependencies {
             @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
+            implementation(libs.kotlin.test)
         }
 
         desktopMain.dependencies {

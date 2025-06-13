@@ -1,5 +1,6 @@
 package com.jerryokafor.core.datastore
 
+import com.jerryokafor.core.datastore.store.UserDataStore
 import com.jerryokafor.core.datastore.store.UserSettingsStore
 import org.koin.dsl.module
 

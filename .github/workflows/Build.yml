@@ -111,7 +111,7 @@ jobs:
           -scheme iosApp \
           -sdk iphoneos \
           -allowProvisioningUpdates \
-          -destination name='iPhone 14' build
+          -destination name='iPhone 16 Pro' build
 
       - name: Run iOS simulator Tests
         run: |

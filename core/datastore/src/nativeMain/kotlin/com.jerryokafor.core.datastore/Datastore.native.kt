@@ -20,7 +20,7 @@ fun createUserDataStore(json: Json): UserDataStore = UserDataStore(json = json) 
             create = false,
             error = null,
         )
-    requireNotNull(documentDirectory).path + "/$dataStoreFileName"
+    requireNotNull(documentDirectory).path + "/$userSettingsStoreFileName"
 }
 
 @OptIn(ExperimentalForeignApi::class)

@@ -57,18 +57,19 @@ dependencies {
     // Graph QL
     implementation(libs.expediagroup.graphql.kotlin.ktor.server)
 
-    implementation("org.postgresql:postgresql:42.2.2")
-    implementation("com.zaxxer:HikariCP:2.7.8")
-    implementation("com.h2database:h2:2.3.232")
+    // Exposed
+    implementation(libs.jetbrains.exposed.core)
+    implementation(libs.jetbrains.exposed.jdbc)
+    implementation(libs.jetbrains.exposed.dao)
+
+
+    // Utils
+    implementation(libs.postgres.postgresql)
+    implementation(libs.zaxxer.hikaricp)
+    implementation(libs.h2database.h2)
     implementation(libs.flywaydb.flyway.core)
-
-    implementation("org.jetbrains.exposed:exposed-core:0.54.0")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.54.0")
-    implementation("org.jetbrains.exposed:exposed-dao:0.54.0")
-
-    implementation("org.mindrot:jbcrypt:0.4")
-
-    implementation("com.sendgrid:sendgrid-java:4.4.1")
+    implementation(libs.mindrot.jbcrypt)
+    implementation(libs.sendgrid.java)
     implementation(libs.firebase.firestore.ktx)
 
     testImplementation(libs.kotlin.test)

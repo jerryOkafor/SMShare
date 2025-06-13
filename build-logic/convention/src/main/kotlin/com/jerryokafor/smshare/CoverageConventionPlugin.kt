@@ -43,7 +43,7 @@ class CoverageConventionPlugin : Plugin<Project> {
                     }
                     createVariant("custom") {
                         add("debug")
-                        add("jvm")
+                        add("desktopDebug")
                     }
                 }
             }
