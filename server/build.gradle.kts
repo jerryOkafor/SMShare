@@ -1,6 +1,8 @@
 import com.jerryokafor.smshare.configureKotlinServer
+import com.jerryokafor.smshare.configurePowerAssert
 import io.ktor.plugin.features.DockerPortMapping
 import io.ktor.plugin.features.DockerPortMappingProtocol
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlinJvm)
@@ -13,6 +15,7 @@ plugins {
     alias(libs.plugins.smshare.ktlint)
     alias(libs.plugins.flywaydb)
     alias(libs.plugins.expediagroup.graphql)
+    alias(libs.plugins.kotlin.powerAssert)
 }
 
 description = "SMS Sahre Server"
@@ -26,6 +29,8 @@ application {
 }
 
 configureKotlinServer()
+
+configurePowerAssert()
 
 dependencies {
     implementation(projects.core.rpc)

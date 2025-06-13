@@ -20,6 +20,7 @@ dependencies {
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.firebase.testLab.gradlePlugin)
     compileOnly(libs.kover.gradlePlugin)
+    compileOnly(libs.powerAssert.gradlePlugin)
     implementation(gradleKotlinDsl())
 }
 

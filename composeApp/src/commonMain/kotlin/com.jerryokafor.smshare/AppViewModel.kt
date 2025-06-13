@@ -130,9 +130,9 @@ open class AppViewModel :
                 val helloResponse = userService.hello(message = "Welcome message")
                 Logger.withTag("Testing").d("Hello: $helloResponse")
 
-//                userService.subscribeToNews().collect { news ->
-//                    Logger.withTag("Testing").d("Testing News: $news")
-//                }
+                userService.subscribeToNews().collect { news ->
+                    Logger.withTag("Testing").d("Testing News: $news")
+                }
             } catch (e: Throwable) {
                 Logger.withTag("Testing").e("Error: ${e.message}", e)
             }

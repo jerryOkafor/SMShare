@@ -7,11 +7,14 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.powerassert.gradle.PowerAssertGradleExtension
 
 class KotlinMultiplatformConventionPlugin : Plugin<Project> {
+   
     override fun apply(target: Project) = with(target) {
         with(pluginManager) {
             apply("org.jetbrains.kotlin.multiplatform")
+            apply("org.jetbrains.kotlin.plugin.power-assert")
         }
 
         extensions.configure<KotlinMultiplatformExtension> {
@@ -52,5 +55,7 @@ class KotlinMultiplatformConventionPlugin : Plugin<Project> {
 
             configureKotlin()
         }
+
+        configurePowerAssert()
     }
 }

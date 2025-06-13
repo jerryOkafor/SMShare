@@ -31,7 +31,7 @@ written completely in Jetpack Compose and shareed accross iOS, Android and Deskt
 
 Android, iOS and Desktop screenshot sample
 <p align="center">
-  <img src="doc/screenshots/ios_android_desktop.webp"/>
+  <img src="assets/screenshots/ios_android_desktop.webp"/>
 </p>
 
 ### More samples
@@ -39,31 +39,31 @@ Android, iOS and Desktop screenshot sample
 <details>
   <summary>Android</summary>
 <p align="center">
-  <img src="doc/screenshots/android/android_1.webp" width="200" />
-  <img src="doc/screenshots/android/android_2.webp" width="200" />
-  <img src="doc/screenshots/android/android_3.webp" width="200" />
-  <img src="doc/screenshots/android/android_4.webp" width="200" />
-  <img src="doc/screenshots/android/android_5.webp" width="200" />
+  <img src="assets/screenshots/android/android_1.webp" width="200" />
+  <img src="assets/screenshots/android/android_2.webp" width="200" />
+  <img src="assets/screenshots/android/android_3.webp" width="200" />
+  <img src="assets/screenshots/android/android_4.webp" width="200" />
+  <img src="assets/screenshots/android/android_5.webp" width="200" />
 </p>
 </details>
 
 <details>
   <summary>iOS</summary>
 <p align="center">
-  <img src="doc/screenshots/ios/ios_1.webp" width="200" />
-  <img src="doc/screenshots/ios/ios_2.webp" width="200" />
-  <img src="doc/screenshots/ios/ios_3.webp" width="200" />
-  <img src="doc/screenshots/ios/ios_4.webp" width="200" />
+  <img src="assets/screenshots/ios/ios_1.webp" width="200" />
+  <img src="assets/screenshots/ios/ios_2.webp" width="200" />
+  <img src="assets/screenshots/ios/ios_3.webp" width="200" />
+  <img src="assets/screenshots/ios/ios_4.webp" width="200" />
 </p>
 </details>
 
 <details>
   <summary>Desktop</summary>
 <p align="center">
-  <img src="doc/screenshots/desktop/desktop_1.webp" width="400" />
-  <img src="doc/screenshots/desktop/desktop_2.webp" width="400" />
-  <img src="doc/screenshots/desktop/desktop_3.webp" width="400" />
-  <img src="doc/screenshots/desktop/desktop_4.webp" width="400" />
+  <img src="assets/screenshots/desktop/desktop_1.webp" width="400" />
+  <img src="assets/screenshots/desktop/desktop_2.webp" width="400" />
+  <img src="assets/screenshots/desktop/desktop_3.webp" width="400" />
+  <img src="assets/screenshots/desktop/desktop_4.webp" width="400" />
 </p>
 </details>
 

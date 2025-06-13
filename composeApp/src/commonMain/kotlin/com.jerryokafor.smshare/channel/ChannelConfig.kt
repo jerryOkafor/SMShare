@@ -17,15 +17,9 @@ interface ChannelConfig {
 
     val icon: DrawableResource
 
-    fun createLoginUrl(
-        redirectUrl: String,
-        challenge: String,
-    ): String
+    fun createLoginUrl(redirectUrl: String, challenge: String): String
 
-    suspend fun requestAccessToken(
-        code: String,
-        redirectUrl: String,
-    ): TokenResponse
+    suspend fun requestAccessToken(code: String, redirectUrl: String): TokenResponse
 }
 
 interface ChannelAuthManager {

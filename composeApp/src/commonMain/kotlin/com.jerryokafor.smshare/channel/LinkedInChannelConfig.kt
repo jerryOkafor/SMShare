@@ -26,20 +26,14 @@ class LinkedInChannelConfig(
     override val accountType: AccountType
         get() = AccountType.LINKEDIN
 
-    override fun createLoginUrl(
-        redirectUrl: String,
-        challenge: String,
-    ): String = domain +
+    override fun createLoginUrl(redirectUrl: String, challenge: String): String = domain +
         "?response_type=code&" +
         "client_id=$clientId&" +
         "redirect_uri=$redirectUrl&" +
         "state=$challenge&" +
         "scope=${urlEncode(scope.joinToString(" "))}"
 
-    override suspend fun requestAccessToken(
-        code: String,
-        redirectUrl: String,
-    ): TokenResponse = httpClient
+    override suspend fun requestAccessToken(code: String, redirectUrl: String): TokenResponse = httpClient
         .post("https://www.linkedin.com/oauth/v2/accessToken") {
             header("content-type", "application/x-www-form-urlencoded")
             setBody(

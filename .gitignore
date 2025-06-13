@@ -22,3 +22,4 @@ captures
 /secrets.properties
 /gcloud-service-key.json
 /.envrc
+/docs/_site/

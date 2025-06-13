@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.flywaydb) apply false
     alias(libs.plugins.expediagroup.graphql) apply false
+    alias(libs.plugins.kotlin.powerAssert) apply false
 }
 
 kover {
