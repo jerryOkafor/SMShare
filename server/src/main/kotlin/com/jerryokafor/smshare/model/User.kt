@@ -33,10 +33,10 @@ class UserDao(id: EntityID<Int>) : Entity<Int>(id) {
 data class User(
     val id: Int = -1,
     val firstName: String? = "",
-    val lastname: String? = "",
+    val lastName: String? = "",
     val userName: String? = "",
     val email: String = "",
-    val createdAt: Long = 0L,
+//    val createdAt: Long = 0L,
     val token: String? = null,
 
     @Transient

@@ -1,4 +1,4 @@
-package com.jerryokafor.smshare.screens.login
+package com.jerryokafor.smshare.screens.auth.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
@@ -22,9 +22,8 @@ import org.koin.core.component.inject
 
 data class LoginUiState(
     val isLoading: Boolean = false,
-    val loginComplete: Boolean = false,
-    val toast: String? = null,
-    val error: String? = null
+    val successMessage: String? = null,
+    val errorMessage: String? = null
 )
 
 @OptIn(SavedStateHandleSaveableApi::class)
@@ -61,7 +60,7 @@ class LoginViewModel(
                         _uiState.update { current: LoginUiState ->
                             current.copy(
                                 isLoading = false,
-                                error = it.errorResponse
+                                errorMessage = it.errorResponse
                             )
                         }
                     }
@@ -70,7 +69,7 @@ class LoginViewModel(
                         _uiState.update { current: LoginUiState ->
                             current.copy(
                                 isLoading = false,
-                                toast = "Login Successful"
+                                successMessage = "Login Successful"
                             )
                         }
                     }
@@ -84,5 +83,12 @@ class LoginViewModel(
 
     fun onPasswordChange(password: TextFieldValue) {
         this.password = password
+    }
+
+    fun handleSuccessMessage(){
+        _uiState.update { it.copy(successMessage = null) }
+    }
+    fun handleErrorMessage(){
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }

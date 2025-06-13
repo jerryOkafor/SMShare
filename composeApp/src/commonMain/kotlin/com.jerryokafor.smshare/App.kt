@@ -58,7 +58,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,9 +73,10 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -88,19 +88,24 @@ import com.jerryokafor.smshare.component.ChannelWithName
 import com.jerryokafor.smshare.component.NewChannelConnectionButton
 import com.jerryokafor.smshare.component.iconIndicatorForAccountType
 import com.jerryokafor.smshare.navigation.Auth
-import com.jerryokafor.smshare.navigation.NavItem
+import com.jerryokafor.smshare.navigation.BottomNavItem
 import com.jerryokafor.smshare.platform.SupportedPlatformType
+import com.jerryokafor.smshare.screens.analytics.Analytics
 import com.jerryokafor.smshare.screens.analytics.analyticsScreen
+import com.jerryokafor.smshare.screens.auth.AuthDestinations
+import com.jerryokafor.smshare.screens.auth.installAuth
+import com.jerryokafor.smshare.screens.auth.navigateToSignIn
+import com.jerryokafor.smshare.screens.auth.navigateToSignUp
 import com.jerryokafor.smshare.screens.compose.composeMessageScreen
 import com.jerryokafor.smshare.screens.compose.navigateToCompose
+import com.jerryokafor.smshare.screens.drafts.Drafts
 import com.jerryokafor.smshare.screens.drafts.draftsScreen
-import com.jerryokafor.smshare.screens.login.AuthDestinations
-import com.jerryokafor.smshare.screens.login.navigateToSignIn
-import com.jerryokafor.smshare.screens.login.signInScreen
 import com.jerryokafor.smshare.screens.navigation.SideNav
 import com.jerryokafor.smshare.screens.navigation.SideNavMenuAction
+import com.jerryokafor.smshare.screens.posts.Posts
+import com.jerryokafor.smshare.screens.posts.installPosts
 import com.jerryokafor.smshare.screens.posts.navigateToPosts
-import com.jerryokafor.smshare.screens.posts.postsScreen
+import com.jerryokafor.smshare.screens.settings.Settings
 import com.jerryokafor.smshare.screens.settings.settingsScreen
 import com.jerryokafor.smshare.tags.navigateToTags
 import com.jerryokafor.smshare.tags.tagsScreen
@@ -112,11 +117,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import screens.addNewConnection.addNewConnectionScreen
-import screens.createAccount.navigateToSignUp
-import screens.createAccount.signUpRoute
-import screens.createAccount.signUpScreen
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.avatar6
 import smshare.composeapp.generated.resources.ic_twitter
@@ -171,7 +172,6 @@ class AppState(
             }
 }
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 @Preview
 fun App(
@@ -246,11 +246,12 @@ fun Home(
     val scope = rememberCoroutineScope()
     val currentAnAppReady by rememberUpdatedState(onAppReady)
 
-    val channels by viewModel.channels.collectAsState()
-    val appUiState by viewModel.userData.collectAsState()
-    val isOnline by viewModel.isOnLine.collectAsState()
-    val accounts by viewModel.accounts.collectAsState()
-    val currentAccount by viewModel.currentAccount.collectAsState()
+    val channels by viewModel.channels.collectAsStateWithLifecycle()
+    val appUiState by viewModel.userData.collectAsStateWithLifecycle()
+    val isOnline by viewModel.isOnLine.collectAsStateWithLifecycle()
+    val accounts by viewModel.accounts.collectAsStateWithLifecycle()
+    val currentAccount by viewModel.currentAccount.collectAsStateWithLifecycle()
+    val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
 
     val currentOnNetChange by rememberUpdatedState(onNetChange)
     LaunchedEffect(viewModel, isOnline) {
@@ -270,30 +271,34 @@ fun Home(
         }
     }
 
-    val onMenuItemClick: (route: String) -> Unit = { route ->
-        navController.navigate(route) {
+    val onMenuItemClick: (bottomNavItem: BottomNavItem) -> Unit = { navItem ->
+        val navOptions = navOptions {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
             // on the back stack as users select items
-            popUpTo(navController.graph.findStartDestination().route!!) {
-                saveState = true
+            navController.graph.findStartDestination().route?.let {
+                popUpTo(it) {
+                    saveState = true
+                }
             }
             // Avoid multiple copies of the same destination when
-            // reselecting the same item
+            // re-selecting the same item
             launchSingleTop = true
-            // Restore state when reselecting a previously selected item
+            // Restore state when re-selecting a previously selected item
             restoreState = true
         }
+
+        navItem.navigate(navController, navOptions)
     }
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val title = when (currentDestination?.route) {
-        NavItem.Posts().route() -> stringResource(Res.string.main_nav_title_posts)
-        NavItem.Drafts().route() -> stringResource(Res.string.main_nav_title_drafts)
-        NavItem.Analytics().route() -> stringResource(Res.string.main_nav_title_analytics)
-        NavItem.Settings().route() -> stringResource(Res.string.main_nav_title_settings)
-        else -> "currentRoute"
+    val title = when {
+        currentDestination?.hasRoute<Posts>() == true -> stringResource(Res.string.main_nav_title_posts)
+        currentDestination?.hasRoute<Drafts>() == true -> stringResource(Res.string.main_nav_title_drafts)
+        currentDestination?.hasRoute<Analytics>() == true -> stringResource(Res.string.main_nav_title_analytics)
+        currentDestination?.hasRoute<Settings>() == true -> stringResource(Res.string.main_nav_title_settings)
+        else -> ""
     }
 
     val mainTopAppBar: @Composable (() -> Unit) = {
@@ -369,17 +374,16 @@ fun Home(
     val mainBottomNavigation: @Composable () -> Unit = {
         NavigationBar(containerColor = MaterialTheme.colorScheme.surface) {
             listOf(
-                NavItem.Posts(),
-                NavItem.Drafts(),
-                NavItem.Analytics(),
-                NavItem.Settings(),
+                BottomNavItem.PostsNavItem(),
+                BottomNavItem.DraftsBottomNavItem(),
+                BottomNavItem.AnalyticsBottomNavItem(),
+                BottomNavItem.SettingsBottomNavItem(),
             ).fastForEach { navItem ->
                 NavigationBarItem(
-                    selected =
-                        currentDestination?.hierarchy?.any { it.route == navItem.route() } == true,
+                    selected = navItem.isSelected(navController),
                     onClick = {
                         hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onMenuItemClick(navItem.route())
+                        onMenuItemClick(navItem)
                     },
                     icon = navItem.icon,
                     label = { Text(text = navItem.title()) },
@@ -394,303 +398,272 @@ fun Home(
     var bottomAppBarState by remember { mutableStateOf<SMShareBottomAppBarState?>(null) }
     val sheetState = rememberModalBottomSheetState(false)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-            ModalNavigationDrawer(
-                drawerState = drawerState,
-                drawerContent = {
-                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                        SideNav(
-                            accounts = accounts,
-                            onClose = { sideNavMenAction ->
-                                scope
-                                    .launch { drawerState.close() }
-                                    .invokeOnCompletion {
-                                        when (sideNavMenAction) {
-                                            SideNavMenuAction.Logout -> {
-                                                viewModel.logout()
-                                                navController.navigateToSignIn(
-                                                    navOptions {
-                                                        popUpTo(
-                                                            navController.graph.startDestinationRoute!!,
-                                                        ) {
-                                                            inclusive = true
+    startDestination?.let { navHostStarDestination ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+                ModalNavigationDrawer(
+                    drawerState = drawerState,
+                    drawerContent = {
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                            SideNav(
+                                accounts = accounts,
+                                onClose = { sideNavMenAction ->
+                                    scope
+                                        .launch { drawerState.close() }
+                                        .invokeOnCompletion {
+                                            when (sideNavMenAction) {
+                                                SideNavMenuAction.Logout -> {
+                                                    viewModel.logout()
+                                                    navController.navigateToSignIn(
+                                                        navOptions {
+                                                            popUpTo(
+                                                                navController.graph.startDestinationRoute!!,
+                                                            ) {
+                                                                inclusive = true
+                                                            }
+                                                            launchSingleTop = true
+                                                        },
+                                                    )
+                                                }
+
+                                                SideNavMenuAction.AddNewConnection -> {
+                                                    scope
+                                                        .launch { sheetState.show() }
+                                                        .invokeOnCompletion {
+                                                            bottomSheetVisible = true
                                                         }
-                                                        launchSingleTop = true
-                                                    },
+                                                }
+
+                                                null -> { // Do Nothing
+                                                }
+
+                                                SideNavMenuAction.ManageTags ->
+                                                    navController
+                                                        .navigateToTags()
+                                            }
+                                        }
+                                },
+                            )
+                        }
+                    },
+                    gesturesEnabled = appState.currentTopLevelDestination != null,
+                ) {
+                    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                        Scaffold(
+                            modifier = Modifier.fillMaxSize(),
+                            snackbarHost = { SnackbarHost(snackbarHostState) },
+                            topBar = {
+                                if (isLoggedIn) {
+                                    topAppBarState?.configure?.invoke()
+                                }
+                            },
+                            content = { innerPadding ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(
+                                            top = innerPadding.calculateTopPadding(),
+                                            end = innerPadding.calculateEndPadding(
+                                                LayoutDirection.Ltr,
+                                            ),
+                                            start = innerPadding.calculateStartPadding(
+                                                LayoutDirection.Ltr,
+                                            ),
+                                            bottom = innerPadding.calculateBottomPadding(),
+                                        ).consumeWindowInsets(innerPadding),
+                                ) {
+                                    if (!shouldShowBottomNav &&
+                                        appState.currentTopLevelDestination != null &&
+                                        bottomAppBarState != null
+                                    ) {
+                                        NavigationRail(modifier = Modifier.fillMaxHeight()) {
+                                            listOf(
+                                                BottomNavItem.PostsNavItem(),
+                                                BottomNavItem.DraftsBottomNavItem(),
+                                                BottomNavItem.AnalyticsBottomNavItem(),
+                                                BottomNavItem.SettingsBottomNavItem(),
+                                            ).fastForEach { navItem ->
+                                                NavigationRailItem(
+                                                    selected = navItem.isSelected(navController),
+                                                    onClick = { onMenuItemClick(navItem) },
+                                                    icon = navItem.icon,
+                                                    label = { Text(text = navItem.title()) },
                                                 )
                                             }
-
-                                            SideNavMenuAction.AddNewConnection -> {
-                                                scope
-                                                    .launch { sheetState.show() }
-                                                    .invokeOnCompletion {
-                                                        bottomSheetVisible = true
-                                                    }
-                                            }
-
-                                            null -> { // Do Nothing
-                                            }
-
-                                            SideNavMenuAction.ManageTags ->
-                                                navController
-                                                    .navigateToTags()
                                         }
                                     }
-                            },
-                        )
-                    }
-                },
-                gesturesEnabled = appState.currentTopLevelDestination != null,
-            ) {
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        snackbarHost = { SnackbarHost(snackbarHostState) },
-                        topBar = {
-                            if (isLoggedIn) {
-                                topAppBarState?.configure?.invoke()
-                            }
-                        },
-                        content = { innerPadding ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(
-                                        top = innerPadding.calculateTopPadding(),
-                                        end = innerPadding.calculateEndPadding(
-                                            LayoutDirection.Ltr,
-                                        ),
-                                        start = innerPadding.calculateStartPadding(
-                                            LayoutDirection.Ltr,
-                                        ),
-                                        bottom = innerPadding.calculateBottomPadding(),
-                                    ).consumeWindowInsets(innerPadding),
-                            ) {
-                                if (!shouldShowBottomNav &&
-                                    appState.currentTopLevelDestination != null &&
-                                    bottomAppBarState != null
-                                ) {
-                                    NavigationRail(modifier = Modifier.fillMaxHeight()) {
-                                        listOf(
-                                            NavItem.Posts(),
-                                            NavItem.Drafts(),
-                                            NavItem.Analytics(),
-                                            NavItem.Settings(),
-                                        ).fastForEach { navItem ->
-                                            NavigationRailItem(
-                                                selected =
-                                                    currentDestination?.hierarchy?.any {
-                                                        it.route ==
-                                                            navItem.route()
-                                                    } ==
-                                                        true,
-                                                onClick = { onMenuItemClick(navItem.route()) },
-                                                icon = navItem.icon,
-                                                label = { Text(text = navItem.title()) },
-                                            )
-                                        }
-                                    }
-                                }
 
-                                val onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit =
-                                    { topAppBarState = it }
+                                    val onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit =
+                                        { topAppBarState = it }
 
-                                NavHost(
-                                    modifier = Modifier.fillMaxSize(),
-                                    navController = navController,
-                                    startDestination = Auth,
-                                ) {
-                                    // SignIn
-                                    signInScreen<Auth>(
-                                        onSetupTopAppBar = onSetupTopAppBar,
-                                        onCreateAccountClick = {
-                                            navController.navigateToSignUp(
-                                                navOptions =
+                                    NavHost(
+                                        modifier = Modifier.fillMaxSize(),
+                                        navController = navController,
+                                        startDestination = navHostStarDestination,
+                                    ) {
+                                        // auth
+                                        installAuth<Auth>(
+                                            onSetupTopAppBar = onSetupTopAppBar,
+                                            onLoginClick = { navController.popBackStack() },
+                                            onSignUpComplete = {
+                                                navController.navigateToPosts(
                                                     navOptions {
                                                         popUpTo(AuthDestinations.SignIn) {
                                                             inclusive = true
                                                         }
                                                         launchSingleTop = true
                                                     },
-                                            )
-                                        },
-                                        onLoginComplete = {
-                                            navController.navigateToPosts(
-                                                navOptions {
-                                                    popUpTo(AuthDestinations.SignIn) {
-                                                        inclusive = true
-                                                    }
-                                                    launchSingleTop = true
-                                                },
-                                            )
-                                        },
-                                        onShowSnackbar = onShowSnackbar,
-                                        onSetUpBottomAppBar = { bottomAppBarState = it },
-                                    )
-
-                                    // SignUp
-                                    signUpScreen(
-                                        onSetupTopAppBar = onSetupTopAppBar,
-                                        onLoginClick = {
-                                            navController.navigateToSignIn(
-                                                navOptions {
-                                                    popUpTo(signUpRoute) {
-                                                        inclusive = true
-                                                    }
-                                                    launchSingleTop = true
-                                                },
-                                            )
-                                        },
-                                        onSignUpComplete = {
-                                            navController.navigateToPosts(
-                                                navOptions {
-                                                    popUpTo(AuthDestinations.SignIn) {
-                                                        inclusive = true
-                                                    }
-                                                    launchSingleTop = true
-                                                },
-                                            )
-                                        },
-                                        onShowSnackbar = onShowSnackbar,
-                                        onSetUpBottomAppBar = { bottomAppBarState = it },
-                                    )
-
-                                    // Posts
-                                    postsScreen(
-                                        onSetupTopAppBar = {
-                                            topAppBarState =
-                                                SMShareTopAppBarState(configure = mainTopAppBar)
-                                        },
-                                        onSetUpBottomAppBar = {
-                                            bottomAppBarState =
-                                                SMShareBottomAppBarState(
-                                                    configure = mainBottomNavigation,
                                                 )
-                                        },
-                                    )
-
-                                    // Drafts
-                                    draftsScreen(
-                                        onSetupTopAppBar = {
-                                            topAppBarState =
-                                                SMShareTopAppBarState(configure = mainTopAppBar)
-                                        },
-                                        onSetUpBottomAppBar = {
-                                            bottomAppBarState =
-                                                SMShareBottomAppBarState(
-                                                    configure = mainBottomNavigation,
+                                            },
+                                            onCreateAccountClick = { navController.navigateToSignUp() },
+                                            onLoginComplete = {
+                                                navController.navigateToPosts(
+                                                    navOptions = navOptions {
+                                                        popUpTo<Auth> {
+                                                            inclusive = true
+                                                        }
+                                                        launchSingleTop = true
+                                                    },
                                                 )
-                                        },
-                                    )
-
-                                    // Analytics
-                                    analyticsScreen(
-                                        onSetupTopAppBar = {
-                                            topAppBarState =
-                                                SMShareTopAppBarState(configure = mainTopAppBar)
-                                        },
-                                        onSetUpBottomAppBar = {
-                                            bottomAppBarState =
-                                                SMShareBottomAppBarState(
-                                                    configure = mainBottomNavigation,
-                                                )
-                                        },
-                                    )
-
-                                    // Settings
-                                    settingsScreen(
-                                        onSetupTopAppBar = {
-                                            topAppBarState =
-                                                SMShareTopAppBarState(configure = mainTopAppBar)
-                                        },
-                                        onSetUpBottomAppBar = {
-                                            bottomAppBarState =
-                                                SMShareBottomAppBarState(
-                                                    configure = mainBottomNavigation,
-                                                )
-                                        },
-                                    )
-
-                                    // Compose message
-                                    composeMessageScreen(
-                                        onSetupTopAppBar = onSetupTopAppBar,
-                                        onShowSnackbar = onShowSnackbar,
-                                        onSetUpBottomAppBar = { bottomAppBarState = it },
-                                        onCancel = { navController.popBackStack() },
-                                    )
-
-                                    // Add new channel connection
-                                    addNewConnectionScreen(
-                                        onBackPress = {
-                                            navController.popBackStack()
-                                        },
-                                    )
-
-                                    // tags
-                                    tagsScreen(
-                                        onSetupTopAppBar = { topAppBarState = it },
-                                        onSetUpBottomAppBar = { bottomAppBarState = it },
-                                    )
-                                }
-                            }
-                        },
-                        floatingActionButton = {
-                            AnimatedVisibility(appState.currentTopLevelDestination != null) {
-                                ExtendedFloatingActionButton(onClick = {
-                                    if (accounts.isEmpty() && currentAccount == null) {
-                                        scope.launch {
-                                            onShowSnackbar(
-                                                "No account added, please add account to continue",
-                                                "",
-                                                false
-                                            )
-                                        }
-                                    } else {
-                                        navController.navigateToCompose(currentAccount?.id)
-                                    }
-                                }) {
-                                    Row(
-                                        modifier = Modifier,
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Edit,
-                                            contentDescription = "",
+                                            },
+                                            onShowSnackbar = onShowSnackbar,
+                                            onSetUpBottomAppBar = { bottomAppBarState = it },
                                         )
-                                        Spacer(modifier = Modifier.width(16.dp))
-                                        Text("Compose")
-                                    }
-                                }
-                            }
-                        },
-                        bottomBar = {
-                            if (shouldShowBottomNav) {
-                                bottomAppBarState?.let { appBar -> appBar.configure() }
-                            }
-                        },
-                    )
 
-                    if (bottomSheetVisible) {
-                        ModalBottomSheet(
-                            onDismissRequest = {
-                                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                    bottomSheetVisible = false
+                                        // Posts
+                                        installPosts(
+                                            onSetupTopAppBar = {
+                                                topAppBarState =
+                                                    SMShareTopAppBarState(configure = mainTopAppBar)
+                                            },
+                                            onSetUpBottomAppBar = {
+                                                bottomAppBarState =
+                                                    SMShareBottomAppBarState(
+                                                        configure = mainBottomNavigation,
+                                                    )
+                                            },
+                                        )
+
+                                        // Drafts
+                                        draftsScreen(
+                                            onSetupTopAppBar = {
+                                                topAppBarState =
+                                                    SMShareTopAppBarState(configure = mainTopAppBar)
+                                            },
+                                            onSetUpBottomAppBar = {
+                                                bottomAppBarState =
+                                                    SMShareBottomAppBarState(
+                                                        configure = mainBottomNavigation,
+                                                    )
+                                            },
+                                        )
+
+                                        // Analytics
+                                        analyticsScreen(
+                                            onSetupTopAppBar = {
+                                                topAppBarState =
+                                                    SMShareTopAppBarState(configure = mainTopAppBar)
+                                            },
+                                            onSetUpBottomAppBar = {
+                                                bottomAppBarState =
+                                                    SMShareBottomAppBarState(
+                                                        configure = mainBottomNavigation,
+                                                    )
+                                            },
+                                        )
+
+                                        // Settings
+                                        settingsScreen(
+                                            onSetupTopAppBar = {
+                                                topAppBarState =
+                                                    SMShareTopAppBarState(configure = mainTopAppBar)
+                                            },
+                                            onSetUpBottomAppBar = {
+                                                bottomAppBarState =
+                                                    SMShareBottomAppBarState(
+                                                        configure = mainBottomNavigation,
+                                                    )
+                                            },
+                                        )
+
+                                        // Compose message
+                                        composeMessageScreen(
+                                            onSetupTopAppBar = onSetupTopAppBar,
+                                            onShowSnackbar = onShowSnackbar,
+                                            onSetUpBottomAppBar = { bottomAppBarState = it },
+                                            onCancel = { navController.popBackStack() },
+                                        )
+
+                                        // Add new channel connection
+                                        addNewConnectionScreen(
+                                            onBackPress = {
+                                                navController.popBackStack()
+                                            },
+                                        )
+
+                                        // tags
+                                        tagsScreen(
+                                            onSetupTopAppBar = { topAppBarState = it },
+                                            onSetUpBottomAppBar = { bottomAppBarState = it },
+                                        )
+                                    }
                                 }
                             },
-                            sheetState = sheetState,
-                            containerColor = MaterialTheme.colorScheme.background,
-                        ) {
-                            LazyColumn(modifier = Modifier.padding(16.dp)) {
-                                items(channels) { channel ->
-                                    HalfVerticalSpacer()
-                                    NewChannelConnectionButton(
-                                        title = channel.name,
-                                        description = channel.description,
-                                        icon = channel.icon,
-                                        onClick = {
-                                            scope
-                                                .launch {
+                            floatingActionButton = {
+                                AnimatedVisibility(appState.currentTopLevelDestination != null) {
+                                    ExtendedFloatingActionButton(onClick = {
+                                        if (accounts.isEmpty() && currentAccount == null) {
+                                            scope.launch {
+                                                onShowSnackbar(
+                                                    "No account added, please add account to continue",
+                                                    "",
+                                                    false
+                                                )
+                                            }
+                                        } else {
+                                            navController.navigateToCompose(currentAccount?.id)
+                                        }
+                                    }) {
+                                        Row(
+                                            modifier = Modifier,
+                                            verticalAlignment = Alignment.CenterVertically,
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Edit,
+                                                contentDescription = "",
+                                            )
+                                            Spacer(modifier = Modifier.width(16.dp))
+                                            Text("Compose")
+                                        }
+                                    }
+                                }
+                            },
+                            bottomBar = {
+                                if (shouldShowBottomNav) {
+                                    bottomAppBarState?.configure?.invoke()
+                                }
+                            },
+                        )
+
+                        if (bottomSheetVisible) {
+                            ModalBottomSheet(
+                                onDismissRequest = {
+                                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                        bottomSheetVisible = false
+                                    }
+                                },
+                                sheetState = sheetState,
+                                containerColor = MaterialTheme.colorScheme.background,
+                            ) {
+                                LazyColumn(modifier = Modifier.padding(16.dp)) {
+                                    items(channels) { channel ->
+                                        HalfVerticalSpacer()
+                                        NewChannelConnectionButton(
+                                            title = channel.name,
+                                            description = channel.description,
+                                            icon = channel.icon,
+                                            onClick = {
+                                                scope.launch {
                                                     sheetState.hide()
                                                 }.invokeOnCompletion {
                                                     bottomSheetVisible = false
@@ -698,39 +671,35 @@ fun Home(
                                                         channelAuthManager.authenticateUser(channel)
                                                     }
                                                 }
-                                        },
-                                    )
-                                    HalfVerticalSpacer()
-                                }
+                                            },
+                                        )
+                                        HalfVerticalSpacer()
+                                    }
 
-                                item {
-                                    Spacer(modifier = Modifier.height(20.dp))
+                                    item {
+                                        Spacer(modifier = Modifier.height(20.dp))
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
 
-        LaunchedEffect(appUiState) {
-            if (appUiState is AppUiState.Success) {
-                currentAnAppReady()
-                if ((appUiState as AppUiState.Success).user.isLoggedIn) {
-                    navController.navigateToPosts()
-                } else {
-                    navController.navigateToSignIn()
-                }
+            val isMobilePlatform = when (val state = appUiState) {
+                AppUiState.Loading -> false
+                is AppUiState.Success ->
+                    state.platform.type == SupportedPlatformType.Android ||
+                            state.platform.type == SupportedPlatformType.iOS
+            }
+            AnimatedVisibility(!isOnline && isMobilePlatform) {
+                Box(modifier = Modifier.fillMaxWidth().height(48.dp).background(Color.Red))
             }
         }
-        val isMobilePlatform = when (val state = appUiState) {
-            AppUiState.Loading -> false
-            is AppUiState.Success ->
-                state.platform.type == SupportedPlatformType.Android ||
-                    state.platform.type == SupportedPlatformType.iOS
-        }
-        AnimatedVisibility(!isOnline && isMobilePlatform) {
-            Box(modifier = Modifier.fillMaxWidth().height(48.dp).background(Color.Red))
-        }
+    }
+
+    LaunchedEffect(startDestination) {
+        if (startDestination != null)
+            currentAnAppReady()
     }
 }

@@ -48,6 +48,7 @@ import com.jerryokafor.smshare.theme.FillingSpacer
 import com.jerryokafor.smshare.theme.OneHorizontalSpacer
 import com.jerryokafor.smshare.theme.OneVerticalSpacer
 import com.jerryokafor.smshare.theme.TwoHorizontalSpacer
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -136,13 +137,14 @@ fun Settings(
     }
 }
 
-const val settingRoute = "settings"
+@Serializable
+data object Settings
 
 fun NavGraphBuilder.settingsScreen(
     onSetupTopAppBar: () -> Unit = {},
     onSetUpBottomAppBar: () -> Unit,
 ) {
-    composable(settingRoute) {
+    composable<Settings> {
         Settings(
             onSetupTopAppBar = onSetupTopAppBar,
             onSetUpBottomAppBar = onSetUpBottomAppBar,
@@ -151,7 +153,7 @@ fun NavGraphBuilder.settingsScreen(
 }
 
 fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
-    navigate(route = settingRoute, navOptions = navOptions)
+    navigate(route = Settings, navOptions = navOptions)
 }
 
 @Composable

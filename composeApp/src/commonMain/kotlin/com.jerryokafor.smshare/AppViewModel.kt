@@ -13,17 +13,29 @@ import com.jerryokafor.smshare.channel.ChannelConfig
 import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.Account
 import com.jerryokafor.smshare.core.network.util.NetworkMonitor
+import com.jerryokafor.smshare.core.rpc.RPCUserService
+import com.jerryokafor.smshare.navigation.Auth
 import com.jerryokafor.smshare.platform.Platform
+import com.jerryokafor.smshare.screens.posts.Posts
+import io.ktor.client.HttpClient
+import io.ktor.http.encodedPath
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.rpc.krpc.ktor.client.installKrpc
+import kotlinx.rpc.krpc.ktor.client.rpc
+import kotlinx.rpc.krpc.ktor.client.rpcConfig
+import kotlinx.rpc.krpc.serialization.json.json
+import kotlinx.rpc.withService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -36,6 +48,9 @@ open class AppViewModel :
     private val networkMonitor: NetworkMonitor by inject()
     private val platForm: Platform by inject()
     private val channelConfigAuthManager: ChannelAuthManager by inject()
+
+    private val _startDestination = MutableStateFlow<Any?>(null)
+    val startDestination = _startDestination.asStateFlow()
 
     val userData = userDataStore.user
         .map { AppUiState.Success(user = it, platform = platForm) }
@@ -80,29 +95,46 @@ open class AppViewModel :
             initialValue = emptyList(),
         )
 
-//    init {
-//        viewModelScope.launch {
-//            try {
-//                val rpcClient = HttpClient { installRPC() }.rpc {
-//                    url("ws://192.168.68.101:8080/api")
-//
-//                    rpcConfig {
-//                        serialization {
-//                            json()
-//                        }
-//                    }
+    init {
+        viewModelScope.launch {
+            userDataStore.user.takeWhile { startDestination.value == null }
+                .collectLatest { userData ->
+                    val startDestination: Any = if (userData.isLoggedIn) Posts else Auth
+                    _startDestination.update { startDestination }
+                }
+        }
+
+        viewModelScope.launch {
+            try {
+                Logger.withTag("Testing").d("Starting KRPC call")
+                val userService = HttpClient { installKrpc() }.rpc {
+                    url {
+                        host = DEV_SERVER_HOST
+                        port = 8080
+                        encodedPath = "/api"
+                    }
+
+                    rpcConfig {
+                        serialization {
+                            json()
+                        }
+                    }
+                }.withService<RPCUserService>()
+
+                Logger.withTag("Testing").d("KRPC client service: $userService")
+
+                val helloResponse = userService.hello(message = "Welcome message")
+                Logger.withTag("Testing").d("Hello: $helloResponse")
+
+//                userService.subscribeToNews().collect { news ->
+//                    Logger.withTag("Testing").d("Testing News: $news")
 //                }
-//
-//                streamScoped {
-//                    rpcClient.withService<RPCUserService>().subscribeToNews().collect { news ->
-//                        Logger.withTag("Testing").d("Testing News: $news")
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                Logger.withTag("Testing").e(e.message ?: "")
-//            }
-//        }
-//    }
+
+            } catch (e: Throwable) {
+                Logger.withTag("Testing").e("Error: ${e.message}",e)
+            }
+        }
+    }
 
     fun logout() {
         viewModelScope.launch {

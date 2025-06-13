@@ -1,4 +1,4 @@
-package screens.createAccount
+package com.jerryokafor.smshare.screens.auth.createAccount
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
@@ -10,7 +10,7 @@ import androidx.lifecycle.viewmodel.compose.saveable
 import com.jerryokafor.core.datastore.store.UserDataStore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -19,8 +19,8 @@ import org.koin.core.component.inject
 data class CreateAccountUIState(
     val isLoading: Boolean = false,
     val createAccountComplete: Boolean = false,
-    val error: String? = null,
-    val toast: String? = null
+    val errorMessage: String? = null,
+    val successMessage: String? = null
 )
 
 @OptIn(SavedStateHandleSaveableApi::class)
@@ -37,8 +37,8 @@ class CreateAccountViewModel(savedStateHandle: SavedStateHandle) : ViewModel(), 
     }
         private set
 
-    val uiState: StateFlow<CreateAccountUIState>
-        field = MutableStateFlow<CreateAccountUIState>(CreateAccountUIState())
+    private val _uiState = MutableStateFlow(CreateAccountUIState())
+    val uiState = _uiState.asStateFlow()
 
     fun onEmailChange(email: TextFieldValue) {
         this.email = email
@@ -50,10 +50,16 @@ class CreateAccountViewModel(savedStateHandle: SavedStateHandle) : ViewModel(), 
 
     fun createAccount() {
         viewModelScope.launch {
-            uiState.update { currentState -> currentState.copy(isLoading = true) }
+            _uiState.update { it.copy(isLoading = true) }
             delay(3_000)
-            uiState.update { currentState -> currentState.copy(isLoading = false) }
+            _uiState.update { it.copy(isLoading = false) }
         }
+    }
 
+    fun handleSuccessMessage(){
+        _uiState.update { it.copy(successMessage = null) }
+    }
+    fun handleErrorMessage(){
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }

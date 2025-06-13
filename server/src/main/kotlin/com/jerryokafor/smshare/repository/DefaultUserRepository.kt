@@ -103,10 +103,10 @@ class DefaultUserRepository(private val database: Database) : UserRepository {
         return User(
             id = row[Users.id].value,
             firstName = row[Users.firstName],
-            lastname = row[Users.lastName],
+            lastName = row[Users.lastName],
             email = row[Users.email],
             userName = row[Users.userName],
-            createdAt = row[Users.createdAt],
+//            createdAt = row[Users.createdAt],
             password = row[Users.password]
         )
     }

@@ -1,4 +1,4 @@
-package screens.createAccount
+package com.jerryokafor.smshare.screens.auth.createAccount
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -36,20 +36,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.SMSShareButton
 import com.jerryokafor.smshare.component.SMSShareTextButton
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.compose_multiplatform
 
@@ -62,7 +58,6 @@ fun CreateAccountScreenPreview() {
 }
 
 
-@OptIn(KoinExperimentalAPI::class)
 @Composable
 fun CreateAccountScreen(
     onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
@@ -95,18 +90,20 @@ fun CreateAccountScreen(
                 }
         }
         launch {
-            snapshotFlow { uiState.error }
-                .filter { it != null }
-                .collect { error ->
-                    currentOnShowSnackbar(error!!, "", false)
+            snapshotFlow { uiState.errorMessage }
+                .filterNotNull()
+                .collect { errorMessage ->
+                    viewModel.handleErrorMessage()
+                    currentOnShowSnackbar(errorMessage, "", false)
                 }
         }
 
         launch {
-            snapshotFlow { uiState.toast }
-                .filter { it != null }
-                .collect { error ->
-                    currentOnShowSnackbar(error!!, "", true)
+            snapshotFlow { uiState.successMessage }
+                .filterNotNull()
+                .collect { successMessage ->
+                    viewModel.handleSuccessMessage()
+                    currentOnShowSnackbar(successMessage, "", true)
                 }
         }
     }
@@ -192,28 +189,4 @@ fun CreateAccountScreen(
             Text("Already have and account? Login")
         }
     }
-}
-
-const val signUpRoute = "singup"
-
-fun NavGraphBuilder.signUpScreen(
-    onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
-    onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
-    onLoginClick: () -> Unit = {},
-    onSignUpComplete: () -> Unit = {},
-    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
-) {
-    composable(route = signUpRoute) {
-        CreateAccountScreen(
-            onSetupTopAppBar = onSetupTopAppBar,
-            onSetUpBottomAppBar = onSetUpBottomAppBar,
-            onLoginClick = onLoginClick,
-            onSignUpComplete = onSignUpComplete,
-            onShowSnackbar = onShowSnackbar,
-        )
-    }
-}
-
-fun NavController.navigateToSignUp(navOptions: NavOptions? = null) {
-    navigate(route = signUpRoute, navOptions = navOptions)
 }

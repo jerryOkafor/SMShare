@@ -17,6 +17,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.jerryokafor.smshare.component.PostItem
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -52,13 +53,15 @@ fun Posts(
     }
 }
 
-val postsRoute = "posts"
 
-fun NavGraphBuilder.postsScreen(
+@Serializable
+data object Posts
+
+fun NavGraphBuilder.installPosts(
     onSetupTopAppBar: () -> Unit = {},
     onSetUpBottomAppBar: () -> Unit,
 ) {
-    composable(route = postsRoute) {
+    composable<Posts> {
         Posts(
             onSetupTopAppBar = onSetupTopAppBar,
             onSetUpBottomAppBar = onSetUpBottomAppBar,
@@ -67,5 +70,5 @@ fun NavGraphBuilder.postsScreen(
 }
 
 fun NavController.navigateToPosts(navOptions: NavOptions? = null) {
-    navigate(route = postsRoute, navOptions = navOptions)
+    navigate(route = Posts, navOptions = navOptions)
 }

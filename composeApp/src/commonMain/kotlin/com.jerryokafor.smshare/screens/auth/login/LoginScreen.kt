@@ -1,4 +1,4 @@
-package com.jerryokafor.smshare.screens.login
+package com.jerryokafor.smshare.screens.auth.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +45,7 @@ import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.SMSShareButton
 import com.jerryokafor.smshare.component.SMSShareTextButton
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.resources.painterResource
@@ -83,37 +83,28 @@ fun LoginScreen(
         currentOnSetUpBottomAppBar(null)
     }
 
-    LaunchedEffect(viewModel, uiState) {
+    LaunchedEffect(viewModel) {
         launch {
-            snapshotFlow { uiState.loginComplete }
-                .filter { it }
-                .collect { isLoggedIn ->
-                    if (isLoggedIn) {
-                        currentOnLoginComplete()
-                    }
-                }
-        }
-        launch {
-            snapshotFlow { uiState.error }
-                .filter { it != null }
-                .collect { error ->
-                    currentOnShowSnackbar(error!!, "", false)
+            snapshotFlow { uiState.errorMessage }
+                .filterNotNull()
+                .collect { errorMessage ->
+                    viewModel.handleErrorMessage()
+                    currentOnShowSnackbar(errorMessage, "", false)
                 }
         }
 
         launch {
-            snapshotFlow { uiState.toast }
-                .filter { it != null }
-                .collect { error ->
-                    currentOnShowSnackbar(error!!, "", true)
+            snapshotFlow { uiState.successMessage }
+                .filterNotNull()
+                .collect { successMessage ->
+                    viewModel.handleErrorMessage()
+                    currentOnShowSnackbar(successMessage, "", true)
+                    currentOnLoginComplete()
                 }
         }
     }
 
-    val onLoginClick: () -> Unit = {
-        viewModel.login()
-    }
-
+    val onLoginClick: () -> Unit = { viewModel.login() }
 
     Column(
         modifier = Modifier
@@ -189,38 +180,4 @@ fun LoginScreen(
             Text("Create account")
         }
     }
-}
-
-
-data object AuthDestinations {
-    @Serializable
-    data object SignIn
-
-    @Serializable
-    data object SignUp
-
-}
-
-inline fun <reified T : Any> NavGraphBuilder.signInScreen(
-    noinline onSetupTopAppBar: (SMShareTopAppBarState?) -> Unit = {},
-    noinline onSetUpBottomAppBar: (SMShareBottomAppBarState?) -> Unit = {},
-    noinline onCreateAccountClick: () -> Unit = {},
-    noinline onLoginComplete: () -> Unit = {},
-    noinline onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
-) {
-    navigation<T>(startDestination = AuthDestinations.SignIn) {
-        composable<AuthDestinations.SignIn> {
-            LoginScreen(
-                onSetupTopAppBar = onSetupTopAppBar,
-                onSetUpBottomAppBar = onSetUpBottomAppBar,
-                onCreateAccountClick = onCreateAccountClick,
-                onLoginComplete = onLoginComplete,
-                onShowSnackbar = onShowSnackbar,
-            )
-        }
-    }
-}
-
-fun NavController.navigateToSignIn(navOptions: NavOptions? = null) {
-    navigate(route = AuthDestinations.SignIn, navOptions = navOptions)
 }

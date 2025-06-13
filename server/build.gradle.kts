@@ -1,34 +1,35 @@
+import com.jerryokafor.smshare.JVMLanguageVersion
+import com.jerryokafor.smshare.configureKotlinServer
 import io.ktor.plugin.features.DockerPortMapping
 import io.ktor.plugin.features.DockerPortMappingProtocol
 
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.ktor)
-//    alias(libs.plugins.kotlinx.rpc)
+    alias(libs.plugins.kotlinx.rpc)
     alias(libs.plugins.kotlinx.serialization)
     application
 
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
-    id("org.flywaydb.flyway")
+    alias(libs.plugins.flywaydb)
+    alias(libs.plugins.expediagroup.graphql)
 }
 
+description = "SMS Sahre Server"
 group = "com.jerryokafor.smshare"
 version = "1.0.0"
+
 application {
     mainClass.set("com.jerryokafor.smshare.ApplicationKt")
     applicationDefaultJvmArgs =
         listOf("-Dio.ktor.development=${extra["io.ktor.development"] ?: "false"}")
 }
 
-tasks.compileKotlin {
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xskip-prerelease-check"
-    }
-}
+configureKotlinServer()
 
 dependencies {
-//    implementation(projects.core.rpc)
+    implementation(projects.core.rpc)
     implementation(projects.core.model)
 
     implementation(libs.kotlinx.coroutines.core)
@@ -42,27 +43,26 @@ dependencies {
     implementation(libs.ktor.server.auth.jwt)
     implementation(libs.ktor.server.websockets.jvm)
     implementation(libs.ktor.server.host.common.jvm)
+    implementation(libs.ktor.network.tls.certificates)
 
 
-    // Koin
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger.slf4j)
 
     // Kotlinx RPC
-//    implementation(libs.kotlinx.rpc.server)
-//    implementation(libs.kotlinx.rpc.serialization.json)
-//    implementation(libs.kotlinx.rpc.transport.ktor.server)
-//    testImplementation(libs.kotlinx.rpc.client)
-//    testImplementation(libs.kotlinx.rpc.transport.ktor.client)
+    implementation(libs.kotlinx.rpc.server)
+    implementation(libs.kotlinx.rpc.serialization.json)
+    implementation(libs.kotlinx.rpc.transport.ktor.server)
+    testImplementation(libs.kotlinx.rpc.client)
+    testImplementation(libs.kotlinx.rpc.transport.ktor.client)
 
     //Graph QL
-    implementation("com.apurebase:kgraphql:0.19.0")
-    implementation("com.apurebase:kgraphql-ktor:0.19.0")
+    implementation(libs.expediagroup.graphql.kotlin.ktor.server)
 
     implementation("org.postgresql:postgresql:42.2.2")
     implementation("com.zaxxer:HikariCP:2.7.8")
     implementation("com.h2database:h2:2.3.232")
-    implementation("org.flywaydb:flyway-core:6.5.2")
+    implementation(libs.flywaydb.flyway.core)
 
     implementation("org.jetbrains.exposed:exposed-core:0.54.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.54.0")
@@ -71,10 +71,11 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
 
     implementation("com.sendgrid:sendgrid-java:4.4.1")
+    implementation(libs.firebase.firestore.ktx)
 
     testImplementation(libs.kotlin.test)
     testImplementation(libs.kotlin.test.junit)
-    testImplementation(libs.ktor.server.tests)
+//    testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlinx.coroutines.test)
 }
 
@@ -110,3 +111,11 @@ flyway {
     password = System.getenv("DB_PASSWORD")
     baselineOnMigrate = true
 }
+
+graphql {
+    schema {
+        packages = listOf("com.jerryokafor.smshare")
+    }
+}
+
+

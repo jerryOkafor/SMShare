@@ -1,6 +1,7 @@
 package com.jerryokafor.smshare.core.network.injection
 
 import com.apollographql.apollo.ApolloClient
+import com.jerryokafor.smshare.core.config.Config
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
@@ -13,7 +14,7 @@ import org.koin.dsl.module
 fun commonNetworkModule() = module {
     single {
         ApolloClient.Builder()
-            .serverUrl("http://192.168.68.105:8080/graphql")
+            .serverUrl("http://${Config.IP_ADDRESS}:${Config.API_PORT}/graphql")
             .build()
     }
     single<HttpClient> {

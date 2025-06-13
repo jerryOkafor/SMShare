@@ -4,23 +4,21 @@ import org.gradle.api.Project
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
-const val JVMLanguageVersion = 22
-val JVMTarget = JvmTarget.JVM_21
-
-fun Project.configureKotlin() {
-    extensions.configure<KotlinMultiplatformExtension> {
+fun Project.configureKotlinServer() {
+    extensions.configure<KotlinJvmProjectExtension> {
         jvmToolchain {
             languageVersion.set(JavaLanguageVersion.of(JVMLanguageVersion))
         }
-        sourceSets.all {
-            languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
-            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
-            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+        sourceSets.all {}
+        
+        compilerOptions {
+            freeCompilerArgs.add("-Xskip-prerelease-check")
         }
     }
-    
+
     // Configure Java to use our chosen language level. Kotlin will automatically pick this up
     configureJava()
 }

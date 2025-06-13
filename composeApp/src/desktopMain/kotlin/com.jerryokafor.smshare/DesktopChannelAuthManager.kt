@@ -89,22 +89,23 @@ class DesktopChannelAuthManager(
         var server: NettyApplicationEngine? = null
 
         val code = suspendCancellableCoroutine { continuation ->
-            server = embeddedServer(Netty, port = 5789) {
-                routing {
-                    get("/callback") {
-                        val code =
-                            call.parameters["code"]
-                                ?: throw RuntimeException("Received a response with no code")
-                        val state =
-                            call.parameters["state"]
-                                ?: throw RuntimeException("Received a response with no code")
-                        println("OAuth finished: Code: $code,\nState: $state")
-                        call.respondText("User authenticated")
-
-                        continuation.resume(code)
-                    }
-                }
-            }.start(wait = false)
+            continuation.resume("")
+//            server = embeddedServer(Netty, port = 5789) {
+//                routing {
+//                    get("/callback") {
+//                        val code =
+//                            call.parameters["code"]
+//                                ?: throw RuntimeException("Received a response with no code")
+//                        val state =
+//                            call.parameters["state"]
+//                                ?: throw RuntimeException("Received a response with no code")
+//                        println("OAuth finished: Code: $code,\nState: $state")
+//                        call.respondText("User authenticated")
+//
+//                        continuation.resume(code)
+//                    }
+//                }
+//            }.start(wait = false)
         }
 
         // Wait for 5 seconds and timeout

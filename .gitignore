@@ -21,3 +21,4 @@ captures
 /iosApp/Pods
 /secrets.properties
 /gcloud-service-key.json
+/.envrc

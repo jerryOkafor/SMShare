@@ -13,54 +13,43 @@ A type representing a formatted kotlinx.datetime.LocalDate
 """
 scalar LocalDate
 
-
-# A user on the app
-type User {
-  createdAt: Long!
-  email: String!
-  firstName: String
-  id: Int!
-  lastname: String
-  password: String
-  token: String
-  userName: String
-  profile: UserProfile!
-  settings: UserSetting!
-}
-
-#
-type UserProfile {
-  id: Int!
-}
-
-#
-type UserSetting {
-  id: Int!
-}
-
-#
-input LoginInput {
-  password: String!
-  username: String!
-}
-
 # The Short scalar type represents a signed 16-bit numeric non-fractional value
 scalar Short
 
 # The Long scalar type represents a signed 64-bit numeric non-fractional value
 scalar Long
 
-# Query object
-type Query {
-  # Returns users profile
-  user: User!
+type AuthPayload {
+  accessToken: String
+  user: User
 }
 
-# Mutation object
 type Mutation {
-  # Creates a new user
-  createUser(email: String!, password: String!): User!
-  
-  # Login an existing user
-  login(userName: String!, password: String!): User!
+  "Create a new user and return access token"
+  createUser(input: CreateUserInput!): AuthPayload!
+  "Create a new access token for an existing user"
+  login(password: String!, userName: String!): AuthPayload!
+  "Modify Greetings, and returns it"
+  updateGreeting(greeting: String!): String!
+}
+
+type Query {
+  "Returns Greeting - Hello World : "
+  hello: String!
+}
+
+type User {
+  email: String!
+  firstName: String
+  id: Int!
+  lastName: String
+  password: String
+  token: String
+  userName: String
+}
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
 }

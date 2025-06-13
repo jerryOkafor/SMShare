@@ -7,7 +7,6 @@ enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 pluginManagement {
     includeBuild("build-logic")
     repositories {
-        maven { url = uri("") }
         gradlePluginPortal()
         google {
             content {
@@ -25,7 +24,6 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        maven { url = uri("") }
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
@@ -64,7 +62,7 @@ buildCache {
 include(":composeApp")
 include(":server")
 include(":core:common")
-// include(":core:rpc")
+ include(":core:rpc")
 include(":core:model")
 include(":core:database")
 include(":core:datastore")

@@ -5,6 +5,7 @@ import com.apollographql.apollo.exception.ApolloException
 import com.jerryokafor.core.datastore.store.UserDataStore
 import com.jerryokafor.smshare.graphql.CreateUserMutation
 import com.jerryokafor.smshare.graphql.LoginUserMutation
+import com.jerryokafor.smshare.graphql.type.CreateUserInput
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -28,9 +29,10 @@ class DefaultUserRepository(
                 LoginUserMutation(userName = userName, password = password)
             ).execute().dataAssertNoErrors.login
 
-            userDataStore.loginUser(response.token!!)
+            userDataStore.loginUser(response.accessToken!!)
             emit(Success(Unit))
         } catch (e: ApolloException) {
+            e.printStackTrace()
             emit(
                 Failure(
                     errorResponse = e.message ?: "Error login in user, please try again",
@@ -43,10 +45,10 @@ class DefaultUserRepository(
     override fun createAccount(email: String, password: String): Flow<Outcome<Unit>> = flow {
         try {
             val response = apolloClient.mutation(
-                CreateUserMutation(email = email, password = password)
+                CreateUserMutation(input = CreateUserInput(email, firstName = "", lastName = ""))
             ).execute().dataAssertNoErrors.createUser
 
-            userDataStore.loginUser(response.token!!)
+            userDataStore.loginUser(response.accessToken!!)
             emit(Success(Unit))
         } catch (e: ApolloException) {
             emit(

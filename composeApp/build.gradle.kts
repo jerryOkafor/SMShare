@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinx.serialization)
-//    alias(libs.plugins.kotlinx.rpc)
+    alias(libs.plugins.kotlinx.rpc)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
 }
@@ -87,7 +87,7 @@ kotlin {
             implementation(projects.core.datastore)
             implementation(projects.core.config)
             implementation(projects.core.network)
-//            implementation(projects.core.rpc)
+            implementation(projects.core.rpc)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
@@ -103,10 +103,9 @@ kotlin {
             implementation(libs.viewmodel.compose)
 
             //RPC
-//            implementation(libs.kotlinx.rpc.client)
-//            implementation(libs.kotlinx.rpc.serialization.json)
-//            implementation(libs.kotlinx.rpc.transport.ktor.client)
-
+            implementation(libs.kotlinx.rpc.client)
+            implementation(libs.kotlinx.rpc.serialization.json)
+            implementation(libs.kotlinx.rpc.transport.ktor.client)
 
             //Ktor
             implementation(libs.ktor.client.core)

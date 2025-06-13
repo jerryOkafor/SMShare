@@ -258,6 +258,7 @@ or Using Gradle command
 - [KMM-PicSplash](https://github.com/cvivek07/KMM-PicSplash)
 - [Native distributions & local execution](https://github.com/JetBrains/compose-multiplatform/tree/master/tutorials/Native_distributions_and_local_execution)
 - [GitHub Actions: Firebase Test Lab](https://medium.com/firebase-developers/github-actions-firebase-test-lab-4bc830685a99)
+- https://www.marcogomiero.com/posts/2022/ktor-migration-liquibase/
 
 ## Contributions
 

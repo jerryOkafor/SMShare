@@ -17,6 +17,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.jerryokafor.smshare.component.AnalyticsItem
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Preview
@@ -51,13 +52,14 @@ fun Analytics(
     }
 }
 
-val analyticsRoute = "analytics"
+@Serializable
+data object Analytics
 
 fun NavGraphBuilder.analyticsScreen(
     onSetupTopAppBar: () -> Unit = {},
     onSetUpBottomAppBar: () -> Unit,
 ) {
-    composable(route = analyticsRoute) {
+    composable<Analytics> {
         Analytics(
             onSetupTopAppBar = onSetupTopAppBar,
             onSetUpBottomAppBar = onSetUpBottomAppBar,
@@ -66,5 +68,5 @@ fun NavGraphBuilder.analyticsScreen(
 }
 
 fun NavController.navigateToAnalytics(navOptions: NavOptions? = null) {
-    navigate(route = analyticsRoute, navOptions = navOptions)
+    navigate(route = Analytics, navOptions = navOptions)
 }

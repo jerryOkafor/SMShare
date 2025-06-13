@@ -25,6 +25,7 @@ kotlin {
         }
 
         commonMain.dependencies {
+            implementation(projects.core.config)
             implementation(libs.kotlinx.serialization.json)
 
             api(libs.ktor.client.core)

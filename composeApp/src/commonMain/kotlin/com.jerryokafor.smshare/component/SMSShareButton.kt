@@ -44,9 +44,10 @@ fun SMSShareButton(
             elevation = elevation,
             border = border,
             contentPadding = contentPadding,
-            interactionSource = interactionSource,
-            content = content,
-        )
+            interactionSource = interactionSource
+        ){
+            if (!isLoading) content()
+        }
         if (isLoading) {
             CircularProgressIndicator(
                 modifier =
