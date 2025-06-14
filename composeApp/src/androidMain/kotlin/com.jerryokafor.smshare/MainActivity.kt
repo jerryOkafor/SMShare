@@ -34,16 +34,19 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Consumer
 import org.koin.android.ext.android.inject
+import kotlin.compareTo
 
 class MainActivity : ComponentActivity() {
     private val appViewModel: AppViewModel by inject()
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -66,8 +69,12 @@ class MainActivity : ComponentActivity() {
                 onDispose {}
             }
 
+            val windowSizeClass = calculateWindowSizeClass(this)
+            val useNavRail = windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact
+
             App(
                 viewModel = appViewModel,
+                shouldUseNavRail = useNavRail,
                 isDarkTheme = isDarkTheme,
                 onAppReady = {
                     splashScreen.setKeepOnScreenCondition { false }
@@ -96,12 +103,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }
 
 @Suppress("MagicNumber")

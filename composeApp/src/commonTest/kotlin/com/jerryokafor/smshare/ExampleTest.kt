@@ -62,6 +62,8 @@ class ExampleTest : UsingContextTest() {
             }
         }
 
+        awaitIdle()
+
         // Tests the declared UI with assertions and actions of the Compose Multiplatform testing API
         onNodeWithTag("text").assertTextEquals("Hello")
         onNodeWithTag("button").performClick()

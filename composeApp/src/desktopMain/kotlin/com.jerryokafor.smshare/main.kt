@@ -24,6 +24,9 @@
 
 package com.jerryokafor.smshare
 
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
@@ -34,6 +37,7 @@ private val koin = initKoin {
     modules(desktopModule())
 }.koin
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 fun main() = application {
     val windowState = rememberWindowState()
     Window(
@@ -41,7 +45,9 @@ fun main() = application {
         state = windowState,
         title = "SM Share",
         content = {
-            App()
+            val windowSizeClass = calculateWindowSizeClass()
+            val useNavRail = windowSizeClass.widthSizeClass > WindowWidthSizeClass.Compact
+            App(shouldUseNavRail = useNavRail)
         },
     )
 }

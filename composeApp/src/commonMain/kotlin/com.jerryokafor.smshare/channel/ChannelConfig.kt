@@ -19,17 +19,22 @@ interface ChannelConfig {
 
     fun createLoginUrl(
         redirectUrl: String,
+        state: String,
         challenge: String,
     ): String
 
     suspend fun requestAccessToken(
         code: String,
         redirectUrl: String,
+        challenge: String,
     ): TokenResponse
 }
 
 interface ChannelAuthManager {
+    var currentChallenge: String
     var currentChannelConfig: ChannelConfig?
+
+    fun getState(): String
 
     suspend fun authenticateUser(channelConfig: ChannelConfig)
 

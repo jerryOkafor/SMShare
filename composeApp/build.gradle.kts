@@ -1,4 +1,6 @@
+import org.gradle.kotlin.dsl.implementation
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 plugins {
     alias(libs.plugins.smshare.kotlin.multiplatform)
@@ -9,6 +11,7 @@ plugins {
     alias(libs.plugins.kotlinx.rpc)
     alias(libs.plugins.smshare.detekt)
     alias(libs.plugins.smshare.ktlint)
+    alias(libs.plugins.jetbrains.compose.hotReload)
 }
 
 kotlin {
@@ -48,7 +51,7 @@ kotlin {
     }
 
     composeCompiler {
-        enableStrongSkippingMode = true
+        featureFlags = setOf(ComposeFeatureFlag.StrongSkipping)
     }
 
     sourceSets {
@@ -78,6 +81,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+
+            // Util
+            implementation(libs.apache.commons.codec)
         }
 
         commonMain.dependencies {
@@ -88,6 +94,8 @@ kotlin {
             implementation(projects.core.config)
             implementation(projects.core.network)
             implementation(projects.core.rpc)
+
+            // Compose
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
@@ -95,12 +103,31 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.dev.chrisbanes.windowSizeClass)
+
+            implementation(
+                "org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.0.0-alpha03",
+            ) {
+                exclude(group = "org.jetbrains.androidx.window")
+            }
+            implementation("org.jetbrains.compose.material3.adaptive:adaptive:1.0.0-alpha03") {
+                exclude(group = "org.jetbrains.androidx.window")
+            }
+            implementation(
+                "org.jetbrains.compose.material3.adaptive:adaptive-layout:1.0.0-alpha03",
+            ) {
+                exclude(group = "org.jetbrains.androidx.window")
+            }
+            implementation(compose.material3AdaptiveNavigationSuite) {
+                exclude(group = "org.jetbrains.androidx.window")
+            }
+            implementation(libs.jetbrains.compose.material3.windowSizeClass)
 
             implementation(libs.kotlinx.datetime)
 
             // ViewModel
-            implementation(libs.viewmodel.compose)
+            implementation(libs.jetbrains.androidx.viewmodel.compose)
+            implementation(libs.jetbrains.androidx.lifecycle.runtime.compose)
+            implementation(libs.jetbrains.androidx.savedstate)
 
             // RPC
             implementation(libs.kotlinx.rpc.client)
@@ -131,10 +158,11 @@ kotlin {
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
-            implementation(libs.commons.codec)
+            implementation(libs.apache.commons.codec)
             api(libs.kotlinx.coroutines.swingx)
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
+            implementation("androidx.window:window-core-jvm:1.4.0")
         }
 
         desktopTest.dependencies {
@@ -177,10 +205,6 @@ android {
 
     buildFeatures {
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.kotlinCompilerPlugin.get()
     }
 
     dependencies {

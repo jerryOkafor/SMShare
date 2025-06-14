@@ -156,6 +156,7 @@ open class AppViewModel :
                 val tokenResponse = currentChannelConfig?.requestAccessToken(
                     code = code,
                     redirectUrl = SMShareConfig.redirectUrl,
+                    challenge = channelConfigAuthManager.currentChallenge,
                 )
 
                 val accountDao = database.getAccountDao()

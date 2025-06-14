@@ -52,8 +52,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -141,10 +139,12 @@ private val DarkColorScheme = darkColorScheme(
 fun rememberAppState(
     navController: NavHostController,
     viewModel: AppViewModel,
-): AppState = remember(navController) {
+    shouldUseNavRail: Boolean,
+): AppState = remember(navController, viewModel, shouldUseNavRail) {
     AppState(
         navController = navController,
         viewModel = viewModel,
+        shouldUseNavRail = shouldUseNavRail,
     )
 }
 
@@ -152,24 +152,24 @@ fun rememberAppState(
 class AppState(
     private val navController: NavController,
     private val viewModel: AppViewModel,
+    val shouldUseNavRail: Boolean,
 ) {
     val currentDestination: NavDestination?
-        @Composable get() =
-            navController
-                .currentBackStackEntryAsState()
-                .value
-                ?.destination
+        @Composable
+        get() = navController
+            .currentBackStackEntryAsState()
+            .value
+            ?.destination
 
     val currentTopLevelDestination: String?
         @Composable
-        get() =
-            when (currentDestination?.route) {
-                "posts" -> "Posts"
-                "drafts" -> "Drafts"
-                "analytics" -> "Analytics"
-                "settings" -> "Settings"
-                else -> null
-            }
+        get() = when (currentDestination?.route) {
+            "posts" -> "Posts"
+            "drafts" -> "Drafts"
+            "analytics" -> "Analytics"
+            "settings" -> "Settings"
+            else -> null
+        }
 }
 
 @Composable
@@ -177,7 +177,12 @@ class AppState(
 fun App(
     viewModel: AppViewModel = koinViewModel<AppViewModel>(),
     navController: NavHostController = rememberNavController(),
-    appState: AppState = rememberAppState(navController, viewModel),
+    shouldUseNavRail: Boolean,
+    appState: AppState = rememberAppState(
+        navController = navController,
+        viewModel = viewModel,
+        shouldUseNavRail = shouldUseNavRail,
+    ),
     onAppReady: () -> Unit = {},
     onNetChange: (Boolean) -> Unit = {},
     isDarkTheme: Boolean = isSystemInDarkTheme(),
@@ -237,11 +242,7 @@ fun Home(
         ) == SnackbarResult.ActionPerformed
     },
 ) {
-    val windowSizeClass = calculateWindowSizeClass()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val shouldShowBottomNav = remember(windowSizeClass) {
-        windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
-    }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val currentAnAppReady by rememberUpdatedState(onAppReady)
@@ -485,10 +486,7 @@ fun Home(
                                             bottom = innerPadding.calculateBottomPadding(),
                                         ).consumeWindowInsets(innerPadding),
                                 ) {
-                                    if (!shouldShowBottomNav &&
-                                        appState.currentTopLevelDestination != null &&
-                                        bottomAppBarState != null
-                                    ) {
+                                    if (appState.shouldUseNavRail) {
                                         NavigationRail(modifier = Modifier.fillMaxHeight()) {
                                             listOf(
                                                 BottomNavItem.PostsNavItem(),
@@ -497,6 +495,7 @@ fun Home(
                                                 BottomNavItem.SettingsBottomNavItem(),
                                             ).fastForEach { navItem ->
                                                 NavigationRailItem(
+                                                    modifier = Modifier.padding(vertical = 16.dp),
                                                     selected = navItem.isSelected(navController),
                                                     onClick = { onMenuItemClick(navItem) },
                                                     icon = navItem.icon,
@@ -655,7 +654,7 @@ fun Home(
                                 }
                             },
                             bottomBar = {
-                                if (shouldShowBottomNav) {
+                                if (!appState.shouldUseNavRail) {
                                     bottomAppBarState?.configure?.invoke()
                                 }
                             },

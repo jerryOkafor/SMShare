@@ -384,7 +384,7 @@ fun NavGraphBuilder.composeMessageScreen(
             navArgument(name = composeMessageAccountArg) { type = NavType.LongType },
         ),
     ) { bavBackstackEntry ->
-        val accountId = bavBackstackEntry.arguments?.getLong(composeMessageAccountArg)
+        val accountId = bavBackstackEntry.savedStateHandle.get<Long>(composeMessageRoutePattern)
         ComposeMessage(
             defaultAccountId = accountId,
             onSetupTopAppBar = onSetupTopAppBar,

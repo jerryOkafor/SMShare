@@ -34,7 +34,7 @@ fun commonModule() = module {
         listOf(
             LinkedInChannelConfig(httpClient = get()),
             FacebookChannelConfig(),
-            XChannelConfig(),
+            XChannelConfig(httpClient = get()),
         )
     }
 
@@ -43,19 +43,3 @@ fun commonModule() = module {
     viewModelOf(::CreateAccountViewModel)
     viewModelOf(::ComposeMessageViewModel)
 }
-
-// suspend inline fun <reified T : RPC> HttpClient.bindRPC(): T {
-//    return rpc {
-//        url {
-//            host = DEV_SERVER_HOST
-//            port = 8080
-//            encodedPath = "/api"
-//        }
-//
-//        rpcConfig {
-//            serialization {
-//                json()
-//            }
-//        }
-//    }.withService<T>()
-// }

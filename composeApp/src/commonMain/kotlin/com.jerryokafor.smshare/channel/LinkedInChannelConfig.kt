@@ -19,35 +19,44 @@ class LinkedInChannelConfig(
     override val description: String = "Profile or Page",
     override val icon: DrawableResource = Res.drawable.ic_linkedin,
 ) : ChannelConfig {
-    private val domain: String = "https://www.linkedin.com/oauth/v2/authorization"
+    private val oAuth2BaseUrl: String = "https://www.linkedin.com/oauth/v2/authorization"
+
+    private val accessTokenBaseUrl: String = "https://www.linkedin.com/oauth/v2/accessToken"
+
     private val scope: List<String> = listOf("profile", "email", "w_member_social")
+
     private val clientId: String = SMShareConfig.linkedInClientId
+
     private val clientSecret = SMShareConfig.linkedInClientSecret
+
     override val accountType: AccountType
         get() = AccountType.LINKEDIN
 
     override fun createLoginUrl(
         redirectUrl: String,
+        state: String,
         challenge: String,
-    ): String = domain +
-        "?response_type=code&" +
-        "client_id=$clientId&" +
-        "redirect_uri=$redirectUrl&" +
-        "state=$challenge&" +
-        "scope=${urlEncode(scope.joinToString(" "))}"
+    ): String = oAuth2BaseUrl +
+        "?response_type=code" +
+        "&client_id=$clientId" +
+        "&redirect_uri=$redirectUrl" +
+        "&state=$challenge" +
+        "&scope=${urlEncode(scope.joinToString(" "))}" +
+        "&code_challenge_method=S256"
 
     override suspend fun requestAccessToken(
         code: String,
         redirectUrl: String,
+        challenge: String,
     ): TokenResponse = httpClient
-        .post("https://www.linkedin.com/oauth/v2/accessToken") {
+        .post(accessTokenBaseUrl) {
             header("content-type", "application/x-www-form-urlencoded")
             setBody(
-                "grant_type=authorization_code&" +
-                    "client_id=$clientId&" +
-                    "client_secret=$clientSecret&" +
-                    "&code=$code&" +
-                    "redirect_uri=$redirectUrl",
+                "grant_type=authorization_code" +
+                    "&client_id=$clientId" +
+                    "&client_secret=$clientSecret" +
+                    "&code=$code" +
+                    "&redirect_uri=$redirectUrl",
             )
         }.body<TokenResponse>()
 }

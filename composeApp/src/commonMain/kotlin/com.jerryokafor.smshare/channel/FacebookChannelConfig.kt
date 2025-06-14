@@ -16,12 +16,14 @@ class FacebookChannelConfig(
 
     override fun createLoginUrl(
         redirectUrl: String,
+        state: String,
         challenge: String,
     ): String = ""
 
     override suspend fun requestAccessToken(
         code: String,
         redirectUrl: String,
+        challenge: String,
     ): TokenResponse {
         TODO("Not yet implemented")
     }

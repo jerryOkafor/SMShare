@@ -25,6 +25,8 @@ buildkonfig {
 
     // default config is required
     defaultConfigs {
+        
+        //LinkedIn
         buildConfigField(STRING, "linkedInClientId", secretProps["LINKEDIN_CLIENT_ID"] as String)
         buildConfigField(STRING, "redirectUrl", secretProps["REDIRECT_URL"] as String)
         buildConfigField(
@@ -32,6 +34,9 @@ buildkonfig {
             "linkedInClientSecret",
             secretProps["LINKEDIN_CLIENT_SECRET"] as String,
         )
+        
+        // X or Twitter
+        buildConfigField(STRING,"xClientId",secretProps["X_OAUTH_CLIENT_ID"] as String)
     }
 
     targetConfigs {
