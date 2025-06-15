@@ -112,7 +112,6 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.KoinContext
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import screens.addNewConnection.addNewConnectionScreen
@@ -187,25 +186,23 @@ fun App(
     onNetChange: (Boolean) -> Unit = {},
     isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
-    KoinContext {
-        val shouldUseDarkTheme by remember(isDarkTheme) { mutableStateOf(isDarkTheme) }
+    val shouldUseDarkTheme by remember(isDarkTheme) { mutableStateOf(isDarkTheme) }
 
-        val colorScheme = remember(shouldUseDarkTheme) {
-            if (!shouldUseDarkTheme) {
-                LightColorScheme
-            } else {
-                DarkColorScheme
-            }
+    val colorScheme = remember(shouldUseDarkTheme) {
+        if (!shouldUseDarkTheme) {
+            LightColorScheme
+        } else {
+            DarkColorScheme
         }
-        MaterialTheme(colorScheme = colorScheme) {
-            Home(
-                appState = appState,
-                onNetChange = onNetChange,
-                onAppReady = onAppReady,
-                viewModel = viewModel,
-                navController = navController,
-            )
-        }
+    }
+    MaterialTheme(colorScheme = colorScheme) {
+        Home(
+            appState = appState,
+            onNetChange = onNetChange,
+            onAppReady = onAppReady,
+            viewModel = viewModel,
+            navController = navController,
+        )
     }
 }
 

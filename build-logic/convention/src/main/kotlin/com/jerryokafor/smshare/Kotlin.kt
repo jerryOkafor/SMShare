@@ -17,7 +17,7 @@ fun Project.configureKotlin() {
         sourceSets.all {
             languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
             languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
-            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+//            languageSettings.enableLanguageFeature("ExplicitBackingFields")
         }
     }
     

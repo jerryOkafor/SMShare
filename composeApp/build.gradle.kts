@@ -58,7 +58,7 @@ kotlin {
         all {
             languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
             languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
-            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+//            languageSettings.enableLanguageFeature("ExplicitBackingFields")
         }
         val desktopMain by getting
         val desktopTest by getting

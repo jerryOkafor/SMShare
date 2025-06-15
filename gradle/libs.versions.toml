@@ -32,7 +32,7 @@ buildKonfig = "0.15.1"
 
 # DI
 #https://github.com/InsertKoinIO/koin/releases
-koin = "4.0.0"
+koin = "4.1.0"
 kermit = "2.0.3"
 
 cryptographyProviderJdkVersion = "0.2.0"
