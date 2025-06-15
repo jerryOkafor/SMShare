@@ -29,16 +29,3 @@ interface ChannelConfig {
         challenge: String,
     ): TokenResponse
 }
-
-interface ChannelAuthManager {
-    var currentChallenge: String
-    var currentChannelConfig: ChannelConfig?
-
-    fun getState(): String
-
-    suspend fun authenticateUser(channelConfig: ChannelConfig)
-
-    suspend fun getChallenge(): String
-
-    suspend fun getRedirectUrl(): String
-}

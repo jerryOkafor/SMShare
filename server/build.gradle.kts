@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.ktor.server.websockets.jvm)
     implementation(libs.ktor.server.host.common.jvm)
     implementation(libs.ktor.network.tls.certificates)
+    implementation(libs.ktor.server.html.builder)
 
     implementation(libs.koin.ktor)
     implementation(libs.koin.logger.slf4j)

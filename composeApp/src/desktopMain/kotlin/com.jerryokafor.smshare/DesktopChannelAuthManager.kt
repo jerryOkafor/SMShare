@@ -26,11 +26,12 @@ package com.jerryokafor.smshare
 
 import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.channel.oAuth2ResponseBuilder
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.engine.stop
+import io.ktor.server.html.respondHtml
 import io.ktor.server.netty.Netty
-import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.CoroutineScope
@@ -109,7 +110,7 @@ class DesktopChannelAuthManager(
                             call.parameters["state"]
                                 ?: throw RuntimeException("Received a response with no code")
                         println("OAuth finished: Code: $code,\nState: $state")
-                        call.respondText("User authenticated")
+                        call.respondHtml(HttpStatusCode.OK, oAuth2ResponseBuilder())
 
                         continuation.resume(code)
                     }

@@ -242,7 +242,7 @@ fun Home(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val currentAnAppReady by rememberUpdatedState(onAppReady)
+    val currentOnAppReady by rememberUpdatedState(onAppReady)
 
     val channels by viewModel.channels.collectAsStateWithLifecycle()
     val appUiState by viewModel.userData.collectAsStateWithLifecycle()
@@ -715,7 +715,7 @@ fun Home(
 
     LaunchedEffect(startDestination) {
         if (startDestination != null) {
-            currentAnAppReady()
+            currentOnAppReady()
         }
     }
 }

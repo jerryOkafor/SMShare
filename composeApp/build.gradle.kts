@@ -123,6 +123,7 @@ kotlin {
             implementation(libs.jetbrains.compose.material3.windowSizeClass)
 
             implementation(libs.kotlinx.datetime)
+            implementation(libs.jetbrains.kotlinx.html)
 
             // ViewModel
             implementation(libs.jetbrains.androidx.viewmodel.compose)
@@ -160,8 +161,11 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.apache.commons.codec)
             api(libs.kotlinx.coroutines.swingx)
+
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
+            implementation(libs.ktor.server.html.builder)
+
             implementation("androidx.window:window-core-jvm:1.4.0")
         }
 
