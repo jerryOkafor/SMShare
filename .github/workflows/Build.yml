@@ -36,11 +36,12 @@ jobs:
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v2
 
-      - name: Set up JDK 17
+      - name: Set Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: 17
+          distribution: corretto
+          java-version: 21
+          cache: 'gradle'
 
       - name: Setup Kotlin/Native compile(Konan) Cache
         if: always()
@@ -76,26 +77,27 @@ jobs:
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
-      - name: Set Up JDK 17
+      - name: Set Java
         uses: actions/setup-java@v4
         with:
-          distribution: "zulu"
-          java-version: 17
+          distribution: corretto
+          java-version: 21
+          cache: 'gradle'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
 
-      - name: Setup Kotlin/Native compile(Konan) Cache
-        if: always()
+      - name: Cache Kotlin Native
         uses: actions/cache@v4
         with:
           path: |
-            ~/.konan/caches
-            ~/.konan/dependencies
-            ~/.konan/kotlin-native-prebuilt-macos-*
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
-          restore-keys: |
-            ${{ runner.os }}-konan-
+            ~/.konan
+          key: ${{ runner.os }}-konan
+          restore-keys: ${{ runner.os }}-konan
 
       - name: Install Dependencies
         run: |
@@ -133,26 +135,27 @@ jobs:
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
-      - name: Set Up JDK 17
+      - name: Set Java
         uses: actions/setup-java@v4
         with:
-          distribution: "zulu"
-          java-version: 17
+          distribution: corretto
+          java-version: 21
+          cache: 'gradle'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
 
-      - name: Setup Kotlin/Native compile(Konan) Cache
-        if: always()
+      - name: Cache Kotlin Native
         uses: actions/cache@v4
         with:
           path: |
-            ~/.konan/caches
-            ~/.konan/dependencies
-            ~/.konan/kotlin-native-prebuilt-macos-*
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
-          restore-keys: |
-            ${{ runner.os }}-konan-
+            ~/.konan
+          key: ${{ runner.os }}-konan
+          restore-keys: ${{ runner.os }}-konan
 
       - name: Build
         run: ./gradlew :composeApp:assembleDebug
@@ -188,26 +191,27 @@ jobs:
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
-      - name: Set Up JDK 17
+      - name: Set Java
         uses: actions/setup-java@v4
         with:
-          distribution: "zulu"
-          java-version: 17
+          distribution: corretto
+          java-version: 21
+          cache: 'gradle'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
 
-      - name: Setup Kotlin/Native compile(Konan) Cache
-        if: always()
+      - name: Cache Kotlin Native
         uses: actions/cache@v4
         with:
           path: |
-            ~/.konan/caches
-            ~/.konan/dependencies
-            ~/.konan/kotlin-native-prebuilt-macos-*
-          key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
-          restore-keys: |
-            ${{ runner.os }}-konan-
+            ~/.konan
+          key: ${{ runner.os }}-konan
+          restore-keys: ${{ runner.os }}-konan
 
       - name: Build
         run: ./gradlew :composeApp:desktopJar
@@ -215,5 +219,8 @@ jobs:
       - name: Test Desktop
         run: |
           ./gradlew clean desktopTest
+          
+env:
+  GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -XX:MaxMetaspaceSize=512m"
 #
 #    # https://proandroiddev.com/optimising-ci-build-times-of-a-kotlin-multiplatform-project-2a430055f383
