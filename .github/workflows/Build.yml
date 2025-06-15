@@ -33,15 +33,22 @@ jobs:
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
 
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v2
-
       - name: Set Java
         uses: actions/setup-java@v4
         with:
           distribution: corretto
           java-version: 21
           cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
+          build-scan-terms-of-use-agree: "yes"
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
 
       - name: Setup Kotlin/Native compile(Konan) Cache
         if: always()
@@ -54,9 +61,6 @@ jobs:
           key: ${{ runner.os }}-konan-${{ hashFiles('**/Dependencies.kt') }}
           restore-keys: |
             ${{ runner.os }}-konan-
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
 
       - name: Verify Code Quality
         run: ./gradlew detekt ktlintCheck
