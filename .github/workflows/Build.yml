@@ -50,6 +50,7 @@ jobs:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
           build-scan-terms-of-use-agree: "yes"
+          cache-overwrite-existing: true
 
       - name: Validate Gradle Wrapper
         uses: gradle/actions/wrapper-validation@v3
@@ -98,6 +99,7 @@ jobs:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
           build-scan-terms-of-use-agree: "yes"
+          cache-overwrite-existing: true
 
       - name: Cache Kotlin Native
         uses: actions/cache@v4
@@ -156,6 +158,7 @@ jobs:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
           build-scan-terms-of-use-agree: "yes"
+          cache-overwrite-existing: true
 
       - name: Cache Kotlin Native
         uses: actions/cache@v4
@@ -212,6 +215,7 @@ jobs:
           build-scan-publish: true
           build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
           build-scan-terms-of-use-agree: "yes"
+          cache-overwrite-existing: true
 
       - name: Cache Kotlin Native
         uses: actions/cache@v4
