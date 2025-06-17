@@ -23,16 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
-            <!--http://com.jerryokafor.smsshare/auth/callback-->
+            <!--https://jerryokafor.com/smshare/auth/callback-->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="com.jerryokafor.smshare"
-                    android:scheme="http" />
+                        android:host="jerryokafor.com"
+                        android:pathPrefix="/smshare"
+                        android:scheme="https"/>
             </intent-filter>
         </activity>
 

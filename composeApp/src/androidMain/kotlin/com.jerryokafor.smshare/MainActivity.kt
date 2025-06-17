@@ -41,7 +41,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Consumer
 import org.koin.android.ext.android.inject
-import kotlin.compareTo
 
 class MainActivity : ComponentActivity() {
     private val appViewModel: AppViewModel by inject()
@@ -85,12 +84,18 @@ class MainActivity : ComponentActivity() {
                 val listener = Consumer<Intent> {
                     Log.d("Testing: ", "Intent: $it")
                     val data: Uri? = it.data
-                    when (val path = data?.path) {
-                        "/auth/callback" -> {
+                    when (data?.path) {
+                        "/smshare/auth/callback" -> {
                             // create session id here
-                            val code = data.getQueryParameter("code")!!
-                            val state = data.getQueryParameter("state")
-                            appViewModel.authenticateChannel(code, state)
+                            val code = data.getQueryParameter("code") ?: ""
+                            val state = data.getQueryParameter("state") ?: ""
+
+                            if (code.isEmpty() || state.isEmpty()) {
+                                return@Consumer
+                            }
+
+                            // call shared viewModel to authenticate user
+                            appViewModel.exchangeCodeForAccessToken(code, state)
                         }
                     }
                 }

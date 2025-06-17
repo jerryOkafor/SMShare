@@ -137,7 +137,7 @@ open class AppViewModel :
         }
     }
 
-    fun authenticateChannel(
+    fun exchangeCodeForAccessToken(
         code: String,
         state: String?,
     ) {

@@ -186,7 +186,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "com.jerryokafor.smshare"
+        applicationId = "com.jerryokafor.app.smshare"
         versionCode = 1
         versionName = "1.0"
 
@@ -232,7 +232,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.jerryokafor.smshare"
+            packageName = "com.jerryokafor.app.smshare"
             packageVersion = "1.0.0"
         }
     }

@@ -169,6 +169,15 @@ Ensure yuor android phone is connected and adb is running, then run
 adb reverse tcp:8080 tcp:8080
 ```
 
+Test Deeplink Android
+
+```bash
+ adb shell am start -a android.intent.action.VIEW \
+    -c android.intent.category.BROWSABLE \
+    -d "https://jerryokafor.com/smshare/auth/callback"
+
+```
+
 Then open `http://localhost:8080` from your android phone to test. You can now also use this in the
 base url of
 your api requests for Android.
