@@ -18,7 +18,7 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
-            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.dev.whyoleg.cryptography.provider.jdk)
 
             implementation(libs.androidx.core.ktx)
@@ -28,7 +28,9 @@ kotlin {
             implementation(projects.core.config)
             implementation(libs.kotlinx.serialization.json)
 
+            // Ktor Client
             api(libs.ktor.client.core)
+            api(libs.ktor.client.logging)
             api(libs.ktor.client.content.negotiation)
             api(libs.ktor.serialization.kotlinx.json)
 
@@ -42,7 +44,7 @@ kotlin {
             api("com.apollographql.adapters:apollo-adapters-kotlinx-datetime:0.0.4")
         }
 
-        iosMain.dependencies {
+        nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
             implementation(libs.dev.whyoleg.cryptography.provider.apple)
         }
@@ -50,6 +52,8 @@ kotlin {
         desktopMain.dependencies {
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
+
+            implementation(libs.ktor.client.okhttp)
 
             implementation(libs.dev.whyoleg.cryptography.provider.jdk)
         }

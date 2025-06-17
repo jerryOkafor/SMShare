@@ -1,5 +1,6 @@
 package com.jerryokafor.smshare.channel
 
+import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
 import org.jetbrains.compose.resources.DrawableResource
@@ -14,16 +15,16 @@ class FacebookChannelConfig(
     override val accountType: AccountType
         get() = AccountType.FACEBOOK
 
-    override fun createLoginUrl(
-        redirectUrl: String,
+    override fun createOAuthUrl(
         state: String,
         challenge: String,
+        redirectUrl: String,
     ): String = ""
 
-    override suspend fun requestAccessToken(
+    override suspend fun exchangeCodeForAccessToken(
         code: String,
-        redirectUrl: String,
         challenge: String,
+        redirectUrl: String,
     ): TokenResponse {
         TODO("Not yet implemented")
     }

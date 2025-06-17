@@ -135,16 +135,19 @@ kotlin {
             implementation(libs.kotlinx.rpc.serialization.json)
             implementation(libs.kotlinx.rpc.transport.ktor.client)
 
-            // Ktor
+            // Ktor Client
             implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.websockets)
 
+            // Navigation
             implementation(libs.navigation.compose)
-
+            
+            // Utils
             implementation(libs.richeditor.compose)
             implementation(libs.flexible.bottomsheet.material3)
 
+            // Koin - DI
             api(libs.koin.core)
             api(libs.koin.test)
             api(libs.koin.compose)

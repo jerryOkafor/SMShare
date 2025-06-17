@@ -3,6 +3,7 @@ package com.jerryokafor.smshare.injection
 import com.jerryokafor.core.database.AppDatabase
 import com.jerryokafor.core.database.nativeDBModule
 import com.jerryokafor.core.datastore.nativeUserDatastoreModule
+import com.jerryokafor.smshare.AppViewModel
 import com.jerryokafor.smshare.IOSChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.core.network.util.injection.iosNetworkModules
@@ -28,6 +29,6 @@ fun initKoin() = initKoin {
 }
 
 class IOSInjectionHelper : KoinComponent {
-    val appDatabase: AppDatabase by inject()
+    val appViewModel: AppViewModel by inject()
     val channelAuthManager: ChannelAuthManager by inject()
 }

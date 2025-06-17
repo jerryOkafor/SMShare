@@ -52,13 +52,13 @@ import kotlin.coroutines.resume
 class DesktopChannelAuthManager(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : ChannelAuthManager {
-    override lateinit var currentChallenge: String
+    override lateinit var challenge: String
 
     private var coroutineScope: CoroutineScope = coroutineScope
         private set
 
     private val callbackJob = MutableStateFlow<Job?>(null)
-    override var currentChannelConfig: ChannelConfig? = null
+    override var channelConfig: ChannelConfig? = null
 
     override fun getState(): String {
         val sr = SecureRandom()
@@ -71,15 +71,13 @@ class DesktopChannelAuthManager(
     }
 
     override suspend fun authenticateUser(channelConfig: ChannelConfig) {
-        currentChannelConfig = channelConfig
+        this.channelConfig = channelConfig
         val job = coroutineScope.launch {
             try {
-                val challenge = getChallenge()
-                val redirectUrl = getRedirectUrl()
-                val url = channelConfig.createLoginUrl(
-                    redirectUrl = redirectUrl,
+                val url = channelConfig.createOAuthUrl(
+                    redirectUrl = getRedirectUrl(),
                     state = getState(),
-                    challenge = challenge,
+                    challenge = getChallenge(),
                 )
 
                 withContext(Dispatchers.IO) {
@@ -126,15 +124,16 @@ class DesktopChannelAuthManager(
         return code
     }
 
-    override suspend fun getChallenge(): String = if (::currentChallenge.isInitialized) {
-        currentChallenge
+    override suspend fun getChallenge(): String = if (::challenge.isInitialized) {
+        this.challenge
     } else {
         val bytes: ByteArray = createVerifier().toByteArray(Charsets.US_ASCII)
         val md = MessageDigest.getInstance("SHA-256")
         md.update(bytes, 0, bytes.size)
         val digest = md.digest()
         val challenge = Base64.encodeBase64URLSafeString(digest)
-        currentChallenge = challenge
+        
+        this.challenge = challenge
         challenge
     }
 

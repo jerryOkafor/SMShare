@@ -1,5 +1,6 @@
 package com.jerryokafor.smshare.channel
 
+import co.touchlab.kermit.Logger
 import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
@@ -9,6 +10,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_twitter
@@ -32,22 +34,22 @@ class XChannelConfig(
     override val accountType: AccountType
         get() = AccountType.TWITTER_X
 
-    override fun createLoginUrl(
-        redirectUrl: String,
+    override fun createOAuthUrl(
         state: String,
         challenge: String,
+        redirectUrl: String,
     ): String = oAuth2BaseUrl + "?response_type=code" +
         "&client_id=$clientId" +
-        "&redirect_uri=$redirectUrl" +
         "&scope=${urlEncode(scope.joinToString(" "))}" +
         "&state=$state" +
-        "&code_challenge=$challenge" +
+            "&code_challenge=$challenge" +
+            "&redirect_uri=$redirectUrl" +
         "&code_challenge_method=S256"
 
-    override suspend fun requestAccessToken(
+    override suspend fun exchangeCodeForAccessToken(
         code: String,
-        redirectUrl: String,
         challenge: String,
+        redirectUrl: String,
     ): TokenResponse = httpClient
         .post(accessTokenBaseUrl) {
             header("content-type", "application/x-www-form-urlencoded")
@@ -55,8 +57,12 @@ class XChannelConfig(
                 "grant_type=authorization_code" +
                     "&code=$code" +
                     "&client_id=$clientId" +
-                    "&redirect_uri=$redirectUrl" +
-                    "&code_verifier=$challenge",
+                        "&code_verifier=$challenge" +
+                        "&redirect_uri=$redirectUrl"
             )
-        }.body<TokenResponse>()
+        }.let {
+            val response = it.bodyAsText()
+            Logger.withTag("Testing").d("Response: $response")
+            it.body<TokenResponse>()
+        }
 }

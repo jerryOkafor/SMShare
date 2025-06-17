@@ -5,7 +5,8 @@ import com.jerryokafor.smshare.core.network.response.TokenResponse
 import org.jetbrains.compose.resources.DrawableResource
 
 /**
- * Interface for channel configuration, represents various social media channels
+ * Interface for channel configuration, represents various social media platforms
+ * that a user may want to add to the app.
  *
  */
 interface ChannelConfig {
@@ -17,15 +18,15 @@ interface ChannelConfig {
 
     val icon: DrawableResource
 
-    fun createLoginUrl(
-        redirectUrl: String,
+    fun createOAuthUrl(
         state: String,
         challenge: String,
+        redirectUrl: String,
     ): String
 
-    suspend fun requestAccessToken(
+    suspend fun exchangeCodeForAccessToken(
         code: String,
-        redirectUrl: String,
         challenge: String,
+        redirectUrl: String,
     ): TokenResponse
 }

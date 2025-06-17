@@ -17,8 +17,8 @@ import kotlinx.html.unsafe
  * Interface to manage [ChannelConfig]
  * */
 interface ChannelAuthManager {
-    var currentChallenge: String
-    var currentChannelConfig: ChannelConfig?
+    var challenge: String
+    var channelConfig: ChannelConfig?
 
     fun getState(): String
 

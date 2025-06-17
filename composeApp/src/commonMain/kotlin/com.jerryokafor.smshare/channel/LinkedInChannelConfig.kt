@@ -4,11 +4,9 @@ import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
 import com.jerryokafor.smshare.core.network.util.urlEncode
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_linkedin
@@ -32,31 +30,38 @@ class LinkedInChannelConfig(
     override val accountType: AccountType
         get() = AccountType.LINKEDIN
 
-    override fun createLoginUrl(
-        redirectUrl: String,
+    override fun createOAuthUrl(
         state: String,
         challenge: String,
-    ): String = oAuth2BaseUrl +
-        "?response_type=code" +
-        "&client_id=$clientId" +
-        "&redirect_uri=$redirectUrl" +
-        "&state=$challenge" +
-        "&scope=${urlEncode(scope.joinToString(" "))}" +
-        "&code_challenge_method=S256"
-
-    override suspend fun requestAccessToken(
-        code: String,
         redirectUrl: String,
+    ): String {
+        return oAuth2BaseUrl +
+                "?response_type=code" +
+                "&client_id=$clientId" +
+                "&redirect_uri=$redirectUrl" +
+                "&state=$challenge" +
+                "&scope=${urlEncode(scope.joinToString(" "))}" +
+                "&code_challenge_method=S256"
+    }
+
+    override suspend fun exchangeCodeForAccessToken(
+        code: String,
         challenge: String,
-    ): TokenResponse = httpClient
-        .post(accessTokenBaseUrl) {
-            header("content-type", "application/x-www-form-urlencoded")
-            setBody(
-                "grant_type=authorization_code" +
-                    "&client_id=$clientId" +
-                    "&client_secret=$clientSecret" +
-                    "&code=$code" +
-                    "&redirect_uri=$redirectUrl",
-            )
-        }.body<TokenResponse>()
+        redirectUrl: String,
+    ): TokenResponse {
+        val response = httpClient
+            .post(accessTokenBaseUrl) {
+                header("content-type", "application/x-www-form-urlencoded")
+                setBody(
+                    "grant_type=authorization_code" +
+                            "&client_id=$clientId" +
+                            "&client_secret=$clientSecret" +
+                            "&code=$code" +
+                            "&redirect_uri=$redirectUrl",
+                )
+            }
+
+//        val textResponse = response.bodyAsText()
+        return response.body<TokenResponse>()
+    }
 }
