@@ -42,8 +42,8 @@ class XChannelConfig(
         "&client_id=$clientId" +
         "&scope=${urlEncode(scope.joinToString(" "))}" +
         "&state=$state" +
-            "&code_challenge=$challenge" +
-            "&redirect_uri=$redirectUrl" +
+        "&code_challenge=$challenge" +
+        "&redirect_uri=$redirectUrl" +
         "&code_challenge_method=S256"
 
     override suspend fun exchangeCodeForAccessToken(
@@ -57,8 +57,8 @@ class XChannelConfig(
                 "grant_type=authorization_code" +
                     "&code=$code" +
                     "&client_id=$clientId" +
-                        "&code_verifier=$challenge" +
-                        "&redirect_uri=$redirectUrl"
+                    "&code_verifier=$challenge" +
+                    "&redirect_uri=$redirectUrl",
             )
         }.let {
             val response = it.bodyAsText()

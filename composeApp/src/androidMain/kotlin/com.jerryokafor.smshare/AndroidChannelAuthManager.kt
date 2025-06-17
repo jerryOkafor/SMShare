@@ -92,7 +92,7 @@ class AndroidChannelAuthManager(
         md.update(bytes, 0, bytes.size)
         val digest = md.digest()
         val challenge = Base64.encodeBase64URLSafeString(digest)
-        
+
         this.challenge = challenge
         challenge
     }

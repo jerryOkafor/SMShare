@@ -142,7 +142,7 @@ kotlin {
 
             // Navigation
             implementation(libs.navigation.compose)
-            
+
             // Utils
             implementation(libs.richeditor.compose)
             implementation(libs.flexible.bottomsheet.material3)

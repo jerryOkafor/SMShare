@@ -13,7 +13,6 @@ import platform.Foundation.NSURL
 import platform.UIKit.UIApplication
 import kotlin.random.Random
 
-
 fun base64UrlEncode(bytes: ByteArray): String {
     val base64 = bytes.encodeBase64()
     return base64
@@ -21,10 +20,12 @@ fun base64UrlEncode(bytes: ByteArray): String {
         .replace("/", "_")
         .replace("=", "")
 }
+
 class IOSChannelAuthManager : ChannelAuthManager {
     override lateinit var challenge: String
     override var channelConfig: ChannelConfig? = null
 
+    @Suppress("MagicNumber")
     override fun getState(): String {
         val bytes = ByteArray(32).apply {
             Random.nextBytes(this)
@@ -47,7 +48,7 @@ class IOSChannelAuthManager : ChannelAuthManager {
                 options = emptyMap<Any?, Any?>(),
                 completionHandler = { success ->
                     println("URL launch success: $success")
-                }
+                },
             )
         }
     }
@@ -64,6 +65,7 @@ class IOSChannelAuthManager : ChannelAuthManager {
         challenge
     }
 
+    @Suppress("MagicNumber")
     private fun createVerifier(): String {
         val bytes = ByteArray(32).apply {
             Random.nextBytes(this)
@@ -81,7 +83,7 @@ fun sha256(input: ByteArray): ByteArray {
             CC_SHA256(
                 pinnedInput.addressOf(0),
                 input.size.convert(),
-                pinnedDigest.addressOf(0)
+                pinnedDigest.addressOf(0),
             )
         }
     }

@@ -4,7 +4,6 @@ import com.apollographql.apollo.ApolloClient
 import com.jerryokafor.smshare.core.config.Config
 import com.jerryokafor.smshare.core.network.util.httpClient
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel

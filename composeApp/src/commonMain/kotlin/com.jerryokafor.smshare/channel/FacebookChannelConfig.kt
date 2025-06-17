@@ -1,6 +1,5 @@
 package com.jerryokafor.smshare.channel
 
-import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
 import org.jetbrains.compose.resources.DrawableResource

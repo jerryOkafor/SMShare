@@ -1,6 +1,5 @@
 package com.jerryokafor.smshare.injection
 
-import com.jerryokafor.core.database.AppDatabase
 import com.jerryokafor.core.database.nativeDBModule
 import com.jerryokafor.core.datastore.nativeUserDatastoreModule
 import com.jerryokafor.smshare.AppViewModel
