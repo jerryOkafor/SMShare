@@ -6,6 +6,10 @@ url: https://just-the-docs.github.io
 
 aux_links:
   Github: https://github.com/jerryOkafor/SMShare
+  
+
+include:
+  - ".well-known"
 
 
 # Color scheme supports "light" (default) and "dark"
