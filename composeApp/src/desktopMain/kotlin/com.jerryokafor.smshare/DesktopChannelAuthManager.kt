@@ -50,13 +50,12 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 
 class DesktopChannelAuthManager(
+    val appViewModel: AppViewModel,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : ChannelAuthManager {
     override lateinit var challenge: String
-
     private var coroutineScope: CoroutineScope = coroutineScope
         private set
-
     private val callbackJob = MutableStateFlow<Job?>(null)
     override var channelConfig: ChannelConfig? = null
 
@@ -84,7 +83,13 @@ class DesktopChannelAuthManager(
                     Desktop.getDesktop().browse(URI(url))
                 }
 
-                waitForCallback()
+                val (code, state) = waitForCallback()
+                if (code.isEmpty() || state.isEmpty()) {
+                    return@launch
+                }
+
+                // call app viewModel to exchange code for access token
+                appViewModel.exchangeCodeForAccessToken(code, state)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -94,23 +99,20 @@ class DesktopChannelAuthManager(
         job.invokeOnCompletion { callbackJob.value = null }
     }
 
-    private suspend fun waitForCallback(): String {
+    private suspend fun waitForCallback(): Pair<String, String> {
         var server: EmbeddedServer<*, *>? = null
 
-        val code = suspendCancellableCoroutine { continuation ->
+        val (code, state) = suspendCancellableCoroutine { continuation ->
             server = embeddedServer(factory = Netty, port = AUTH_SERVER_PORT) {
                 routing {
-                    get("/callback") {
+                    get("/smshare/auth/callback") {
                         val code =
-                            call.parameters["code"]
-                                ?: throw RuntimeException("Received a response with no code")
+                            call.parameters["code"] ?: ""
                         val state =
-                            call.parameters["state"]
-                                ?: throw RuntimeException("Received a response with no code")
-                        println("OAuth finished: Code: $code,\nState: $state")
+                            call.parameters["state"] ?: ""
                         call.respondHtml(HttpStatusCode.OK, oAuth2ResponseBuilder())
 
-                        continuation.resume(code)
+                        continuation.resume(code to state)
                     }
                 }
             }.start(wait = false)
@@ -121,7 +123,7 @@ class DesktopChannelAuthManager(
             server?.stop(1, 5, TimeUnit.SECONDS)
         }
 
-        return code
+        return code to state
     }
 
     override suspend fun getChallenge(): String = if (::challenge.isInitialized) {
@@ -137,7 +139,8 @@ class DesktopChannelAuthManager(
         challenge
     }
 
-    override suspend fun getRedirectUrl(): String = "http://localhost:${AUTH_SERVER_PORT}/callback"
+    override suspend fun getRedirectUrl(): String =
+        "http://localhost:${AUTH_SERVER_PORT}/smshare/auth/callback"
 
     private fun createVerifier(): String {
         val sr = SecureRandom()

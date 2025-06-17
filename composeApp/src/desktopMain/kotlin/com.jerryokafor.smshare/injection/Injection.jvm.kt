@@ -38,7 +38,9 @@ fun desktopModule() = module {
         jvmDBModule(),
         jvmNetworkModule(),
     )
-    single<ChannelAuthManager> { DesktopChannelAuthManager() }
+    single<ChannelAuthManager> {
+        DesktopChannelAuthManager(appViewModel = get())
+    }
 
     single { Platform() }
 }

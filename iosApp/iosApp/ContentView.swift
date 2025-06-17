@@ -29,7 +29,7 @@ struct ContentView: View {
                         let state = queryItems.first(where: { $0.name == "state" })?.value
                         print("Using Auth Code: \(code)")
                         print("Using Auth State: \(state)")
-                        appViewModel.authenticateChannel(code: code, state: state)
+                        appViewModel.exchangeCodeForAccessToken(code: code, state: state)
                     }
                     
                 }
