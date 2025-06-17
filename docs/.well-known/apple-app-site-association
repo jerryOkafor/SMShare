@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "45ZGNV2NAU.com.jerryokafor.app.smshare",
+        "paths": [
+          "/smshare/*"
+        ]
+      }
+    ]
+  }
+}
