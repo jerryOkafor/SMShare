@@ -4,6 +4,8 @@ enum class AccountType {
     LINKEDIN,
     TWITTER_X,
     FACEBOOK,
+
+    UNKNOWN,
 }
 
 data class Account(

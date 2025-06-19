@@ -40,6 +40,7 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.DisposableEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.util.Consumer
+import com.jerryokafor.smshare.channel.ExternalUriHandler
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -85,18 +86,7 @@ class MainActivity : ComponentActivity() {
                     Log.d("Testing: ", "Intent: $it")
                     val data: Uri? = it.data
                     when (data?.path) {
-                        "/smshare/auth/callback" -> {
-                            // create session id here
-                            val code = data.getQueryParameter("code") ?: ""
-                            val state = data.getQueryParameter("state") ?: ""
-
-                            if (code.isEmpty() || state.isEmpty()) {
-                                return@Consumer
-                            }
-
-                            // call shared viewModel to authenticate user
-                            appViewModel.exchangeCodeForAccessToken(code, state)
-                        }
+                        "/smshare/auth/callback" -> ExternalUriHandler.onNewUri(data.toString())
                     }
                 }
 

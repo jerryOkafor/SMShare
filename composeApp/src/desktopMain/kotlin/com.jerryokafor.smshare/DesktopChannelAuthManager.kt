@@ -26,12 +26,14 @@ package com.jerryokafor.smshare
 
 import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.channel.ExternalUriHandler
 import com.jerryokafor.smshare.channel.oAuth2ResponseBuilder
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.EmbeddedServer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.html.respondHtml
 import io.ktor.server.netty.Netty
+import io.ktor.server.request.uri
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 import kotlinx.coroutines.CoroutineScope
@@ -78,18 +80,13 @@ class DesktopChannelAuthManager(
                     state = getState(),
                     challenge = getChallenge(),
                 )
+                println("Desktop channel auth url: $url")
 
                 withContext(Dispatchers.IO) {
                     Desktop.getDesktop().browse(URI(url))
                 }
 
-                val (code, state) = waitForCallback()
-                if (code.isEmpty() || state.isEmpty()) {
-                    return@launch
-                }
-
-                // call app viewModel to exchange code for access token
-                appViewModel.exchangeCodeForAccessToken(code, state)
+                waitForCallback()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -99,31 +96,25 @@ class DesktopChannelAuthManager(
         job.invokeOnCompletion { callbackJob.value = null }
     }
 
-    private suspend fun waitForCallback(): Pair<String, String> {
+    private suspend fun waitForCallback() {
         var server: EmbeddedServer<*, *>? = null
 
-        val (code, state) = suspendCancellableCoroutine { continuation ->
+        suspendCancellableCoroutine { continuation ->
             server = embeddedServer(factory = Netty, port = AUTH_SERVER_PORT) {
                 routing {
                     get("/smshare/auth/callback") {
-                        val code =
-                            call.parameters["code"] ?: ""
-                        val state =
-                            call.parameters["state"] ?: ""
                         call.respondHtml(HttpStatusCode.OK, oAuth2ResponseBuilder())
-
-                        continuation.resume(code to state)
+                        ExternalUriHandler.onNewUri(call.request.uri)
+                        continuation.resume(Unit)
                     }
                 }
             }.start(wait = false)
         }
 
-        // Wait for 5 seconds and timeout
+        // Wait for 1 seconds and timeout
         coroutineScope.launch {
-            server?.stop(1, 5, TimeUnit.SECONDS)
+            server?.stop(1, 1, TimeUnit.SECONDS)
         }
-
-        return code to state
     }
 
     override suspend fun getChallenge(): String = if (::challenge.isInitialized) {

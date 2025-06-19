@@ -43,6 +43,7 @@ fun iconIndicatorForAccountType(type: AccountType) = when (type) {
     AccountType.LINKEDIN -> painterResource(Res.drawable.ic_linkedin)
     AccountType.TWITTER_X -> painterResource(Res.drawable.ic_twitter)
     AccountType.FACEBOOK -> painterResource(Res.drawable.ic_facebook)
+    AccountType.UNKNOWN -> painterResource(Res.drawable.ic_facebook)
 }
 
 @Composable

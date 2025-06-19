@@ -1,6 +1,5 @@
 package com.jerryokafor.smshare.channel
 
-import co.touchlab.kermit.Logger
 import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
@@ -10,7 +9,6 @@ import io.ktor.client.call.body
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_twitter
@@ -60,9 +58,5 @@ class XChannelConfig(
                     "&code_verifier=$challenge" +
                     "&redirect_uri=$redirectUrl",
             )
-        }.let {
-            val response = it.bodyAsText()
-            Logger.withTag("Testing").d("Response: $response")
-            it.body<TokenResponse>()
-        }
+        }.body<TokenResponse>()
 }

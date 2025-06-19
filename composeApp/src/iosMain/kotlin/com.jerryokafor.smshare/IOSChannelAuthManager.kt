@@ -42,10 +42,12 @@ class IOSChannelAuthManager : ChannelAuthManager {
             challenge = getChallenge(),
         )
 
+        println("oauth2Url: $oauth2Url ")
+
         NSURL.URLWithString(oauth2Url)?.let { nsUrl ->
             UIApplication.sharedApplication.openURL(
                 url = nsUrl,
-                options = emptyMap<Any?, Any?>(),
+                options = mapOf("UIApplicationOpenURLOptionsUniversalLinksOnly" to true),
                 completionHandler = { success ->
                     println("URL launch success: $success")
                 },
@@ -58,7 +60,6 @@ class IOSChannelAuthManager : ChannelAuthManager {
     } else {
         val verifier = createVerifier()
         val sha256Digest = sha256(verifier.encodeToByteArray())
-
         val challenge = base64UrlEncode(sha256Digest)
         this.challenge = challenge
 

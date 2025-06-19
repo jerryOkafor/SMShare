@@ -9,6 +9,7 @@ import io.ktor.client.call.body
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_linkedin
@@ -36,13 +37,11 @@ class LinkedInChannelConfig(
         state: String,
         challenge: String,
         redirectUrl: String,
-    ): String = oAuth2BaseUrl +
-        "?response_type=code" +
+    ): String = oAuth2BaseUrl + "?response_type=code" +
         "&client_id=$clientId" +
-        "&redirect_uri=$redirectUrl" +
-        "&state=$challenge" +
         "&scope=${urlEncode(scope.joinToString(" "))}" +
-        "&code_challenge_method=S256"
+        "&state=$challenge" +
+        "&redirect_uri=$redirectUrl"
 
     override suspend fun exchangeCodeForAccessToken(
         code: String,
@@ -54,14 +53,15 @@ class LinkedInChannelConfig(
                 header("content-type", "application/x-www-form-urlencoded")
                 setBody(
                     "grant_type=authorization_code" +
+                        "&code=$code" +
                         "&client_id=$clientId" +
                         "&client_secret=$clientSecret" +
-                        "&code=$code" +
                         "&redirect_uri=$redirectUrl",
                 )
             }
 
-//        val textResponse = response.bodyAsText()
+        val textResponse = response.bodyAsText()
+        println("response: $response, \ntextResponse: $textResponse")
         return response.body<TokenResponse>()
     }
 }

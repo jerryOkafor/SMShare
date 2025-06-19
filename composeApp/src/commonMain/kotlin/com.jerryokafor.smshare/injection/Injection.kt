@@ -33,7 +33,7 @@ fun commonModule() = module {
     single<List<ChannelConfig>> {
         listOf(
             LinkedInChannelConfig(httpClient = get()),
-            FacebookChannelConfig(),
+            FacebookChannelConfig(httpClient = get()),
             XChannelConfig(httpClient = get()),
         )
     }

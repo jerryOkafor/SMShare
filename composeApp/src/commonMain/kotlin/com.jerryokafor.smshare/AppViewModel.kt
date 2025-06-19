@@ -4,13 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.jerryokafor.core.database.AccountEntity
+import com.jerryokafor.core.database.AccountTypeEntity
 import com.jerryokafor.core.database.AppDatabase
 import com.jerryokafor.core.database.toDomainModel
 import com.jerryokafor.core.datastore.model.UserData
 import com.jerryokafor.core.datastore.store.UserDataStore
 import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfig
-import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.model.Account
 import com.jerryokafor.smshare.core.network.util.NetworkMonitor
 import com.jerryokafor.smshare.navigation.Auth
@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -44,6 +43,9 @@ open class AppViewModel :
     private val _startDestination = MutableStateFlow<Any?>(null)
     val startDestination = _startDestination.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     val userData = userDataStore.user
         .map { AppUiState.Success(user = it, platform = platForm) }
         .stateIn(
@@ -52,13 +54,6 @@ open class AppViewModel :
             initialValue = AppUiState.Loading,
         )
 
-    val channels: StateFlow<List<ChannelConfig>> =
-        flowOf(supportedChannels)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Eagerly,
-                initialValue = emptyList(),
-            )
     val isOnLine: StateFlow<Boolean> = networkMonitor.isOnline
         .onEach { Logger.d("isOnLine: $it") }
         .stateIn(
@@ -80,6 +75,17 @@ open class AppViewModel :
         }.onEach { acts ->
             if (currentAccount.isNull()) {
                 _currentAccount.update { acts.firstOrNull() }
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = emptyList(),
+        )
+
+    val channels: StateFlow<List<ChannelConfig>> = accounts
+        .map { accountsList ->
+            supportedChannels.filter { config ->
+                accountsList.none { account -> account.type == config.accountType }
             }
         }.stateIn(
             scope = viewModelScope,
@@ -137,23 +143,31 @@ open class AppViewModel :
         }
     }
 
+    fun authoriseChannel(channel: ChannelConfig) {
+        viewModelScope.launch {
+            _isLoading.update { true }
+            channelConfigAuthManager.authenticateUser(channel)
+        }
+    }
+
     fun exchangeCodeForAccessToken(
         code: String,
         state: String?,
     ) {
-        Logger.withTag("Testing").d("Fetching Token: $code | $state")
+        println("Fetching Access token: Code : $code \nState: $state")
         viewModelScope.launch {
             try {
                 val channelConfig = channelConfigAuthManager.channelConfig
                 val tokenResponse = channelConfig?.exchangeCodeForAccessToken(
                     code = code,
-                    redirectUrl = SMShareConfig.redirectUrl,
+                    redirectUrl = channelConfigAuthManager.getRedirectUrl(),
                     challenge = channelConfigAuthManager.challenge,
                 )
-
-                val accountDao = database.getAccountDao()
+                print("Response: $tokenResponse")
+                _isLoading.update { false }
 
                 val accountEntity = AccountEntity(
+                    type = AccountTypeEntity.fromDomainModel(channelConfig?.accountType),
                     name = channelConfig?.name ?: "",
                     description = channelConfig?.description ?: "",
                     avatarUrl = "",
@@ -163,15 +177,16 @@ open class AppViewModel :
                     created = "",
                 )
 
+                // Todo: Update this part and also send a copy to the Backend
+                val accountDao = database.getAccountDao()
                 accountDao.insert(accountEntity)
 
                 if (_currentAccount.isNull()) {
                     _currentAccount.update { accountEntity.toDomainModel() }
                 }
-
-                Logger.withTag("Testing").d("access Token: $tokenResponse -> $accountEntity")
             } catch (e: Exception) {
-                Logger.withTag("Testing").w(e.message ?: "Error creating access token")
+                println("Error: ${e.message}")
+                _isLoading.update { false }
             }
         }
     }

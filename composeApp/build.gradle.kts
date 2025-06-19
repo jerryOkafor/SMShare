@@ -214,6 +214,16 @@ android {
         compose = true
     }
 
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
+        }
+    }
+
     dependencies {
         implementation(libs.androidx.core.splashscreen)
         implementation(libs.androidx.activity.ktx)
