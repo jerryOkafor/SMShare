@@ -113,6 +113,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import screens.addNewConnection.AddNewConnectionChannel
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.avatar6
 import smshare.composeapp.generated.resources.ic_twitter
