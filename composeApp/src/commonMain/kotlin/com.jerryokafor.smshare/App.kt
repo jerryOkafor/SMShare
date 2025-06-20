@@ -230,7 +230,7 @@ fun Home(
     navController: NavHostController,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onAppReady: () -> Unit = {},
-    onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { msg, act, isSuccess ->
+    onShowSnackbar: suspend (message: String, actions: String?, success: Boolean) -> Boolean = { msg, act, isSuccess ->
         snackbarHostState.showSnackbar(
             message = msg,
             actionLabel = act,
@@ -404,7 +404,7 @@ fun Home(
     var topAppBarState by remember { mutableStateOf<SMShareTopAppBarState?>(null) }
     var bottomAppBarState by remember { mutableStateOf<SMShareBottomAppBarState?>(null) }
     val sheetState = rememberModalBottomSheetState(false)
-
+    val channels by viewModel.channels.collectAsStateWithLifecycle()
     val onCloseSidNav: (SideNavMenuAction?) -> Unit = { sideNavMenAction ->
         scope
             .launch { drawerState.close() }
@@ -427,7 +427,20 @@ fun Home(
                     SideNavMenuAction.AddNewConnection ->
                         scope
                             .launch { sheetState.show() }
-                            .invokeOnCompletion { showAddConnectionBottomSheet = true }
+                            .invokeOnCompletion {
+
+                                if (channels.isEmpty()) {
+                                    scope.launch {
+                                        onShowSnackbar(
+                                            "All caught up, no more channels to add",
+                                            "Ok",
+                                            false
+                                        )
+                                    }
+                                } else {
+                                    showAddConnectionBottomSheet = true
+                                }
+                            }
 
                     null -> {}
                     SideNavMenuAction.ManageTags -> navController.navigateToTags()
@@ -661,7 +674,6 @@ fun Home(
                             },
                         )
 
-                        val channels by viewModel.channels.collectAsStateWithLifecycle()
                         val onChannelClick: (ChannelConfig) -> Unit = { channel ->
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                 showAddConnectionBottomSheet = false

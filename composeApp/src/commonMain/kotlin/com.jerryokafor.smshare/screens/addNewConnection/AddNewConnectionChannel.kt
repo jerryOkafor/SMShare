@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import com.jerryokafor.smshare.channel.ChannelConfig
 import com.jerryokafor.smshare.component.NewChannelConnectionButton
 import com.jerryokafor.smshare.theme.HalfVerticalSpacer
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +48,7 @@ fun AddNewConnectionChannel(
                     icon = channel.icon,
                     onClick = { onChannelClick(channel) },
                 )
-                HalfVerticalSpacer()
+                HalfVerticalSpacer()    
             }
 
             item {
@@ -54,4 +56,16 @@ fun AddNewConnectionChannel(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun AddNewConnectionChannelPreview() {
+    AddNewConnectionChannel(
+        channels = listOf(),
+        onChannelClick = {},
+        sheetState = rememberModalBottomSheetState { true },
+        onCloseBottomSheet = {},
+    )
 }
