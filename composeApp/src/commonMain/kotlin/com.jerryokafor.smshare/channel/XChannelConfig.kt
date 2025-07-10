@@ -1,8 +1,10 @@
 package com.jerryokafor.smshare.channel
 
 import com.jerryokafor.smshare.core.config.SMShareConfig
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
+import com.jerryokafor.smshare.core.model.UserProfile
 import com.jerryokafor.smshare.core.network.util.urlEncode
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -18,7 +20,7 @@ class XChannelConfig(
     override val name: String = "Twitter/X",
     override val description: String = "Profile",
     override val icon: DrawableResource = Res.drawable.ic_twitter,
-) : ChannelConfig {
+) : ChannelConfigResource {
     private val oAuth2BaseUrl: String = "https://x.com/i/oauth2/authorize"
 
     private val accessTokenBaseUrl: String = "https://api.x.com/2/oauth2/token"
@@ -59,4 +61,8 @@ class XChannelConfig(
                     "&redirect_uri=$redirectUrl",
             )
         }.body<TokenResponse>()
+
+    override suspend fun userProfile(accessToken: String): UserProfile {
+        return UserProfile("")
+    }
 }

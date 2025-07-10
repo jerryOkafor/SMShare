@@ -2,13 +2,15 @@ package com.jerryokafor.smshare.injection
 
 import com.jerryokafor.core.database.injection.commonDatabaseModules
 import com.jerryokafor.smshare.AppViewModel
-import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.channel.ChannelConfigResource
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.channel.FacebookChannelConfig
 import com.jerryokafor.smshare.channel.LinkedInChannelConfig
 import com.jerryokafor.smshare.channel.XChannelConfig
 import com.jerryokafor.smshare.core.common.injection.dispatcherModule
 import com.jerryokafor.smshare.core.domain.injection.domainModule
 import com.jerryokafor.smshare.core.network.injection.commonNetworkModule
+import com.jerryokafor.smshare.screens.accounts.AccountsViewModel
 import com.jerryokafor.smshare.screens.auth.createAccount.CreateAccountViewModel
 import com.jerryokafor.smshare.screens.auth.login.LoginViewModel
 import com.jerryokafor.smshare.screens.compose.ComposeMessageViewModel
@@ -30,7 +32,7 @@ fun initKoin(appDeclaration: KoinAppDeclaration = {}): KoinApplication = startKo
 }
 
 fun commonModule() = module {
-    single<List<ChannelConfig>> {
+    single<List<ChannelConfigResource>> {
         listOf(
             LinkedInChannelConfig(httpClient = get()),
             FacebookChannelConfig(httpClient = get()),
@@ -42,4 +44,5 @@ fun commonModule() = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::CreateAccountViewModel)
     viewModelOf(::ComposeMessageViewModel)
+    viewModelOf(::AccountsViewModel)
 }

@@ -1,4 +1,4 @@
-package com.jerryokafor.core.database
+package com.jerryokafor.core.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -31,7 +31,6 @@ data class AccountEntity(
     val name: String = "",
     val type: AccountTypeEntity = AccountTypeEntity.UNKNOWN,
     val description: String = "",
-    val avatarUrl: String = "",
     val accessToken: String = "",
     val expiresInt: Int = 0,
     val scope: String = "",
@@ -43,8 +42,8 @@ fun AccountEntity.toDomainModel() = Account(
     type = type.toDomainModel(),
     name = name,
     description = description,
-    avatarUrl = avatarUrl,
     postsCount = 0,
+    accessToken = accessToken,
 )
 
 fun AccountTypeEntity.toDomainModel() = when (this) {

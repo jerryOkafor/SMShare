@@ -1,8 +1,10 @@
 package com.jerryokafor.smshare.channel
 
 import com.jerryokafor.smshare.core.config.SMShareConfig
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
+import com.jerryokafor.smshare.core.model.UserProfile
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -15,7 +17,7 @@ class FacebookChannelConfig(
     override val name: String = "Facebook",
     override val description: String = "Page or Group",
     override val icon: DrawableResource = Res.drawable.ic_facebook,
-) : ChannelConfig {
+) : ChannelConfigResource {
     override val accountType: AccountType
         get() = AccountType.FACEBOOK
 
@@ -46,4 +48,8 @@ class FacebookChannelConfig(
                 "&client_secret=$clientSecret" +
                 "&code=$code",
         ).body<TokenResponse>()
+
+    override suspend fun userProfile(accessToken: String): UserProfile {
+        return UserProfile("")
+    }
 }

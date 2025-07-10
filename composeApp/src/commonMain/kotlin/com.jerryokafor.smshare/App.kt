@@ -66,6 +66,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -81,7 +82,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.jerryokafor.smshare.channel.ChannelConfig
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import com.jerryokafor.smshare.screens.accounts.installAccountsScreen
+import com.jerryokafor.smshare.screens.accounts.navigateToManageAccounts
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.channel.ExternalUriHandler
 import com.jerryokafor.smshare.component.ChannelWithName
 import com.jerryokafor.smshare.component.iconIndicatorForAccountType
@@ -98,8 +104,8 @@ import com.jerryokafor.smshare.screens.compose.composeMessageScreen
 import com.jerryokafor.smshare.screens.compose.navigateToCompose
 import com.jerryokafor.smshare.screens.drafts.Drafts
 import com.jerryokafor.smshare.screens.drafts.draftsScreen
-import com.jerryokafor.smshare.screens.navigation.SideNav
 import com.jerryokafor.smshare.screens.navigation.SideNavMenuAction
+import com.jerryokafor.smshare.screens.navigation.drawerContent
 import com.jerryokafor.smshare.screens.posts.Posts
 import com.jerryokafor.smshare.screens.posts.installPosts
 import com.jerryokafor.smshare.screens.posts.navigateToPosts
@@ -113,7 +119,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import screens.addNewConnection.AddNewConnectionChannel
+import com.jerryokafor.smshare.screens.addNewConnection.AddNewConnectionChannel
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.avatar6
 import smshare.composeapp.generated.resources.ic_twitter
@@ -161,11 +167,11 @@ class AppState(
 
     val currentTopLevelDestination: String?
         @Composable
-        get() = when (currentDestination?.route) {
-            "posts" -> "Posts"
-            "drafts" -> "Drafts"
-            "analytics" -> "Analytics"
-            "settings" -> "Settings"
+        get() = when {
+            currentDestination?.hasRoute<Posts>() == true -> "Posts"
+            currentDestination?.hasRoute<Drafts>() == true -> "Drafts"
+            currentDestination?.hasRoute<Analytics>() == true -> "Analytics"
+            currentDestination?.hasRoute<Settings>() == true -> "Settings"
             else -> null
         }
 }
@@ -245,8 +251,8 @@ fun Home(
 
     val appUiState by viewModel.userData.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnLine.collectAsStateWithLifecycle()
-    val accounts by viewModel.accounts.collectAsStateWithLifecycle()
-    val currentAccount by viewModel.currentAccount.collectAsStateWithLifecycle()
+    val accounts by viewModel.accountsAndProfile.collectAsStateWithLifecycle()
+    val currentAccountAndProfile by viewModel.currentAccount.collectAsStateWithLifecycle()
     val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 
@@ -316,16 +322,26 @@ fun Home(
                 val scrollState = rememberScrollState()
 
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
-                    if (currentAccount != null) {
+                    if (currentAccountAndProfile != null) {
                         Surface(onClick = { expanded = true }, shape = CircleShape) {
+                            val painter = rememberAsyncImagePainter(
+                                model = ImageRequest.Builder(LocalPlatformContext.current)
+                                    .data(currentAccountAndProfile?.profile?.picture)
+                                    .error { it.placeholder() }
+                                    .build(),
+                                placeholder = painterResource(Res.drawable.avatar6),
+                                contentScale = ContentScale.Crop,
+                            )
+                            val account = currentAccountAndProfile?.account
+                            val profile = currentAccountAndProfile?.profile
                             ChannelWithName(
                                 modifier = Modifier
                                     .wrapContentSize()
                                     .padding(vertical = 8.dp, horizontal = 16.dp),
-                                name = currentAccount!!.name,
+                                name = account?.name ?: "Unknown",
                                 avatarSize = 38.dp,
-                                avatar = painterResource(Res.drawable.avatar6),
-                                indicator = painterResource(Res.drawable.ic_twitter),
+                                avatar = painter,
+                                indicator = iconIndicatorForAccountType(account?.type),
                             )
                         }
 
@@ -334,9 +350,18 @@ fun Home(
                                 expanded = expanded,
                                 onDismissRequest = { expanded = false },
                             ) {
-                                accounts.forEach { account ->
+                                accounts.forEach { (account, profile) ->
                                     DropdownMenuItem(
                                         text = {
+                                            val painter = rememberAsyncImagePainter(
+                                                model = ImageRequest.Builder(LocalPlatformContext.current)
+                                                    .data(profile.picture)
+                                                    .error { it.placeholder() }
+                                                    .build(),
+                                                placeholder = painterResource(Res.drawable.avatar6),
+                                                contentScale = ContentScale.Crop,
+                                            )
+
                                             ChannelWithName(
                                                 modifier = Modifier.padding(
                                                     horizontal = 8.dp,
@@ -344,7 +369,7 @@ fun Home(
                                                 ),
                                                 name = account.name,
                                                 avatarSize = 38.dp,
-                                                avatar = painterResource(Res.drawable.avatar6),
+                                                avatar = painter,
                                                 indicator = iconIndicatorForAccountType(
                                                     account.type,
                                                 ),
@@ -428,7 +453,6 @@ fun Home(
                         scope
                             .launch { sheetState.show() }
                             .invokeOnCompletion {
-
                                 if (channels.isEmpty()) {
                                     scope.launch {
                                         onShowSnackbar(
@@ -442,27 +466,22 @@ fun Home(
                                 }
                             }
 
-                    null -> {}
+                    SideNavMenuAction.ManageAccounts -> navController.navigateToManageAccounts()
+
                     SideNavMenuAction.ManageTags -> navController.navigateToTags()
+                    
+                    null -> {}
                 }
             }
     }
 
     startDestination?.let { navHostStarDestination ->
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxSize().background(Color.Cyan)) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 ModalNavigationDrawer(
+                    modifier = Modifier.fillMaxSize().background(Color.Red),
                     drawerState = drawerState,
-                    drawerContent = {
-                        CompositionLocalProvider(
-                            LocalLayoutDirection provides LayoutDirection.Ltr,
-                        ) {
-                            SideNav(
-                                accounts = accounts,
-                                onClose = onCloseSidNav,
-                            )
-                        }
-                    },
+                    drawerContent = drawerContent(accounts, onCloseSidNav),
                     gesturesEnabled = appState.currentTopLevelDestination != null,
                 ) {
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -472,6 +491,42 @@ fun Home(
                             topBar = {
                                 if (isLoggedIn) {
                                     topAppBarState?.configure?.invoke()
+                                }
+                            },
+                            floatingActionButton = {
+                                AnimatedVisibility(appState.currentTopLevelDestination != null) {
+                                    ExtendedFloatingActionButton(onClick = {
+                                        if (accounts.isEmpty() && currentAccountAndProfile == null) {
+                                            scope.launch {
+                                                onShowSnackbar(
+                                                    "No account added, please add account to continue",
+                                                    "",
+                                                    false,
+                                                )
+                                            }
+                                        } else {
+                                            navController.navigateToCompose(
+                                                currentAccountAndProfile?.account?.id
+                                            )
+                                        }
+                                    }) {
+                                        Row(
+                                            modifier = Modifier,
+                                            verticalAlignment = Alignment.CenterVertically,
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Edit,
+                                                contentDescription = "",
+                                            )
+                                            Spacer(modifier = Modifier.width(16.dp))
+                                            Text("Compose")
+                                        }
+                                    }
+                                }
+                            },
+                            bottomBar = {
+                                if (!appState.shouldUseNavRail) {
+                                    bottomAppBarState?.configure?.invoke()
                                 }
                             },
                             content = { innerPadding ->
@@ -487,7 +542,8 @@ fun Home(
                                                 LayoutDirection.Ltr,
                                             ),
                                             bottom = innerPadding.calculateBottomPadding(),
-                                        ).consumeWindowInsets(innerPadding),
+                                        )
+                                        .consumeWindowInsets(innerPadding),
                                 ) {
                                     if (isLoading) {
                                         LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
@@ -629,6 +685,14 @@ fun Home(
                                                 onCancel = { navController.popBackStack() },
                                             )
 
+                                            //accounts
+                                            installAccountsScreen(
+                                                onSetupTopAppBar = { topAppBarState = it },
+                                                onSetUpBottomAppBar = { bottomAppBarState = it },
+                                                onBackClick = { navController.popBackStack() },
+                                                onShowSnackbar = onShowSnackbar,
+                                            )
+
                                             // tags
                                             tagsScreen(
                                                 onSetupTopAppBar = { topAppBarState = it },
@@ -637,41 +701,7 @@ fun Home(
                                         }
                                     }
                                 }
-                            },
-                            floatingActionButton = {
-                                AnimatedVisibility(appState.currentTopLevelDestination != null) {
-                                    ExtendedFloatingActionButton(onClick = {
-                                        if (accounts.isEmpty() && currentAccount == null) {
-                                            scope.launch {
-                                                onShowSnackbar(
-                                                    "No account added, please add account to continue",
-                                                    "",
-                                                    false,
-                                                )
-                                            }
-                                        } else {
-                                            navController.navigateToCompose(currentAccount?.id)
-                                        }
-                                    }) {
-                                        Row(
-                                            modifier = Modifier,
-                                            verticalAlignment = Alignment.CenterVertically,
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Edit,
-                                                contentDescription = "",
-                                            )
-                                            Spacer(modifier = Modifier.width(16.dp))
-                                            Text("Compose")
-                                        }
-                                    }
-                                }
-                            },
-                            bottomBar = {
-                                if (!appState.shouldUseNavRail) {
-                                    bottomAppBarState?.configure?.invoke()
-                                }
-                            },
+                            }
                         )
 
                         val onChannelClick: (ChannelConfig) -> Unit = { channel ->

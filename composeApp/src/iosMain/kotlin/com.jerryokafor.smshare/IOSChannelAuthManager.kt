@@ -1,7 +1,7 @@
 package com.jerryokafor.smshare
 
 import com.jerryokafor.smshare.channel.ChannelAuthManager
-import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.config.SMShareConfig
 import io.ktor.util.encodeBase64
 import kotlinx.cinterop.addressOf

@@ -1,6 +1,8 @@
 package com.jerryokafor.smshare.core.domain.injection
 
 import com.jerryokafor.smshare.core.common.injection.KoinNamed
+import com.jerryokafor.smshare.core.domain.AccountRepository
+import com.jerryokafor.smshare.core.domain.DefaultAccountRepository
 import com.jerryokafor.smshare.core.domain.DefaultUserRepository
 import com.jerryokafor.smshare.core.domain.UserRepository
 import dataStoreModule
@@ -14,6 +16,14 @@ fun domainModule() = module {
             apolloClient = get(),
             userDataStore = get(),
             ioDispatcher = get(named(KoinNamed.defaultDispatcher)),
+        )
+    }
+
+    single<AccountRepository> {
+        DefaultAccountRepository(
+            accountDao = get(),
+            apolloClient = get(),
+            ioDispatcher = get(named(KoinNamed.defaultDispatcher))
         )
     }
 }

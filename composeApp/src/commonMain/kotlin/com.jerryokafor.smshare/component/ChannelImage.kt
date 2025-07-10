@@ -39,11 +39,11 @@ import smshare.composeapp.generated.resources.ic_linkedin
 import smshare.composeapp.generated.resources.ic_twitter
 
 @Composable
-fun iconIndicatorForAccountType(type: AccountType) = when (type) {
+fun iconIndicatorForAccountType(type: AccountType?) = when (type) {
     AccountType.LINKEDIN -> painterResource(Res.drawable.ic_linkedin)
     AccountType.TWITTER_X -> painterResource(Res.drawable.ic_twitter)
     AccountType.FACEBOOK -> painterResource(Res.drawable.ic_facebook)
-    AccountType.UNKNOWN -> painterResource(Res.drawable.ic_facebook)
+    AccountType.UNKNOWN, null -> painterResource(Res.drawable.ic_facebook)
 }
 
 @Composable

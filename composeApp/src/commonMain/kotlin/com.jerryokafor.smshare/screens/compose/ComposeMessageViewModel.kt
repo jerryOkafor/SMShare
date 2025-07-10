@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.jerryokafor.core.database.AppDatabase
-import com.jerryokafor.core.database.toDomainModel
-import com.jerryokafor.smshare.core.model.Account
+import com.jerryokafor.core.database.entity.toDomainModel
+import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.core.model.AccountType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,47 +24,48 @@ class ComposeMessageViewModel :
 
     init {
         viewModelScope.launch {
-            database.getAccountDao().getAll().map { it.toDomainModel() }.let { accounts ->
-                _uiState.update { it.copy(targetAccounts = accounts) }
+            database.getAccountDao().getAccountAndUserProfiles().map { it.toDomainModel() }
+                .let { accounts ->
+                    _uiState.update { it.copy(targetAccountAndProfiles = accounts) }
             }
         }
     }
 
     fun addNewTargetChannel(type: AccountType) {
-        val newList = _uiState.value.targetAccounts.toMutableList().map {
-            if (it.type == type) {
-                it.copy(isSelected = true)
+        val newList = _uiState.value.targetAccountAndProfiles.toMutableList().map {
+            if (it.account.type == type) {
+                it.copy(account = it.account.copy(type = type))
             } else {
                 it
             }
         }
-        _uiState.update { it.copy(targetAccounts = newList) }
+        _uiState.update { it.copy(targetAccountAndProfiles = newList) }
     }
 
     fun removeTargetChannel(type: AccountType) {
-        val newList = _uiState.value.targetAccounts.toMutableList().map {
-            if (it.type == type) {
-                it.copy(isSelected = false)
+        val newList = _uiState.value.targetAccountAndProfiles.toMutableList().map {
+            if (it.account.type == type) {
+                it.copy(account = it.account.copy(isSelected = false))
             } else {
                 it
             }
         }
-        _uiState.update { it.copy(targetAccounts = newList) }
+        _uiState.update { it.copy(targetAccountAndProfiles = newList) }
     }
 
     fun bindDefaultAccountId(accountId: Long?) {
         Logger.d("Account Id: $accountId")
-        val newList = _uiState.value.targetAccounts.toMutableList().map {
-            if (it.id == accountId) {
-                it.copy(isSelected = true)
+        val newList = _uiState.value.targetAccountAndProfiles.toMutableList().map {
+            if (it.account.id == accountId) {
+                it.copy(account = it.account.copy(isSelected = true))
             } else {
                 it
             }
         }
-        _uiState.update { it.copy(targetAccounts = newList) }
+        _uiState.update { it.copy(targetAccountAndProfiles = newList) }
     }
 }
 
 data class ComposeMessageUiState(
-    val targetAccounts: List<Account> = emptyList(),
+    val targetAccountAndProfiles: List<AccountAndProfile> = emptyList(),
 )

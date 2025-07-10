@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1c49834c238be4b3c93b921ecfd87cbb",
+    "identityHash": "d21332b120ccfcd10426b81a2546adb0",
     "entities": [
       {
         "tableName": "accounts",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT NOT NULL, `avatarUrl` TEXT NOT NULL, `accessToken` TEXT NOT NULL, `expiresInt` INTEGER NOT NULL, `scope` TEXT NOT NULL, `created` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT NOT NULL, `accessToken` TEXT NOT NULL, `expiresInt` INTEGER NOT NULL, `scope` TEXT NOT NULL, `created` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -29,12 +29,6 @@
           {
             "fieldPath": "description",
             "columnName": "description",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "avatarUrl",
-            "columnName": "avatarUrl",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -69,11 +63,69 @@
             "id"
           ]
         }
+      },
+      {
+        "tableName": "userProfiles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `subjectId` TEXT, `name` TEXT, `givenName` TEXT, `familyName` TEXT, `picture` TEXT, `email` TEXT, `userProfile_country` TEXT, `userProfile_language` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectId",
+            "columnName": "subjectId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "givenName",
+            "columnName": "givenName",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "familyName",
+            "columnName": "familyName",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "picture",
+            "columnName": "picture",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "locale.country",
+            "columnName": "userProfile_country",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "locale.language",
+            "columnName": "userProfile_language",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1c49834c238be4b3c93b921ecfd87cbb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd21332b120ccfcd10426b81a2546adb0')"
     ]
   }
 }

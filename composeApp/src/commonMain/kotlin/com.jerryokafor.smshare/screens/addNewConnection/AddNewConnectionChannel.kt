@@ -1,4 +1,4 @@
-package screens.addNewConnection
+package com.jerryokafor.smshare.screens.addNewConnection
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -14,7 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.channel.ChannelConfigResource
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.component.NewChannelConnectionButton
 import com.jerryokafor.smshare.theme.HalfVerticalSpacer
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddNewConnectionChannel(
-    channels: List<ChannelConfig>,
+    channels: List<ChannelConfigResource>,
     onChannelClick: (ChannelConfig) -> Unit,
     sheetState: SheetState,
     onCloseBottomSheet: () -> Unit,

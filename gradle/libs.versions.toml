@@ -54,6 +54,7 @@ ktorSeverTestJVM = "3.0.0-beta-2"
 skie = "0.6.2"
 commonsCodec = "1.16.1"
 logback = "1.5.13"
+coil3 = "3.2.0"
 kotlinx-serialization-json = "1.8.0"
 dateTime = "0.6.1"
 coroutines = "1.10.1"
@@ -236,6 +237,10 @@ co-touchlab-kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 # other
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil3" }
+coil-network-ktor2 = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil3" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil3" }
 
 # testing
 junit = { group = "junit", name = "junit", version.ref = "junit" }

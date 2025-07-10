@@ -1,15 +1,16 @@
 package com.jerryokafor.smshare.channel
 
 import com.jerryokafor.smshare.core.config.SMShareConfig
+import com.jerryokafor.smshare.core.domain.mapping.toUserProfile
 import com.jerryokafor.smshare.core.model.AccountType
+import com.jerryokafor.smshare.core.model.UserProfile
+import com.jerryokafor.smshare.core.network.response.LinkedInUserInfoResponse
 import com.jerryokafor.smshare.core.network.response.TokenResponse
 import com.jerryokafor.smshare.core.network.util.urlEncode
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.header
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_linkedin
@@ -19,12 +20,12 @@ class LinkedInChannelConfig(
     override val name: String = "LinkedIn",
     override val description: String = "Profile or Page",
     override val icon: DrawableResource = Res.drawable.ic_linkedin,
-) : ChannelConfig {
+) : ChannelConfigResource {
     private val oAuth2BaseUrl: String = "https://www.linkedin.com/oauth/v2/authorization"
 
     private val accessTokenBaseUrl: String = "https://www.linkedin.com/oauth/v2/accessToken"
 
-    private val scope: List<String> = listOf("profile", "email", "w_member_social")
+    private val scope: List<String> = listOf("openid", "profile", "email", "w_member_social")
 
     private val clientId: String = SMShareConfig.linkedInClientId
 
@@ -63,5 +64,15 @@ class LinkedInChannelConfig(
         val textResponse = response.bodyAsText()
         println("response: $response, \ntextResponse: $textResponse")
         return response.body<TokenResponse>()
+    }
+
+    override suspend fun userProfile(accessToken: String): UserProfile {
+        val response = httpClient.get("https://api.linkedin.com/v2/userinfo") {
+            header("Authorization", "Bearer $accessToken")
+        }.body<LinkedInUserInfoResponse>()
+
+        println("response: $response")
+
+        return response.toUserProfile()
     }
 }

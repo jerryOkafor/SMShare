@@ -2,6 +2,7 @@
 
 package com.jerryokafor.smshare.channel
 
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import kotlinx.html.HTML
 import kotlinx.html.body
 import kotlinx.html.div
@@ -14,10 +15,11 @@ import kotlinx.html.title
 import kotlinx.html.unsafe
 
 /**
- * Interface to manage [ChannelConfig]
+ * Interface to manage [com.jerryokafor.smshare.core.domain.ChannelConfig]
  * */
 interface ChannelAuthManager {
     var challenge: String
+    
     var channelConfig: ChannelConfig?
 
     fun getState(): String

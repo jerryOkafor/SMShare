@@ -84,6 +84,11 @@ kotlin {
 
             // Util
             implementation(libs.apache.commons.codec)
+            
+            //Coil
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.coil.network.ktor3)
+//            implementation(libs.coil.network.okhttp)
         }
 
         commonMain.dependencies {
@@ -103,6 +108,9 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
+            //Compose Coil
+            implementation(libs.coil.compose)
 
             implementation(
                 "org.jetbrains.compose.material3.adaptive:adaptive-navigation:1.0.0-alpha03",
@@ -159,6 +167,12 @@ kotlin {
             implementation(compose.uiTest)
             implementation(libs.kotlin.test)
         }
+        
+        iosMain.dependencies {
+            //Coil
+            implementation(libs.ktor.client.darwin)
+            implementation(libs.coil.network.ktor3)
+        }
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -170,6 +184,10 @@ kotlin {
             implementation(libs.ktor.server.html.builder)
 
             implementation("androidx.window:window-core-jvm:1.4.0")
+
+            //Coil
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.coil.network.ktor3)
         }
 
         desktopTest.dependencies {

@@ -30,7 +30,7 @@ import android.graphics.BitmapFactory
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.net.toUri
 import com.jerryokafor.smshare.channel.ChannelAuthManager
-import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.config.SMShareConfig
 import org.apache.commons.codec.binary.Base64
 import java.net.URLEncoder

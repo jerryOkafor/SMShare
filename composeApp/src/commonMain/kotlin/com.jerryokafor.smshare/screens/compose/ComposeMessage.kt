@@ -112,7 +112,8 @@ fun ComposeMessage(
     }
 
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
-    val currentNnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
+    val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
+    
     LaunchedEffect(true) {
         currentOnSetupTopAppBar(
             SMShareTopAppBarState {
@@ -123,11 +124,13 @@ fun ComposeMessage(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            items(uiState.targetAccounts.filter { it.isSelected }) { channel ->
+                            items(uiState.targetAccountAndProfiles.filter {
+                                it.account.isSelected
+                            }) { (account, _) ->
                                 ChannelImage(
                                     modifier = Modifier.size(40.dp),
                                     avatar = painterResource(Res.drawable.avatar6),
-                                    indicator = iconIndicatorForAccountType(channel.type),
+                                    indicator = iconIndicatorForAccountType(account.type),
                                     contentDescription = "",
                                 )
                             }
@@ -147,7 +150,7 @@ fun ComposeMessage(
             },
         )
 
-        currentNnSetUpBottomAppBar(
+        currentOnSetUpBottomAppBar(
             SMShareBottomAppBarState {
                 BottomAppBar(
                     modifier = Modifier.imePadding(),
@@ -253,22 +256,22 @@ fun ComposeMessage(
                     HorizontalDivider(thickness = 0.5.dp)
                     OneVerticalSpacer()
                 }
-                items(uiState.targetAccounts) { channel ->
+                items(uiState.targetAccountAndProfiles) { (account, profile) ->
                     ChannelItemMenu(
                         modifier = Modifier.padding(end = 16.dp),
-                        name = channel.name,
+                        name = account.name,
                         color = Color.Transparent,
-                        avatar = painterResource(Res.drawable.avatar6),
-                        indicator = iconIndicatorForAccountType(channel.type),
+                        avatar = profile.picture ?: "",
+                        indicator = iconIndicatorForAccountType(account.type),
                         onClick = {
-                            if (channel.isSelected) {
-                                viewModel.removeTargetChannel(channel.type)
+                            if (account.isSelected) {
+                                viewModel.removeTargetChannel(account.type)
                             } else {
-                                viewModel.addNewTargetChannel(channel.type)
+                                viewModel.addNewTargetChannel(account.type)
                             }
                         },
                     ) {
-                        AnimatedVisibility(channel.isSelected) {
+                        AnimatedVisibility(account.isSelected) {
                             Icon(
                                 tint = MaterialTheme.colorScheme.secondary,
                                 imageVector = Icons.Default.Check,
@@ -370,7 +373,8 @@ fun ComposeControlButton(
 
 const val composeMessageAccountArg = "accountId"
 const val composeMessageRoute = "compose"
-val composeMessageRoutePattern = "compose?$composeMessageAccountArg={$composeMessageAccountArg}"
+const val composeMessageRoutePattern =
+    "compose?$composeMessageAccountArg={$composeMessageAccountArg}"
 
 fun NavGraphBuilder.composeMessageScreen(
     onSetupTopAppBar: (SMShareTopAppBarState) -> Unit = {},

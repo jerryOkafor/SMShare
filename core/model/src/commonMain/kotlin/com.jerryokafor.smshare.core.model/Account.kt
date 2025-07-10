@@ -14,6 +14,13 @@ data class Account(
     val name: String = "",
     val description: String = "",
     val isSelected: Boolean = false,
-    val avatarUrl: String = "",
     val postsCount: Int = 0,
+
+    // Todo : Decide if we should keep this prop here
+    val accessToken: String = "",
+)
+
+data class AccountAndProfile(
+    val account: Account,
+    val profile: UserProfile
 )

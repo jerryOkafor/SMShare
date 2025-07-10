@@ -3,15 +3,16 @@ package com.jerryokafor.smshare
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.jerryokafor.core.database.AccountEntity
-import com.jerryokafor.core.database.AccountTypeEntity
 import com.jerryokafor.core.database.AppDatabase
-import com.jerryokafor.core.database.toDomainModel
+import com.jerryokafor.core.database.entity.toDomainModel
 import com.jerryokafor.core.datastore.model.UserData
 import com.jerryokafor.core.datastore.store.UserDataStore
 import com.jerryokafor.smshare.channel.ChannelAuthManager
-import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.channel.ChannelConfigResource
+import com.jerryokafor.smshare.core.domain.ChannelConfig
+import com.jerryokafor.smshare.core.domain.AccountRepository
 import com.jerryokafor.smshare.core.model.Account
+import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.core.network.util.NetworkMonitor
 import com.jerryokafor.smshare.navigation.Auth
 import com.jerryokafor.smshare.platform.Platform
@@ -34,8 +35,9 @@ open class AppViewModel :
     ViewModel(),
     KoinComponent {
     private val database: AppDatabase by inject()
+    private val accountRepository: AccountRepository by inject()
     private val userDataStore: UserDataStore by inject()
-    private val supportedChannels: List<ChannelConfig> by inject()
+    private val supportedChannels: List<ChannelConfigResource> by inject()
     private val networkMonitor: NetworkMonitor by inject()
     private val platForm: Platform by inject()
     private val channelConfigAuthManager: ChannelAuthManager by inject()
@@ -62,19 +64,22 @@ open class AppViewModel :
             initialValue = false,
         )
 
-    private val _currentAccount = MutableStateFlow<Account?>(null)
-    val currentAccount: StateFlow<Account?> = _currentAccount.asStateFlow()
+    private val _currentAccount = MutableStateFlow<AccountAndProfile?>(null)
+    val currentAccount: StateFlow<AccountAndProfile?> = _currentAccount.asStateFlow()
 
-    val accounts = database
+    val accountsAndProfile = database
         .getAccountDao()
-        .getAllAsFlow()
+        .getAccountAndUserProfilesAsFlow()
         .map {
-            it.mapIndexed { index, entity ->
-                entity.toDomainModel().copy(isSelected = index == 0)
+            it.mapIndexed { index, (entity, profile) ->
+                AccountAndProfile(
+                    account = entity.toDomainModel().copy(isSelected = index == 0),
+                    profile = profile.toDomainModel()
+                )
             }
-        }.onEach { acts ->
+        }.onEach { accountAndProfile ->
             if (currentAccount.isNull()) {
-                _currentAccount.update { acts.firstOrNull() }
+                _currentAccount.update { accountAndProfile.firstOrNull() }
             }
         }.stateIn(
             scope = viewModelScope,
@@ -82,10 +87,12 @@ open class AppViewModel :
             initialValue = emptyList(),
         )
 
-    val channels: StateFlow<List<ChannelConfig>> = accounts
-        .map { accountsList ->
+    val channels: StateFlow<List<ChannelConfigResource>> = accountsAndProfile
+        .map { accountsAndProfileList ->
             supportedChannels.filter { config ->
-                accountsList.none { account -> account.type == config.accountType }
+                accountsAndProfileList.none { accountsAndProfile ->
+                    accountsAndProfile.account.type == config.accountType
+                }
             }
         }.stateIn(
             scope = viewModelScope,
@@ -157,33 +164,22 @@ open class AppViewModel :
         println("Fetching Access token: Code : $code \nState: $state")
         viewModelScope.launch {
             try {
-                val channelConfig = channelConfigAuthManager.channelConfig
-                val tokenResponse = channelConfig?.exchangeCodeForAccessToken(
+                val channelConfig = channelConfigAuthManager.channelConfig!!
+                val tokenResponse = channelConfig.exchangeCodeForAccessToken(
                     code = code,
                     redirectUrl = channelConfigAuthManager.getRedirectUrl(),
                     challenge = channelConfigAuthManager.challenge,
                 )
-                print("Response: $tokenResponse")
+                val userProfile =
+                    channelConfig.userProfile(accessToken = tokenResponse.accessToken!!)
+                accountRepository.addAccount(
+                    channelConfig = channelConfig,
+                    tokenResponse = tokenResponse,
+                    userProfile = userProfile
+                ) 
+                
                 _isLoading.update { false }
 
-                val accountEntity = AccountEntity(
-                    type = AccountTypeEntity.fromDomainModel(channelConfig?.accountType),
-                    name = channelConfig?.name ?: "",
-                    description = channelConfig?.description ?: "",
-                    avatarUrl = "",
-                    accessToken = tokenResponse?.accessToken ?: "",
-                    expiresInt = tokenResponse?.expiresIn ?: 0,
-                    scope = tokenResponse?.scope ?: "",
-                    created = "",
-                )
-
-                // Todo: Update this part and also send a copy to the Backend
-                val accountDao = database.getAccountDao()
-                accountDao.insert(accountEntity)
-
-                if (_currentAccount.isNull()) {
-                    _currentAccount.update { accountEntity.toDomainModel() }
-                }
             } catch (e: Exception) {
                 println("Error: ${e.message}")
                 _isLoading.update { false }

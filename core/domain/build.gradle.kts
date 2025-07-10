@@ -18,6 +18,8 @@ kotlin {
 
             implementation(projects.core.datastore)
             implementation(projects.core.database)
+
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.koin.core)

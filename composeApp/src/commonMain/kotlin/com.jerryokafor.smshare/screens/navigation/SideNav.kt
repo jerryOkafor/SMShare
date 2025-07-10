@@ -24,55 +24,45 @@
 
 package com.jerryokafor.smshare.screens.navigation
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Tag
-import androidx.compose.material3.Badge
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key.Companion.R
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.compose.rememberConstraintsSizeResolver
+import coil3.request.ImageRequest
 import com.jerryokafor.smshare.component.ChannelWithName
 import com.jerryokafor.smshare.component.iconIndicatorForAccountType
 import com.jerryokafor.smshare.core.model.Account
+import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.theme.FillingSpacer
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import smshare.composeapp.generated.resources.Res
-import smshare.composeapp.generated.resources.avatar6
-import smshare.composeapp.generated.resources.main_app_name
-import smshare.composeapp.generated.resources.title_accounts
-import smshare.composeapp.generated.resources.title_add_account
-import smshare.composeapp.generated.resources.title_logout
-import smshare.composeapp.generated.resources.title_manage_tags
-import smshare.composeapp.generated.resources.title_more
+import smshare.composeapp.generated.resources.*
 import kotlin.math.min
 
 sealed interface SideNavMenuAction {
@@ -81,6 +71,8 @@ sealed interface SideNavMenuAction {
     data object AddNewConnection : SideNavMenuAction
 
     data object ManageTags : SideNavMenuAction
+
+    data object ManageAccounts : SideNavMenuAction
 }
 
 fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
@@ -111,133 +103,158 @@ fun spacedByWithFooter(space: Dp) = object : Arrangement.Vertical {
     }
 }
 
+fun drawerContent(
+    accounts: List<AccountAndProfile>,
+    onCloseSidNav: (SideNavMenuAction?) -> Unit
+): @Composable () -> Unit = {
+    CompositionLocalProvider(
+        LocalLayoutDirection provides LayoutDirection.Ltr,
+    ) {
+        SideNav(
+            accounts = accounts,
+            onClose = onCloseSidNav,
+        )
+    }
+}
+
 @Composable
 fun SideNav(
-    accounts: List<Account>,
+    accounts: List<AccountAndProfile>,
     onClose: (SideNavMenuAction?) -> Unit,
 ) {
-    ModalDrawerSheet(
-        modifier = Modifier.width(280.dp),
-        drawerContainerColor = MaterialTheme.colorScheme.background,
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxHeight(),
-            verticalArrangement = spacedByWithFooter(0.dp),
+    Box(Modifier.fillMaxSize().clickable(true) {
+        onClose(null)
+    }) {
+        ModalDrawerSheet(
+            modifier = Modifier.width(280.dp).align(Alignment.CenterEnd),
+            drawerContainerColor = MaterialTheme.colorScheme.background,
         ) {
-            item {
-                Text(
-                    text = stringResource(Res.string.main_app_name),
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 16.dp,
-                        bottom = 8.dp,
-                    ),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                MenuGroup {
-                    SideNavMenu(
-                        title = "Content",
-                        subTitle = "Save your ideas",
-                    ) {
-                        onClose(null)
-                    }
-                    HorizontalDivider(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        thickness = 0.5.dp,
+            LazyColumn(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = spacedByWithFooter(0.dp),
+            ) {
+                item {
+                    Text(
+                        text = stringResource(Res.string.main_app_name),
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            bottom = 8.dp,
+                        ),
+                        style = MaterialTheme.typography.titleLarge,
                     )
-                    SideNavMenu(
-                        title = "Calendar",
-                        subTitle = "See your schedule wide",
-                    ) {
-                        onClose(null)
-                    }
                 }
-            }
 
-            item {
-                Text(
-                    text = stringResource(Res.string.title_accounts),
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 16.dp,
-                        bottom = 8.dp,
-                    ),
-                )
-                MenuGroup {
-                    accounts.forEachIndexed { index, account ->
-                        ChannelItemMenu(
-                            name = account.name,
-                            avatar = painterResource(Res.drawable.avatar6),
-                            postsCount = account.postsCount,
-                            indicator = iconIndicatorForAccountType(account.type),
-                            onClick = { onClose(null) },
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MenuGroup {
+                        SideNavMenu(
+                            title = "Content",
+                            subTitle = "Save your ideas",
+                        ) {
+                            onClose(null)
+                        }
+                        HorizontalDivider(
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            thickness = 0.5.dp,
                         )
-
-                        // Add divider except for the last item
-                        if (index < accounts.size - 1) {
-                            HorizontalDivider(
-                                modifier = Modifier
-                                    .height(0.5.dp)
-                                    .padding(start = 80.dp, end = 8.dp),
-                            )
+                        SideNavMenu(
+                            title = "Calendar",
+                            subTitle = "See your schedule wide",
+                        ) {
+                            onClose(null)
                         }
                     }
+                }
 
-                    if (accounts.isEmpty()) {
-                        Row(
-                            modifier = Modifier
-                                .padding(
-                                    vertical = 8.dp,
-                                    horizontal = 16.dp,
-                                ).fillParentMaxWidth(),
-                            horizontalArrangement = Arrangement.Center,
-                        ) { Text("No Account", color = MaterialTheme.colorScheme.error) }
+                item {
+                    Text(
+                        text = stringResource(Res.string.title_accounts),
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            bottom = 8.dp,
+                        ),
+                    )
+
+
+                    MenuGroup {
+                        accounts.forEachIndexed { index, (account, profile) ->
+                            ChannelItemMenu(
+                                name = account.name,
+                                avatar = profile.picture ?: "",
+                                postsCount = account.postsCount,
+                                indicator = iconIndicatorForAccountType(account.type),
+                                onClick = { onClose(null) },
+                            )
+
+                            // Add divider except for the last item
+                            if (index < accounts.size - 1) {
+                                HorizontalDivider(
+                                    modifier = Modifier
+                                        .height(0.5.dp)
+                                        .padding(start = 80.dp, end = 8.dp),
+                                )
+                            }
+                        }
+
+                        if (accounts.isEmpty()) {
+                            Row(
+                                modifier = Modifier
+                                    .padding(
+                                        vertical = 8.dp,
+                                        horizontal = 16.dp,
+                                    ).fillParentMaxWidth(),
+                                horizontalArrangement = Arrangement.Center,
+                            ) { Text("No Account", color = MaterialTheme.colorScheme.error) }
+                        }
                     }
                 }
-            }
 
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                MenuGroup {
-                    MoreMenuItem(
-                        title = stringResource(Res.string.title_add_account),
-                        icon = Icons.Default.Add,
-                        onClick = { onClose(SideNavMenuAction.AddNewConnection) },
-                    )
-                    HorizontalDivider(thickness = 0.5.dp)
-                    MoreMenuItem(
-                        title = stringResource(Res.string.title_manage_tags),
-                        icon = Icons.Default.Tag,
-                        onClick = { onClose(SideNavMenuAction.ManageTags) },
-                    )
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    MenuGroup {
+                        MoreMenuItem(
+                            title = stringResource(Res.string.title_add_account),
+                            icon = Icons.Default.Add,
+                            onClick = { onClose(SideNavMenuAction.AddNewConnection) },
+                        )
+                        HorizontalDivider(thickness = 0.5.dp)
+                        MoreMenuItem(
+                            title = stringResource(Res.string.title_manage_accounts),
+                            icon = Icons.Default.Tag,
+                            onClick = { onClose(SideNavMenuAction.ManageAccounts) },
+                        )
+                        MoreMenuItem(
+                            title = stringResource(Res.string.title_manage_tags),
+                            icon = Icons.Default.Tag,
+                            onClick = { onClose(SideNavMenuAction.ManageTags) },
+                        )
+                    }
                 }
-            }
 
-            item {
-                Text(
-                    text = stringResource(Res.string.title_more),
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 16.dp,
-                        bottom = 8.dp,
-                    ),
-                )
-                MenuGroup(modifier = Modifier) {
-                    MoreMenuItem(
-                        title = stringResource(Res.string.title_logout),
-                        color = Color.Red,
-                        icon = Icons.AutoMirrored.Filled.Logout,
-                        onClick = { onClose(SideNavMenuAction.Logout) },
+                item {
+                    Text(
+                        text = stringResource(Res.string.title_more),
+                        modifier = Modifier.padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 16.dp,
+                            bottom = 8.dp,
+                        ),
                     )
+                    MenuGroup(modifier = Modifier) {
+                        MoreMenuItem(
+                            title = stringResource(Res.string.title_logout),
+                            color = Color.Red,
+                            icon = Icons.AutoMirrored.Filled.Logout,
+                            onClick = { onClose(SideNavMenuAction.Logout) },
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(50.dp))
                 }
-                Spacer(modifier = Modifier.height(50.dp))
             }
         }
     }
@@ -295,14 +312,14 @@ fun ChannelItemMenu(
     modifier: Modifier = Modifier,
     name: String,
     postsCount: Int = 0,
-    avatar: Painter,
+    avatar: String,
     indicator: Painter,
     avatarSize: Dp = 40.dp,
     textStyle: TextStyle = MaterialTheme.typography.titleMedium,
     color: Color = MaterialTheme.colorScheme.surface,
     contentDescription: String? = null,
     onClick: () -> Unit = {},
-    trailingContent: @Composable () -> Unit = {
+    trailingContent: @Composable (() -> Unit) = {
         if (postsCount > 1) {
             Badge(
                 modifier = Modifier,
@@ -316,6 +333,16 @@ fun ChannelItemMenu(
         }
     },
 ) {
+
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalPlatformContext.current)
+            .data(avatar)
+            .error { it.placeholder() }
+            .build(),
+        placeholder = painterResource(Res.drawable.avatar6),
+        contentScale = ContentScale.Crop,
+    )
+    
     Surface(onClick = onClick, color = color) {
         Row(
             modifier = modifier
@@ -327,7 +354,7 @@ fun ChannelItemMenu(
             ChannelWithName(
                 modifier = Modifier.weight(4f),
                 name = name,
-                avatar = avatar,
+                avatar = painter,
                 indicator = indicator,
                 avatarSize = avatarSize,
                 textStyle = textStyle,

@@ -24,6 +24,8 @@
 
 package com.jerryokafor.core.database
 
+import com.jerryokafor.core.database.dao.AccountDao
+import com.jerryokafor.core.database.entity.AccountEntity
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
@@ -42,6 +44,6 @@ class AccountDaoTest : DatabaseTest() {
             created = "Ladawn",
         )
 
-        accountDao.insert(accountEntity)
+        accountDao.addAccount(accountEntity)
     }
 }

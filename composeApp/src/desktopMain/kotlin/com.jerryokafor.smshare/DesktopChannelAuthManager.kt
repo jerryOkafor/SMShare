@@ -25,7 +25,7 @@
 package com.jerryokafor.smshare
 
 import com.jerryokafor.smshare.channel.ChannelAuthManager
-import com.jerryokafor.smshare.channel.ChannelConfig
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.channel.ExternalUriHandler
 import com.jerryokafor.smshare.channel.oAuth2ResponseBuilder
 import io.ktor.http.HttpStatusCode
