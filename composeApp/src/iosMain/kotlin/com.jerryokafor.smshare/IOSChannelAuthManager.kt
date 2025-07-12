@@ -22,7 +22,7 @@ fun base64UrlEncode(bytes: ByteArray): String {
 }
 
 class IOSChannelAuthManager : ChannelAuthManager {
-    override lateinit var challenge: String
+    override lateinit var codeVerifier: String
     override var channelConfig: ChannelConfig? = null
 
     @Suppress("MagicNumber")
@@ -39,7 +39,7 @@ class IOSChannelAuthManager : ChannelAuthManager {
         val oauth2Url = channelConfig.createOAuthUrl(
             redirectUrl = getRedirectUrl(),
             state = getState(),
-            challenge = getChallenge(),
+            challenge = getCodeChallenge(),
         )
 
         println("oauth2Url: $oauth2Url ")
@@ -55,13 +55,13 @@ class IOSChannelAuthManager : ChannelAuthManager {
         }
     }
 
-    override suspend fun getChallenge(): String = if (::challenge.isInitialized) {
-        this.challenge
+    override suspend fun getCodeChallenge(): String = if (::codeVerifier.isInitialized) {
+        this.codeVerifier
     } else {
         val verifier = createVerifier()
         val sha256Digest = sha256(verifier.encodeToByteArray())
         val challenge = base64UrlEncode(sha256Digest)
-        this.challenge = challenge
+        this.codeVerifier = challenge
 
         challenge
     }

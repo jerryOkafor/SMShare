@@ -40,7 +40,7 @@ import java.security.SecureRandom
 class AndroidChannelAuthManager(
     private val context: Context,
 ) : ChannelAuthManager {
-    override lateinit var challenge: String
+    override lateinit var codeVerifier: String
     override var channelConfig: ChannelConfig? = null
 
     @Suppress("MagicNumber")
@@ -58,10 +58,10 @@ class AndroidChannelAuthManager(
         this.channelConfig = channelConfig
 
         val redirectUrl = getRedirectUrl()
-        val challenge = getChallenge()
+        val challenge = getCodeChallenge()
 
         val encodedRedirectUrl = URLEncoder.encode(redirectUrl, "utf-8")
-        val encodedChallenge = URLEncoder.encode(challenge, "utf-8")
+        val encodedChallenge = challenge
 
         val oauth2Url = channelConfig.createOAuthUrl(
             redirectUrl = encodedRedirectUrl,
@@ -84,17 +84,16 @@ class AndroidChannelAuthManager(
         intent.launchUrl(context, oauth2Url.toUri())
     }
 
-    override suspend fun getChallenge(): String = if (::challenge.isInitialized) {
-        this.challenge
-    } else {
-        val bytes: ByteArray = createVerifier().toByteArray(Charsets.US_ASCII)
+    override suspend fun getCodeChallenge(): String {
+        if (::codeVerifier.isInitialized.not()) {
+            this.codeVerifier = createVerifier()
+        }
+
+        val bytes: ByteArray = this.codeVerifier.toByteArray(Charsets.US_ASCII)
         val md = MessageDigest.getInstance("SHA-256")
         md.update(bytes, 0, bytes.size)
         val digest = md.digest()
-        val challenge = Base64.encodeBase64URLSafeString(digest)
-
-        this.challenge = challenge
-        challenge
+        return Base64.encodeBase64URLSafeString(digest)
     }
 
     override suspend fun getRedirectUrl(): String = SMShareConfig.redirectUrl

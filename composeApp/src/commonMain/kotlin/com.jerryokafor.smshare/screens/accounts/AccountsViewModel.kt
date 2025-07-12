@@ -33,7 +33,7 @@ class AccountsViewModel :
     private val accountRepository: AccountRepository by inject()
     private val supportedChannels: List<ChannelConfig> by inject()
 
-    val accounts = database.getAccountDao().getAllAsFlow()
+    val accountAndProfiles = database.getAccountDao().getAccountAndUserProfilesAsFlow()
         .map { entities -> entities.map { it.toDomainModel() } }
         .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 

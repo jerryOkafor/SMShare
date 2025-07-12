@@ -55,7 +55,7 @@ class DesktopChannelAuthManager(
     val appViewModel: AppViewModel,
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO),
 ) : ChannelAuthManager {
-    override lateinit var challenge: String
+    override lateinit var codeVerifier: String
     private var coroutineScope: CoroutineScope = coroutineScope
         private set
     private val callbackJob = MutableStateFlow<Job?>(null)
@@ -78,7 +78,7 @@ class DesktopChannelAuthManager(
                 val url = channelConfig.createOAuthUrl(
                     redirectUrl = getRedirectUrl(),
                     state = getState(),
-                    challenge = getChallenge(),
+                    challenge = getCodeChallenge(),
                 )
                 println("Desktop channel auth url: $url")
 
@@ -117,8 +117,8 @@ class DesktopChannelAuthManager(
         }
     }
 
-    override suspend fun getChallenge(): String = if (::challenge.isInitialized) {
-        this.challenge
+    override suspend fun getCodeChallenge(): String = if (::codeVerifier.isInitialized) {
+        this.codeVerifier
     } else {
         val bytes: ByteArray = createVerifier().toByteArray(Charsets.US_ASCII)
         val md = MessageDigest.getInstance("SHA-256")
@@ -126,7 +126,7 @@ class DesktopChannelAuthManager(
         val digest = md.digest()
         val challenge = Base64.encodeBase64URLSafeString(digest)
 
-        this.challenge = challenge
+        this.codeVerifier = challenge
         challenge
     }
 

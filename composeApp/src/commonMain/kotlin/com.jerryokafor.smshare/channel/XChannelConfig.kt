@@ -2,19 +2,25 @@ package com.jerryokafor.smshare.channel
 
 import com.jerryokafor.smshare.core.config.SMShareConfig
 import com.jerryokafor.smshare.core.domain.ChannelConfig
+import com.jerryokafor.smshare.core.domain.mapping.toUserProfile
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.network.response.TokenResponse
 import com.jerryokafor.smshare.core.model.UserProfile
+import com.jerryokafor.smshare.core.network.response.LinkedInUserInfoResponse
+import com.jerryokafor.smshare.core.network.response.XUserLookUpMeResponse
 import com.jerryokafor.smshare.core.network.util.urlEncode
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.http.appendPathSegments
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_twitter
 
+// https://docs.x.com/resources/fundamentals/authentication/oauth-2-0/overview
 class XChannelConfig(
     private val httpClient: HttpClient,
     override val name: String = "Twitter/X",
@@ -28,7 +34,7 @@ class XChannelConfig(
     @Suppress("UnusedPrivateProperty")
     private val authTokenRevokeBasedUrl: String = "https://api.x.com/2/oauth2/revoke"
     private val scope: List<String> =
-        listOf("tweet.read", "users.read", "follows.read", "follows.write")
+        listOf("users.email", "users.read", "tweet.read", "follows.read", "follows.write")
     private val clientId: String = SMShareConfig.xClientId
 
     override val accountType: AccountType
@@ -63,6 +69,26 @@ class XChannelConfig(
         }.body<TokenResponse>()
 
     override suspend fun userProfile(accessToken: String): UserProfile {
-        return UserProfile("")
+        val response = httpClient.get("https://api.x.com/2/users/me") {
+            header("Authorization", "Bearer $accessToken")
+            url {
+                parameters.append(
+                    "user.fields",
+                    listOf(
+                        "id",
+                        "name",
+                        "description",
+                        "username",
+                        "profile_image_url",
+                        "confirmed_email"
+                    ).joinToString(",")
+                )
+                trailingQuery = true
+            }
+        }.body<XUserLookUpMeResponse>()
+
+        println("response: $response")
+
+        return response.toUserProfile()
     }
 }

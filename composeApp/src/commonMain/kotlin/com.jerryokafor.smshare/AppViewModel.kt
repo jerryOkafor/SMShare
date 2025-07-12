@@ -11,7 +11,6 @@ import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfigResource
 import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.domain.AccountRepository
-import com.jerryokafor.smshare.core.model.Account
 import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.core.network.util.NetworkMonitor
 import com.jerryokafor.smshare.navigation.Auth
@@ -168,7 +167,7 @@ open class AppViewModel :
                 val tokenResponse = channelConfig.exchangeCodeForAccessToken(
                     code = code,
                     redirectUrl = channelConfigAuthManager.getRedirectUrl(),
-                    challenge = channelConfigAuthManager.challenge,
+                    challenge = channelConfigAuthManager.codeVerifier,
                 )
                 val userProfile =
                     channelConfig.userProfile(accessToken = tokenResponse.accessToken!!)

@@ -16,9 +16,19 @@ import kotlinx.html.unsafe
 
 /**
  * Interface to manage [com.jerryokafor.smshare.core.domain.ChannelConfig]
+ *
+ * Flow: Your application generates the Code Verifier, creates the Code Challenge,
+ * and sends the Code Challenge to the authorization server during the authorization
+ * request. The authorization server stores the Code Challenge. When your application
+ * exchanges the authorization code for an access token, it sends the original Code
+ * Verifier. The authorization server verifies that the Code Verifier matches the
+ * stored Code Challenge.
  * */
 interface ChannelAuthManager {
-    var challenge: String
+    /**
+     * A randomly generated, cryptographically strong string by your application.
+     * */
+    var codeVerifier: String
     
     var channelConfig: ChannelConfig?
 
@@ -26,7 +36,10 @@ interface ChannelAuthManager {
 
     suspend fun authenticateUser(channelConfig: ChannelConfig)
 
-    suspend fun getChallenge(): String
+    /**
+     * A transformed (usually hashed) version of the Code Verifier.
+     * */
+    suspend fun getCodeChallenge(): String
 
     suspend fun getRedirectUrl(): String
 }

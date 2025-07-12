@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -65,11 +64,15 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.ChannelWithName
@@ -91,7 +94,7 @@ fun AccountsScreen(
     onShowSnackbar: suspend (String, String?, Boolean) -> Boolean = { _, _, _ -> false },
 ) {
     val viewModel: AccountsViewModel = koinViewModel()
-    val accounts by viewModel.accounts.collectAsState(initial = emptyList())
+    val accountAndProfiles by viewModel.accountAndProfiles.collectAsState(initial = emptyList())
 
     val currentOnSetupTopAppBar by rememberUpdatedState(onSetupTopAppBar)
     val currentOnSetUpBottomAppBar by rememberUpdatedState(onSetUpBottomAppBar)
@@ -131,7 +134,7 @@ fun AccountsScreen(
     }
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(accounts) { account ->
+        items(accountAndProfiles) { (account,profile) ->
             Surface(
                 color = Color.Transparent,
                 modifier = Modifier.fillMaxWidth(), onClick = { }) {
@@ -142,10 +145,19 @@ fun AccountsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
+                        val painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(LocalPlatformContext.current)
+                                .data(profile.picture)
+                                .error { it.placeholder() }
+                                .build(),
+                            placeholder = painterResource(Res.drawable.avatar6),
+                            contentScale = ContentScale.Crop,
+                        )
+                        
                         ChannelWithName(
                             name = account.name,
                             avatarSize = 38.dp,
-                            avatar = painterResource(Res.drawable.avatar6),
+                            avatar = painter,
                             indicator = iconIndicatorForAccountType(account.type)
                         )
 
