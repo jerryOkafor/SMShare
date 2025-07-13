@@ -5,11 +5,11 @@ import com.jerryokafor.smshare.core.network.response.XUserLookUpMeResponse
 
 
 fun XUserLookUpMeResponse.toUserProfile() = UserProfile(
-    subjectId = this.data?.id,
+    subjectId = this.data?.id!!,
     name = this.data?.name,
     givenName = this.data?.name,
     familyName = this.data?.name,
-    picture = this.data?.profileImageUrl,
+    picture = this.data?.profileImageUrl?.replace("_normal", ""),
     email = this.data?.email,
     locale = null
 )

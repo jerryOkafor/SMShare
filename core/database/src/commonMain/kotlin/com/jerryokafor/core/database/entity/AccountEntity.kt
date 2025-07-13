@@ -28,6 +28,11 @@ enum class AccountTypeEntity {
 data class AccountEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+
+    /**
+     * Primary ID for the given account from the provider
+     * */
+    val subjectId: String,
     val name: String = "",
     val type: AccountTypeEntity = AccountTypeEntity.UNKNOWN,
     val description: String = "",

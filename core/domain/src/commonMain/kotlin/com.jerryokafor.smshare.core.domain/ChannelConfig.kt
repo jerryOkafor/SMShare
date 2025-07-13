@@ -34,7 +34,10 @@ interface ChannelConfig {
     suspend fun userProfile(accessToken: String): UserProfile
 }
 
-fun ChannelConfig?.toAccountEntity(tokenResponse: TokenResponse?): AccountEntity = AccountEntity(
+fun ChannelConfig?.toAccountEntity(
+    tokenResponse: TokenResponse?,
+    subjectId: String
+): AccountEntity = AccountEntity(
     type = AccountTypeEntity.fromDomainModel(this?.accountType),
     name = this?.name ?: "",
     description = this?.description ?: "",
@@ -44,4 +47,5 @@ fun ChannelConfig?.toAccountEntity(tokenResponse: TokenResponse?): AccountEntity
     created = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).format(
         LocalDateTime.Formats.ISO
     ),
+    subjectId = subjectId
 )

@@ -6,7 +6,7 @@ import com.jerryokafor.smshare.core.network.response.LinkedInUserInfoLocal
 import com.jerryokafor.smshare.core.network.response.LinkedInUserInfoResponse
 
 fun LinkedInUserInfoResponse.toUserProfile(): UserProfile = UserProfile(
-    subjectId = subjectId,
+    subjectId = subjectId!!,
     name = name,
     givenName = givenName,
     familyName = familyName,

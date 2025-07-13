@@ -5,12 +5,12 @@ import androidx.room.Relation
 import com.jerryokafor.smshare.core.model.AccountAndProfile
 
 data class AccountAndUserProfileEntity(
-    @Embedded 
+    @Embedded
     val account: AccountEntity,
-    
+
     @Relation(
-        parentColumn = "id",
-        entityColumn = "id"
+        parentColumn = "subjectId",
+        entityColumn = "subjectId"
     )
     val profile: UserProfileEntity
 )

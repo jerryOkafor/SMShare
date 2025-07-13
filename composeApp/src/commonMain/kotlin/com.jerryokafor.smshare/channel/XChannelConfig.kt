@@ -87,8 +87,6 @@ class XChannelConfig(
             }
         }.body<XUserLookUpMeResponse>()
 
-        println("response: $response")
-
         return response.toUserProfile()
     }
 }

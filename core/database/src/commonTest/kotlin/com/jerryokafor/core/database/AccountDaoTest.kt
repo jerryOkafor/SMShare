@@ -37,11 +37,11 @@ class AccountDaoTest : DatabaseTest() {
         val accountEntity = AccountEntity(
             name = "Lisset",
             description = "Jaymi",
-            avatarUrl = "Coral",
             accessToken = "Letha",
             expiresInt = 6947,
             scope = "Chanse",
             created = "Ladawn",
+            subjectId = "XXXJKNDLNLNLKN"
         )
 
         accountDao.addAccount(accountEntity)

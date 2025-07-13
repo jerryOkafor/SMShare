@@ -2,6 +2,7 @@ package com.jerryokafor.core.database.entity
 
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.jerryokafor.smshare.core.model.ProfileLocal
 import com.jerryokafor.smshare.core.model.UserProfile
@@ -24,11 +25,11 @@ fun UserProfileLocalEntity.toDomainModel(): ProfileLocal = ProfileLocal(
     language = language
 )
 
-@Entity("userProfiles")
+@Entity(tableName = "userProfiles", indices = [Index(value = ["subjectId"], unique = true)])
 data class UserProfileEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val subjectId: String? = null,
+    val subjectId: String,
     val name: String? = null,
     val givenName: String? = null,
     val familyName: String? = null,
@@ -40,13 +41,13 @@ data class UserProfileEntity(
 ) {
     companion object {
         fun fromDomainEntity(userProfile: UserProfile?): UserProfileEntity = UserProfileEntity(
-            subjectId = userProfile?.subjectId,
-            name = userProfile?.name,
-            givenName = userProfile?.givenName,
-            familyName = userProfile?.familyName,
-            picture = userProfile?.picture,
-            email = userProfile?.email,
-            locale = UserProfileLocalEntity.fromDomainModel(userProfile?.locale)
+            subjectId = userProfile?.subjectId!!,
+            name = userProfile.name,
+            givenName = userProfile.givenName,
+            familyName = userProfile.familyName,
+            picture = userProfile.picture,
+            email = userProfile.email,
+            locale = UserProfileLocalEntity.fromDomainModel(userProfile.locale)
         )
     }
 }

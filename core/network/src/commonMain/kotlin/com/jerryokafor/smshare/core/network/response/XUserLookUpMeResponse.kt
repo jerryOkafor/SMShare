@@ -13,9 +13,9 @@ data class XUserLookUpMeResponse(
 data class XUserLookUpMe(
     val id: String? = null,
     val username: String? = null,
-    
-    @SerialName("confirmed_email")
     val name: String? = null,
+
+    @SerialName("confirmed_email")
     val email: String? = null,
 
     @SerialName("profile_image_url")

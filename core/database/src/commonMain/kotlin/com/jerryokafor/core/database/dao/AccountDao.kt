@@ -2,6 +2,7 @@ package com.jerryokafor.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.jerryokafor.core.database.entity.AccountAndUserProfileEntity
@@ -11,10 +12,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(account: AccountEntity)
 
-    @Insert
+    //Todo: Move to its own DAO
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addUserProfile(userProfileEntity: UserProfileEntity)
 
     @Query("SELECT count(*) FROM accounts")

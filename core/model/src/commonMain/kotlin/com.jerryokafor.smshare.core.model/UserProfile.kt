@@ -7,7 +7,7 @@ data class ProfileLocal(
 )
 
 data class UserProfile(
-    val subjectId: String? = null,
+    val subjectId: String,
     val name: String? = null,
     val givenName: String? = null,
     val familyName: String? = null,

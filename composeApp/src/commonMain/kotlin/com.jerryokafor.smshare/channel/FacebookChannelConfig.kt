@@ -80,7 +80,6 @@ class FacebookChannelConfig(
             }
         }.body<FacebookUserProfileResponse>()
 
-        println("Profile: $profileResponse")
         val userId = profileResponse.id
         val profilePictureResponse = httpClient.get(urlString = graphQLBaseUrl) {
             url {
@@ -92,10 +91,8 @@ class FacebookChannelConfig(
             }
         }.body<FacebookUserProfilePictureResponse>()
 
-        println("Profile Picture: $profilePictureResponse")
-
         return UserProfile(
-            subjectId = profileResponse.id,
+            subjectId = profileResponse.id!!,
             name = profileResponse.name,
             givenName = profileResponse.firstName,
             familyName = profileResponse.lastName,

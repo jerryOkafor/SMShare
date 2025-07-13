@@ -33,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -224,7 +225,7 @@ fun SideNav(
                         HorizontalDivider(thickness = 0.5.dp)
                         MoreMenuItem(
                             title = stringResource(Res.string.title_manage_accounts),
-                            icon = Icons.Default.Tag,
+                            icon = Icons.Default.ManageAccounts,
                             onClick = { onClose(SideNavMenuAction.ManageAccounts) },
                         )
                         MoreMenuItem(

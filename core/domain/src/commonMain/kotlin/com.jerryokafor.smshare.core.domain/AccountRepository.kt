@@ -12,7 +12,7 @@ interface AccountRepository {
     suspend fun addAccount(
         channelConfig: ChannelConfig,
         tokenResponse: TokenResponse,
-        userProfile: UserProfile?
+        userProfile: UserProfile
     )
 
     suspend fun removeAccount(account: Account)
@@ -28,9 +28,9 @@ class DefaultAccountRepository(
     override suspend fun addAccount(
         channelConfig: ChannelConfig,
         tokenResponse: TokenResponse,
-        userProfile: UserProfile?
+        userProfile: UserProfile
     ) {
-        val accountEntity = channelConfig.toAccountEntity(tokenResponse)
+        val accountEntity = channelConfig.toAccountEntity(tokenResponse, userProfile.subjectId)
         val userProfileEntity = UserProfileEntity.fromDomainEntity(userProfile)
         accountDao.insertAccountAndUserProfileEntity(accountEntity, userProfileEntity)
     }

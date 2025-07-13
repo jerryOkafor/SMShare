@@ -333,7 +333,6 @@ fun Home(
                                 contentScale = ContentScale.Crop,
                             )
                             val account = currentAccountAndProfile?.account
-                            val profile = currentAccountAndProfile?.profile
                             ChannelWithName(
                                 modifier = Modifier
                                     .wrapContentSize()
