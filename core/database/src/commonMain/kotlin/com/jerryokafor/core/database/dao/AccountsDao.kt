@@ -11,7 +11,7 @@ import com.jerryokafor.core.database.entity.UserProfileEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface AccountDao {
+interface AccountsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAccount(account: AccountEntity)
 

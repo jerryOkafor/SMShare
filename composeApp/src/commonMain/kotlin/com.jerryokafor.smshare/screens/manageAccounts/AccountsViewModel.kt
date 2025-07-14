@@ -1,4 +1,4 @@
-package com.jerryokafor.smshare.screens.accounts
+package com.jerryokafor.smshare.screens.manageAccounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

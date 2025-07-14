@@ -24,14 +24,18 @@
 
 package com.jerryokafor.core.database.injection
 
-import com.jerryokafor.core.database.dao.AccountDao
+import com.jerryokafor.core.database.dao.AccountsDao
 import com.jerryokafor.core.database.AppDatabase
+import com.jerryokafor.core.database.dao.TagsDao
 import com.jerryokafor.core.database.getRoomDatabase
 import org.koin.dsl.module
 
 fun commonDatabaseModules() = module {
     single<AppDatabase> { getRoomDatabase(get()) }
-    single<AccountDao> { provideAccountDao(get()) }
+    single<AccountsDao> { provideAccountDao(get()) }
+    single<TagsDao> { provideTagsDao(get()) }
 }
 
-fun provideAccountDao(database: AppDatabase): AccountDao = database.getAccountDao()
+fun provideAccountDao(database: AppDatabase): AccountsDao = database.getAccountDao()
+
+fun provideTagsDao(database: AppDatabase): TagsDao = database.tagsDao()

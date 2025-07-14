@@ -24,13 +24,13 @@
 
 package com.jerryokafor.core.database
 
-import com.jerryokafor.core.database.dao.AccountDao
+import com.jerryokafor.core.database.dao.AccountsDao
 import com.jerryokafor.core.database.entity.AccountEntity
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
 class AccountDaoTest : DatabaseTest() {
-    private val accountDao: AccountDao = database.getAccountDao()
+    private val accountDao: AccountsDao = database.getAccountDao()
 
     @Test
     fun justPass() = runTest {

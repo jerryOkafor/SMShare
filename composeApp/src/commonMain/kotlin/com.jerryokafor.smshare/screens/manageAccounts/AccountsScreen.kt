@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.jerryokafor.smshare.screens.accounts
+package com.jerryokafor.smshare.screens.manageAccounts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

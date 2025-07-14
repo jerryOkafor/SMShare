@@ -85,8 +85,8 @@ import androidx.navigation.navOptions
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import com.jerryokafor.smshare.screens.accounts.installAccountsScreen
-import com.jerryokafor.smshare.screens.accounts.navigateToManageAccounts
+import com.jerryokafor.smshare.screens.manageAccounts.installAccountsScreen
+import com.jerryokafor.smshare.screens.manageAccounts.navigateToManageAccounts
 import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.channel.ExternalUriHandler
 import com.jerryokafor.smshare.component.ChannelWithName
@@ -111,8 +111,8 @@ import com.jerryokafor.smshare.screens.posts.installPosts
 import com.jerryokafor.smshare.screens.posts.navigateToPosts
 import com.jerryokafor.smshare.screens.settings.Settings
 import com.jerryokafor.smshare.screens.settings.settingsScreen
-import com.jerryokafor.smshare.tags.navigateToTags
-import com.jerryokafor.smshare.tags.tagsScreen
+import com.jerryokafor.smshare.screens.manageTags.navigateToTags
+import com.jerryokafor.smshare.screens.manageTags.tagsScreen
 import io.ktor.http.Url
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
@@ -122,7 +122,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import com.jerryokafor.smshare.screens.addNewConnection.AddNewConnectionChannel
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.avatar6
-import smshare.composeapp.generated.resources.ic_twitter
 import smshare.composeapp.generated.resources.main_nav_title_analytics
 import smshare.composeapp.generated.resources.main_nav_title_drafts
 import smshare.composeapp.generated.resources.main_nav_title_posts
@@ -696,6 +695,7 @@ fun Home(
                                             tagsScreen(
                                                 onSetupTopAppBar = { topAppBarState = it },
                                                 onSetUpBottomAppBar = { bottomAppBarState = it },
+                                                onBackClick = { navController.popBackStack() },
                                             )
                                         }
                                     }
