@@ -25,9 +25,19 @@
 package com.jerryokafor.smshare.screens.navigation
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
@@ -35,16 +45,21 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material.icons.filled.Tag
-import androidx.compose.material3.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.TextStyle
@@ -54,20 +69,28 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
-import coil3.compose.rememberConstraintsSizeResolver
 import coil3.request.ImageRequest
 import com.jerryokafor.smshare.component.ChannelWithName
 import com.jerryokafor.smshare.component.iconIndicatorForAccountType
-import com.jerryokafor.smshare.core.model.Account
 import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.theme.FillingSpacer
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import smshare.composeapp.generated.resources.*
+import smshare.composeapp.generated.resources.Res
+import smshare.composeapp.generated.resources.avatar6
+import smshare.composeapp.generated.resources.main_app_name
+import smshare.composeapp.generated.resources.title_accounts
+import smshare.composeapp.generated.resources.title_add_account
+import smshare.composeapp.generated.resources.title_logout
+import smshare.composeapp.generated.resources.title_manage_accounts
+import smshare.composeapp.generated.resources.title_manage_tags
+import smshare.composeapp.generated.resources.title_more
 import kotlin.math.min
 
 sealed interface SideNavMenuAction {
     data object Logout : SideNavMenuAction
+
+    data class SelectAccount(val accountAndProfile: AccountAndProfile) : SideNavMenuAction
 
     data object AddNewConnection : SideNavMenuAction
 
@@ -182,13 +205,18 @@ fun SideNav(
 
 
                     MenuGroup {
-                        accounts.forEachIndexed { index, (account, profile) ->
+                        accounts.forEachIndexed { index, accountAndProfile ->
+                            val (account, profile) = accountAndProfile
                             ChannelItemMenu(
                                 name = account.name,
                                 avatar = profile.picture ?: "",
                                 postsCount = account.postsCount,
                                 indicator = iconIndicatorForAccountType(account.type),
-                                onClick = { onClose(null) },
+                                onClick = {
+                                    onClose(
+                                        SideNavMenuAction.SelectAccount(accountAndProfile)
+                                    )
+                                },
                             )
 
                             // Add divider except for the last item

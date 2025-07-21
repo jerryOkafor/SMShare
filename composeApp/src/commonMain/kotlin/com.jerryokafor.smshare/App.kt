@@ -440,6 +440,11 @@ fun Home(
             .launch { drawerState.close() }
             .invokeOnCompletion {
                 when (sideNavMenAction) {
+                    is SideNavMenuAction.SelectAccount -> {
+                        val accountAndProfile = sideNavMenAction.accountAndProfile
+                        viewModel.updateCurrentChannel(accountAndProfile)
+
+                    }
                     SideNavMenuAction.Logout -> {
                         viewModel.logout()
                         val popUpToRout =
