@@ -34,6 +34,9 @@ interface AccountsDao {
     @Query("DELETE FROM accounts WHERE id=:id")
     suspend fun deleteById(id: Long)
 
+    @Query("UPDATE accounts SET isSelected = (id = :id)")
+    suspend fun selectById(id: Long)
+
 
     @Transaction
     suspend fun insertAccountAndUserProfileEntity(

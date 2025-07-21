@@ -9,8 +9,8 @@ import com.jerryokafor.core.datastore.model.UserData
 import com.jerryokafor.core.datastore.store.UserDataStore
 import com.jerryokafor.smshare.channel.ChannelAuthManager
 import com.jerryokafor.smshare.channel.ChannelConfigResource
-import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.domain.AccountRepository
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.core.network.util.NetworkMonitor
 import com.jerryokafor.smshare.navigation.Auth
@@ -63,24 +63,22 @@ open class AppViewModel :
             initialValue = false,
         )
 
-    private val _currentAccount = MutableStateFlow<AccountAndProfile?>(null)
-    val currentAccount: StateFlow<AccountAndProfile?> = _currentAccount.asStateFlow()
+//    private val _currentAccount = MutableStateFlow<AccountAndProfile?>(null)
+//    val currentAccount: StateFlow<AccountAndProfile?> = _currentAccount.asStateFlow()
 
     val accountsAndProfile = database
         .getAccountDao()
         .getAccountAndUserProfilesAsFlow()
-        .map {
-            it.mapIndexed { index, (entity, profile) ->
-                AccountAndProfile(
-                    account = entity.toDomainModel().copy(isSelected = index == 0),
-                    profile = profile.toDomainModel()
-                )
-            }
-        }.onEach { accountAndProfile ->
-            if (currentAccount.isNull()) {
-                _currentAccount.update { accountAndProfile.firstOrNull() }
-            }
-        }.stateIn(
+        .map { accountAndProfile -> accountAndProfile.map { it.toDomainModel() } }
+//        .onEach { accountsAndProfile ->
+//            println("Example: $accountsAndProfile" )
+//            if (currentAccount.isNull()) {
+//                val selectedAccount = accountsAndProfile.firstOrNull { it.account.isSelected }
+//                    ?: accountsAndProfile.firstOrNull()
+//                _currentAccount.update { selectedAccount }
+//            }
+//        }
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
             initialValue = emptyList(),
@@ -187,7 +185,9 @@ open class AppViewModel :
     }
 
     fun updateCurrentChannel(accountAndProfile: AccountAndProfile) {
-        _currentAccount.update { accountAndProfile }
+        viewModelScope.launch {
+            accountRepository.selectAccount(accountAndProfile.account)
+        }
     }
 }
 

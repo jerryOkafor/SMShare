@@ -42,7 +42,8 @@ val MIGRATIONS = arrayOf(INIT_DB)
 
 fun getRoomDatabase(builder: RoomDatabase.Builder<AppDatabase>): AppDatabase = builder
     .addMigrations(*MIGRATIONS)
-    .fallbackToDestructiveMigrationOnDowngrade(true).addCallback(object : RoomDatabase.Callback() {
+    .fallbackToDestructiveMigrationOnDowngrade(true)
+    .addCallback(object : RoomDatabase.Callback() {
         override fun onCreate(connection: SQLiteConnection) {
             super.onCreate(connection)
             ioThread {

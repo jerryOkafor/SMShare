@@ -251,7 +251,9 @@ fun Home(
     val appUiState by viewModel.userData.collectAsStateWithLifecycle()
     val isOnline by viewModel.isOnLine.collectAsStateWithLifecycle()
     val accounts by viewModel.accountsAndProfile.collectAsStateWithLifecycle()
-    val currentAccountAndProfile by viewModel.currentAccount.collectAsStateWithLifecycle()
+    val currentAccountAndProfile = remember(accounts) {
+        accounts.firstOrNull { it.account.isSelected } ?: accounts.firstOrNull()
+    }
     val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
 

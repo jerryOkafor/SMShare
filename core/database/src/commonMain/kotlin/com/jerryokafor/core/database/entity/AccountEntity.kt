@@ -40,6 +40,7 @@ data class AccountEntity(
     val expiresInt: Int = 0,
     val scope: String = "",
     val created: String,
+    val isSelected: Boolean = false
 )
 
 fun AccountEntity.toDomainModel() = Account(
@@ -49,6 +50,7 @@ fun AccountEntity.toDomainModel() = Account(
     description = description,
     postsCount = 0,
     accessToken = accessToken,
+    isSelected = isSelected
 )
 
 fun AccountTypeEntity.toDomainModel() = when (this) {

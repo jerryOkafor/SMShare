@@ -17,6 +17,8 @@ interface AccountRepository {
 
     suspend fun removeAccount(account: Account)
 
+    suspend fun selectAccount(account: Account)
+
 }
 
 class DefaultAccountRepository(
@@ -37,6 +39,10 @@ class DefaultAccountRepository(
 
     override suspend fun removeAccount(account: Account) {
         accountDao.deleteById(account.id)
+    }
+
+    override suspend fun selectAccount(account: Account) {
+        accountDao.selectById(account.id)
     }
 
 }
