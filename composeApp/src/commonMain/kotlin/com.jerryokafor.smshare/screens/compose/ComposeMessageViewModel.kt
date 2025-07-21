@@ -7,6 +7,8 @@ import com.jerryokafor.core.database.AppDatabase
 import com.jerryokafor.core.database.entity.toDomainModel
 import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.core.model.AccountType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -23,7 +25,7 @@ class ComposeMessageViewModel :
     val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             database.getAccountDao().getAccountAndUserProfiles().map { it.toDomainModel() }
                 .let { accounts ->
                     _uiState.update { it.copy(targetAccountAndProfiles = accounts) }

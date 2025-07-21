@@ -185,6 +185,10 @@ open class AppViewModel :
             }
         }
     }
+
+    fun updateCurrentChannel(accountAndProfile: AccountAndProfile) {
+        _currentAccount.update { accountAndProfile }
+    }
 }
 
 sealed interface AppUiState {

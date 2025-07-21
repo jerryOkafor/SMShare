@@ -85,15 +85,14 @@ import androidx.navigation.navOptions
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
-import com.jerryokafor.smshare.screens.manageAccounts.installAccountsScreen
-import com.jerryokafor.smshare.screens.manageAccounts.navigateToManageAccounts
-import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.channel.ExternalUriHandler
 import com.jerryokafor.smshare.component.ChannelWithName
 import com.jerryokafor.smshare.component.iconIndicatorForAccountType
+import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.navigation.Auth
 import com.jerryokafor.smshare.navigation.BottomNavItem
 import com.jerryokafor.smshare.platform.SupportedPlatformType
+import com.jerryokafor.smshare.screens.addNewConnection.AddNewConnectionChannel
 import com.jerryokafor.smshare.screens.analytics.Analytics
 import com.jerryokafor.smshare.screens.analytics.analyticsScreen
 import com.jerryokafor.smshare.screens.auth.AuthDestinations
@@ -104,6 +103,10 @@ import com.jerryokafor.smshare.screens.compose.composeMessageScreen
 import com.jerryokafor.smshare.screens.compose.navigateToCompose
 import com.jerryokafor.smshare.screens.drafts.Drafts
 import com.jerryokafor.smshare.screens.drafts.draftsScreen
+import com.jerryokafor.smshare.screens.manageAccounts.installAccountsScreen
+import com.jerryokafor.smshare.screens.manageAccounts.navigateToManageAccounts
+import com.jerryokafor.smshare.screens.manageTags.navigateToTags
+import com.jerryokafor.smshare.screens.manageTags.tagsScreen
 import com.jerryokafor.smshare.screens.navigation.SideNavMenuAction
 import com.jerryokafor.smshare.screens.navigation.drawerContent
 import com.jerryokafor.smshare.screens.posts.Posts
@@ -111,15 +114,12 @@ import com.jerryokafor.smshare.screens.posts.installPosts
 import com.jerryokafor.smshare.screens.posts.navigateToPosts
 import com.jerryokafor.smshare.screens.settings.Settings
 import com.jerryokafor.smshare.screens.settings.settingsScreen
-import com.jerryokafor.smshare.screens.manageTags.navigateToTags
-import com.jerryokafor.smshare.screens.manageTags.tagsScreen
 import io.ktor.http.Url
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import com.jerryokafor.smshare.screens.addNewConnection.AddNewConnectionChannel
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.avatar6
 import smshare.composeapp.generated.resources.main_nav_title_analytics
@@ -317,12 +317,15 @@ fun Home(
     val mainTopAppBar: @Composable (() -> Unit) = {
         CenterAlignedTopAppBar(
             title = {
-                var expanded by remember { mutableStateOf(false) }
+                var shouldShowHomeDropdownMenu by remember { mutableStateOf(false) }
                 val scrollState = rememberScrollState()
 
                 Box(modifier = Modifier.wrapContentSize(Alignment.TopStart)) {
                     if (currentAccountAndProfile != null) {
-                        Surface(onClick = { expanded = true }, shape = CircleShape) {
+                        Surface(
+                            onClick = { shouldShowHomeDropdownMenu = true },
+                            shape = CircleShape
+                        ) {
                             val painter = rememberAsyncImagePainter(
                                 model = ImageRequest.Builder(LocalPlatformContext.current)
                                     .data(currentAccountAndProfile?.profile?.picture)
@@ -345,10 +348,11 @@ fun Home(
 
                         if (accounts.size > 1) {
                             DropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
+                                expanded = shouldShowHomeDropdownMenu,
+                                onDismissRequest = { shouldShowHomeDropdownMenu = false },
                             ) {
-                                accounts.forEach { (account, profile) ->
+                                accounts.forEach { accountAndProfile ->
+                                    val (account, profile) = accountAndProfile
                                     DropdownMenuItem(
                                         text = {
                                             val painter = rememberAsyncImagePainter(
@@ -360,6 +364,8 @@ fun Home(
                                                 contentScale = ContentScale.Crop,
                                             )
 
+                                            val indicator =
+                                                iconIndicatorForAccountType(account.type)
                                             ChannelWithName(
                                                 modifier = Modifier.padding(
                                                     horizontal = 8.dp,
@@ -368,17 +374,18 @@ fun Home(
                                                 name = account.name,
                                                 avatarSize = 38.dp,
                                                 avatar = painter,
-                                                indicator = iconIndicatorForAccountType(
-                                                    account.type,
-                                                ),
+                                                indicator = indicator,
                                             )
                                         },
-                                        onClick = { expanded = false },
+                                        onClick = {
+                                            shouldShowHomeDropdownMenu = false
+                                            viewModel.updateCurrentChannel(accountAndProfile)
+                                        },
                                     )
                                 }
                             }
-                            LaunchedEffect(expanded) {
-                                if (expanded) {
+                            LaunchedEffect(shouldShowHomeDropdownMenu) {
+                                if (shouldShowHomeDropdownMenu) {
                                     // Scroll to show the bottom menu items.
                                     scrollState.scrollTo(scrollState.maxValue)
                                 }
