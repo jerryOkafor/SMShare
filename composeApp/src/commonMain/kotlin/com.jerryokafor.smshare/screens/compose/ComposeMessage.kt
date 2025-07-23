@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -57,6 +58,9 @@ import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import coil3.compose.LocalPlatformContext
+import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
 import com.jerryokafor.smshare.SMShareBottomAppBarState
 import com.jerryokafor.smshare.SMShareTopAppBarState
 import com.jerryokafor.smshare.component.ChannelImage
@@ -65,6 +69,7 @@ import com.jerryokafor.smshare.component.iconIndicatorForAccountType
 import com.jerryokafor.smshare.screens.navigation.ChannelItemMenu
 import com.jerryokafor.smshare.theme.FillingSpacer
 import com.jerryokafor.smshare.theme.OneVerticalSpacer
+import com.jerryokafor.smshare.theme.SMShareTheme
 import com.jerryokafor.smshare.theme.ThreeVerticalSpacer
 import com.jerryokafor.smshare.theme.TwoHorizontalSpacer
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
@@ -124,12 +129,21 @@ fun ComposeMessage(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
-                            items(uiState.targetAccountAndProfiles.filter {
-                                it.account.isSelected
-                            }) { (account, _) ->
+                            items(
+                                uiState.targetAccountAndProfiles
+                                    .filter { it.account.isSelectedForCompose }) { (account, profile) ->
+
+                                val painter = rememberAsyncImagePainter(
+                                    model = ImageRequest.Builder(LocalPlatformContext.current)
+                                        .data(profile.picture)
+                                        .error { it.placeholder() }
+                                        .build(),
+                                    placeholder = painterResource(Res.drawable.avatar6),
+                                    contentScale = ContentScale.Crop,
+                                )
                                 ChannelImage(
                                     modifier = Modifier.size(40.dp),
-                                    avatar = painterResource(Res.drawable.avatar6),
+                                    avatar = painter,
                                     indicator = iconIndicatorForAccountType(account.type),
                                     contentDescription = "",
                                 )
@@ -153,6 +167,7 @@ fun ComposeMessage(
         currentOnSetUpBottomAppBar(
             SMShareBottomAppBarState {
                 BottomAppBar(
+                    containerColor = SMShareTheme.color.surface,
                     modifier = Modifier.imePadding(),
                     actions = {
                         SMSShareTextButton(onClick = onCancel) {
@@ -161,7 +176,7 @@ fun ComposeMessage(
                     },
                     floatingActionButton = {
                         FloatingActionButton(
-                            onClick = { /* do something */ },
+                            onClick = { viewModel.postMassage(SMMessage(content = "This is a sample message")) },
                             containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                         ) {
@@ -174,7 +189,7 @@ fun ComposeMessage(
     }
 
     LaunchedEffect(defaultAccountId) {
-        viewModel.bindDefaultAccountId(defaultAccountId)
+//        viewModel.bindDefaultAccountId(defaultAccountId)
     }
 
     Column(
@@ -256,6 +271,7 @@ fun ComposeMessage(
                     HorizontalDivider(thickness = 0.5.dp)
                     OneVerticalSpacer()
                 }
+
                 items(uiState.targetAccountAndProfiles) { (account, profile) ->
                     ChannelItemMenu(
                         modifier = Modifier.padding(end = 16.dp),
@@ -264,14 +280,10 @@ fun ComposeMessage(
                         avatar = profile.picture ?: "",
                         indicator = iconIndicatorForAccountType(account.type),
                         onClick = {
-                            if (account.isSelected) {
-                                viewModel.removeTargetChannel(account.type)
-                            } else {
-                                viewModel.addNewTargetChannel(account.type)
-                            }
+                            viewModel.toggleTargetChannelSelection(account)
                         },
                     ) {
-                        AnimatedVisibility(account.isSelected) {
+                        AnimatedVisibility(account.isSelectedForCompose) {
                             Icon(
                                 tint = MaterialTheme.colorScheme.secondary,
                                 imageVector = Icons.Default.Check,
@@ -280,16 +292,14 @@ fun ComposeMessage(
                         }
                     }
                     HorizontalDivider(
-                        modifier = Modifier
-                            .padding(start = 80.dp, end = 8.dp),
+                        modifier = Modifier.padding(start = 80.dp, end = 8.dp),
                         thickness = 0.5.dp,
                     )
                 }
 
                 item {
                     HorizontalDivider(
-                        modifier = Modifier
-                            .padding(start = 80.dp, end = 8.dp),
+                        modifier = Modifier.padding(start = 80.dp, end = 8.dp),
                         thickness = 0.5.dp,
                     )
                     Surface(onClick = {
@@ -331,8 +341,7 @@ fun ComposeMessage(
                         }
                     }
                     HorizontalDivider(
-                        modifier = Modifier
-                            .padding(start = 80.dp, end = 8.dp),
+                        modifier = Modifier.padding(start = 80.dp, end = 8.dp),
                         thickness = 0.5.dp,
                     )
                 }

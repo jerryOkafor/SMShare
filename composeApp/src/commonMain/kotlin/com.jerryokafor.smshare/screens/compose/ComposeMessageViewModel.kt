@@ -1,73 +1,116 @@
 package com.jerryokafor.smshare.screens.compose
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
-import com.jerryokafor.core.database.AppDatabase
-import com.jerryokafor.core.database.entity.toDomainModel
+import com.jerryokafor.smshare.channel.LifecycleState
+import com.jerryokafor.smshare.channel.MemberNetworkVisibility
+import com.jerryokafor.smshare.channel.ShareCommentary
+import com.jerryokafor.smshare.channel.ShareContent
+import com.jerryokafor.smshare.channel.ShareMediaCategory
+import com.jerryokafor.smshare.channel.SharePost
+import com.jerryokafor.smshare.channel.UGCShareContent
+import com.jerryokafor.smshare.channel.Visibility
+import com.jerryokafor.smshare.core.domain.AccountRepository
+import com.jerryokafor.smshare.core.model.Account
 import com.jerryokafor.smshare.core.model.AccountAndProfile
-import com.jerryokafor.smshare.core.model.AccountType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.utils.EmptyContent.contentType
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ComposeMessageViewModel :
-    ViewModel(),
+class ComposeMessageViewModel(
+    savedStateHandle: SavedStateHandle
+) : ViewModel(),
     KoinComponent {
-    private val database: AppDatabase by inject()
+    private val accountRepository: AccountRepository by inject()
+    private val httpClient: HttpClient by inject()
 
-    private val _uiState = MutableStateFlow(ComposeMessageUiState())
-    val uiState = _uiState.asStateFlow()
+    private val accountId = savedStateHandle.get<Long>("accountId")
+    private val selectedAccountIds = MutableStateFlow(setOf(accountId))
 
-    init {
-        viewModelScope.launch(Dispatchers.IO) {
-            database.getAccountDao().getAccountAndUserProfiles().map { it.toDomainModel() }
-                .let { accounts ->
-                    _uiState.update { it.copy(targetAccountAndProfiles = accounts) }
-            }
+    val uiState = combine(
+        accountRepository.accountsAndProfiles(),
+        selectedAccountIds,
+    ) { accountsAndProfiles, accountIds ->
+        val updateAccountsAndProfiles = accountsAndProfiles.map { accountAndProfile ->
+            val account = accountAndProfile.account
+            val isSelected = accountIds.any { it == account.id }
+            accountAndProfile.copy(
+                account = account.copy(isSelectedForCompose = isSelected)
+            )
+        }
+        ComposeMessageUiState(targetAccountAndProfiles = updateAccountsAndProfiles)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5_000),
+        initialValue = ComposeMessageUiState(),
+    )
+
+    fun toggleTargetChannelSelection(account: Account) {
+        if (account.isSelectedForCompose)
+            selectedAccountIds.update { it.minusElement(account.id) }
+        else
+            selectedAccountIds.update { it.plusElement(account.id) }
+    }
+
+    fun postMassage(message: SMMessage) {
+        viewModelScope.launch {
+            val sharePost = SharePost(
+                author = "urn:li:person:8675309",
+                lifecycleState = LifecycleState.PUBLISHED,
+                specificContent = ShareContent(
+                    ugcShareContent = UGCShareContent(
+                        shareCommentary = ShareCommentary("This is a sample message for testing"),
+                        shareMediaCategory = ShareMediaCategory.NONE,
+                        media = emptyList()
+                    )
+                ),
+                visibility = Visibility(ugcMemberNetworkVisibility = MemberNetworkVisibility.PUBLIC)
+            )
+
+            val jsonString = Json.encodeToString(sharePost)
+
+            println("SharePost: $jsonString")
+
+            postUserGeneratedContent(accessToken = "", share = sharePost)
         }
     }
 
-    fun addNewTargetChannel(type: AccountType) {
-        val newList = _uiState.value.targetAccountAndProfiles.toMutableList().map {
-            if (it.account.type == type) {
-                it.copy(account = it.account.copy(type = type))
-            } else {
-                it
+    private suspend fun postUserGeneratedContent(accessToken: String, share: SharePost) {
+        val response = httpClient.post("https://api.linkedin.com/v2/ugcPosts") {
+            headers {
+                append(HttpHeaders.Accept, "application/json")
+                append(HttpHeaders.Authorization, "Bearer $accessToken")
+                append("X-Restli-Protocol-Version", "2.0.0")
             }
-        }
-        _uiState.update { it.copy(targetAccountAndProfiles = newList) }
-    }
+            contentType(ContentType.Application.Json)
+            setBody(share)
+        }.body<Any>()
 
-    fun removeTargetChannel(type: AccountType) {
-        val newList = _uiState.value.targetAccountAndProfiles.toMutableList().map {
-            if (it.account.type == type) {
-                it.copy(account = it.account.copy(isSelected = false))
-            } else {
-                it
-            }
-        }
-        _uiState.update { it.copy(targetAccountAndProfiles = newList) }
-    }
-
-    fun bindDefaultAccountId(accountId: Long?) {
-        Logger.d("Account Id: $accountId")
-        val newList = _uiState.value.targetAccountAndProfiles.toMutableList().map {
-            if (it.account.id == accountId) {
-                it.copy(account = it.account.copy(isSelected = true))
-            } else {
-                it
-            }
-        }
-        _uiState.update { it.copy(targetAccountAndProfiles = newList) }
+        println("response: $response")
     }
 }
+
+
+data class SMMessage(val content: String)
 
 data class ComposeMessageUiState(
     val targetAccountAndProfiles: List<AccountAndProfile> = emptyList(),
 )
+
+

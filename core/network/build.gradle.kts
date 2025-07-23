@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
 
 plugins {
     kotlin("native.cocoapods")
@@ -40,8 +39,8 @@ kotlin {
             implementation(libs.dev.whyoleg.cryptography.core)
 
             // Apollo GraphQL
-            api("com.apollographql.apollo:apollo-runtime:4.0.0")
-            api("com.apollographql.adapters:apollo-adapters-kotlinx-datetime:0.0.4")
+            api(libs.apollo.runtime)
+            api(libs.apollo.adapters.kotlinx.datetime)
         }
 
         nativeMain.dependencies {
@@ -71,7 +70,6 @@ kotlin {
             baseName = "CoreNetwork"
             isStatic = false
             transitiveExport = false
-            embedBitcode(BitcodeEmbeddingMode.BITCODE)
         }
 
 //        extraSpecAttributes["libraries"] = "'c++', 'sqlite3'"

@@ -5,7 +5,15 @@ import com.jerryokafor.core.database.entity.AccountTypeEntity
 import com.jerryokafor.smshare.core.model.AccountType
 import com.jerryokafor.smshare.core.model.UserProfile
 import com.jerryokafor.smshare.core.network.response.TokenResponse
-import kotlinx.datetime.*
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 /**
  * Interface for channel configuration, represents various social media platforms
@@ -34,6 +42,7 @@ interface ChannelConfig {
     suspend fun userProfile(accessToken: String): UserProfile
 }
 
+@OptIn(ExperimentalTime::class)
 fun ChannelConfig?.toAccountEntity(
     tokenResponse: TokenResponse?,
     subjectId: String
@@ -44,8 +53,13 @@ fun ChannelConfig?.toAccountEntity(
     accessToken = tokenResponse?.accessToken ?: "",
     expiresInt = tokenResponse?.expiresIn ?: 0,
     scope = tokenResponse?.scope ?: "",
-    created = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).format(
-        LocalDateTime.Formats.ISO
+    created = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        .format(
+            format = LocalDateTime.Format {
+                date(LocalDate.Formats.ISO)
+                char(' ')
+                time(LocalTime.Formats.ISO)
+            }
     ),
     subjectId = subjectId
 )

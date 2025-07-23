@@ -1,12 +1,10 @@
 package com.jerryokafor.smshare.channel
 
 import com.jerryokafor.smshare.core.config.SMShareConfig
-import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.domain.mapping.toUserProfile
 import com.jerryokafor.smshare.core.model.AccountType
-import com.jerryokafor.smshare.core.network.response.TokenResponse
 import com.jerryokafor.smshare.core.model.UserProfile
-import com.jerryokafor.smshare.core.network.response.LinkedInUserInfoResponse
+import com.jerryokafor.smshare.core.network.response.TokenResponse
 import com.jerryokafor.smshare.core.network.response.XUserLookUpMeResponse
 import com.jerryokafor.smshare.core.network.util.urlEncode
 import io.ktor.client.HttpClient
@@ -15,7 +13,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.http.appendPathSegments
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_twitter

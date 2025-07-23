@@ -79,7 +79,7 @@ val DarkColors =
         scrim = md_theme_dark_scrim,
     )
 
-object SMShareNkiri {
+object SMShareTheme {
     val spacing: SMShareSpacing
         @Composable
         get() = LocalSMShareSpacing.current
@@ -137,7 +137,7 @@ fun SMShareTheme(
     ) {
         MaterialTheme(
             colorScheme = colorScheme.first,
-            typography = SMShareNkiri.typography.toMaterialTypography(),
+            typography = SMShareTheme.typography.toMaterialTypography(),
             shapes = sMShareShape.toMaterialShapes(),
             content = content,
         )

@@ -3,12 +3,18 @@ package com.jerryokafor.smshare.core.domain
 import com.apollographql.apollo.ApolloClient
 import com.jerryokafor.core.database.dao.AccountsDao
 import com.jerryokafor.core.database.entity.UserProfileEntity
+import com.jerryokafor.core.database.entity.toDomainModel
 import com.jerryokafor.smshare.core.model.Account
+import com.jerryokafor.smshare.core.model.AccountAndProfile
 import com.jerryokafor.smshare.core.model.UserProfile
 import com.jerryokafor.smshare.core.network.response.TokenResponse
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 interface AccountRepository {
+
+    fun accountsAndProfiles(): Flow<List<AccountAndProfile>>
     suspend fun addAccount(
         channelConfig: ChannelConfig,
         tokenResponse: TokenResponse,
@@ -26,6 +32,10 @@ class DefaultAccountRepository(
     private val apolloClient: ApolloClient,
     private val ioDispatcher: CoroutineDispatcher,
 ) : AccountRepository {
+
+    override fun accountsAndProfiles(): Flow<List<AccountAndProfile>> =
+        accountDao.getAccountAndUserProfilesAsFlow()
+            .map { it.map { it.toDomainModel() } }
 
     override suspend fun addAccount(
         channelConfig: ChannelConfig,

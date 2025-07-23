@@ -35,67 +35,67 @@ data class SMShareSpacing(
 
 @Composable
 fun QuarterVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.quarter))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.quarter))
 }
 
 @Composable
 fun HalfVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.half))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.half))
 }
 
 @Composable
 fun OneVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.one))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.one))
 }
 
 @Composable
 fun OneAndHalfVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.oneAndHalf))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.oneAndHalf))
 }
 
 @Composable
 fun TwoVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.two))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.two))
 }
 
 @Composable
 fun TwoAndHalfVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.twoAndaHalf))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.twoAndaHalf))
 }
 
 @Composable
 fun ThreeVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.three))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.three))
 }
 
 @Composable
 fun FourVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.four))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.four))
 }
 
 @Composable
 fun FiveVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.five))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.five))
 }
 
 @Composable
 fun SixVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.six))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.six))
 }
 
 @Composable
 fun EightVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.eight))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.eight))
 }
 
 @Composable
 fun TenVerticaSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.ten))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.ten))
 }
 
 @Composable
 fun TwelveVerticalSpacer() {
-    Spacer(modifier = Modifier.height(SMShareNkiri.spacing.twelve))
+    Spacer(modifier = Modifier.height(SMShareTheme.spacing.twelve))
 }
 
 @Composable
@@ -106,37 +106,37 @@ fun ColumnScope.FillingSpacer() {
 // Horizontal Spacers
 @Composable
 fun QuarterHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(SMShareNkiri.spacing.quarter))
+    Spacer(modifier = Modifier.width(SMShareTheme.spacing.quarter))
 }
 
 @Composable
 fun HalfHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(SMShareNkiri.spacing.half))
+    Spacer(modifier = Modifier.width(SMShareTheme.spacing.half))
 }
 
 @Composable
 fun OneHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(SMShareNkiri.spacing.one))
+    Spacer(modifier = Modifier.width(SMShareTheme.spacing.one))
 }
 
 @Composable
 fun OneAndHalfHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(SMShareNkiri.spacing.oneAndHalf))
+    Spacer(modifier = Modifier.width(SMShareTheme.spacing.oneAndHalf))
 }
 
 @Composable
 fun TwoHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(SMShareNkiri.spacing.two))
+    Spacer(modifier = Modifier.width(SMShareTheme.spacing.two))
 }
 
 @Composable
 fun ThreeHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(SMShareNkiri.spacing.three))
+    Spacer(modifier = Modifier.width(SMShareTheme.spacing.three))
 }
 
 @Composable
 fun TwoAndHalfHorizontalSpacer() {
-    Spacer(modifier = Modifier.width(SMShareNkiri.spacing.twoAndaHalf))
+    Spacer(modifier = Modifier.width(SMShareTheme.spacing.twoAndaHalf))
 }
 
 @Composable

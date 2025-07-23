@@ -7,11 +7,8 @@ import com.jerryokafor.smshare.core.rpc.RPCUserService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlin.coroutines.CoroutineContext
 
-class RemoteRPCRPCUserService(
-    override val coroutineContext: CoroutineContext,
-) : RPCUserService {
+class RemoteRPCRPCUserService() : RPCUserService {
     override suspend fun hello(message: String): String = "Hello, welcome $message"
 
     @Suppress("MagicNumber")

@@ -1,20 +1,15 @@
 package com.jerryokafor.smshare.channel
 
 import com.jerryokafor.smshare.core.config.SMShareConfig
-import com.jerryokafor.smshare.core.domain.ChannelConfig
 import com.jerryokafor.smshare.core.model.AccountType
-import com.jerryokafor.smshare.core.network.response.TokenResponse
 import com.jerryokafor.smshare.core.model.UserProfile
 import com.jerryokafor.smshare.core.network.response.FacebookUserProfilePictureResponse
 import com.jerryokafor.smshare.core.network.response.FacebookUserProfileResponse
-import com.jerryokafor.smshare.core.network.response.LinkedInUserInfoResponse
+import com.jerryokafor.smshare.core.network.response.TokenResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.http.appendEncodedPathSegments
 import io.ktor.http.appendPathSegments
-import io.ktor.http.parseQueryString
 import org.jetbrains.compose.resources.DrawableResource
 import smshare.composeapp.generated.resources.Res
 import smshare.composeapp.generated.resources.ic_facebook

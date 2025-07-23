@@ -14,6 +14,7 @@ data class Account(
     val name: String = "",
     val description: String = "",
     val isSelected: Boolean = false,
+    val isSelectedForCompose: Boolean = false,
     val postsCount: Int = 0,
 
     // Todo : Decide if we should keep this prop here

@@ -1,7 +1,7 @@
 package com.jerryokafor.smshare.core.network.util
 
 import dev.whyoleg.cryptography.CryptographyProvider
-import dev.whyoleg.cryptography.algorithms.digest.SHA256
+import dev.whyoleg.cryptography.algorithms.SHA256
 import dev.whyoleg.cryptography.random.CryptographyRandom
 import io.ktor.util.encodeBase64
 import io.ktor.utils.io.charsets.Charsets

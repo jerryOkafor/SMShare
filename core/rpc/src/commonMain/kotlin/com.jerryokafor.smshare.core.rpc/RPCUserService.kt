@@ -2,7 +2,6 @@ package com.jerryokafor.smshare.core.rpc
 
 import com.jerryokafor.smshare.core.model.User
 import kotlinx.coroutines.flow.Flow
-import kotlinx.rpc.RemoteService
 import kotlinx.rpc.annotations.Rpc
 import kotlinx.serialization.Serializable
 
@@ -13,7 +12,7 @@ data class UserData(
 )
 
 @Rpc
-interface RPCUserService : RemoteService {
+interface RPCUserService {
     suspend fun hello(message: String): String
 
     fun subscribeToNews(): Flow<String>

@@ -13,7 +13,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNamingStrategy
 import org.koin.dsl.module
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -36,12 +35,11 @@ fun commonNetworkModule() = module {
             }
 
             install(ContentNegotiation) {
-                val json =
-                    Json {
-                        ignoreUnknownKeys = true
-                        isLenient = true
-                        namingStrategy = JsonNamingStrategy.SnakeCase
-                    }
+                val json = Json {
+                    ignoreUnknownKeys = true
+                    isLenient = true
+                    encodeDefaults = true
+                }
                 json(json)
             }
         }
